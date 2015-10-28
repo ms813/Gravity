@@ -9,7 +9,9 @@ import java.util.List;
  */
 public class GravityQuadTree {
 
-    private int MAX_OBJECTS = 20;
+    private GravityQuadTree parent;
+
+    private int MAX_OBJECTS = 5;
     private int MAX_LEVELS = 10;
 
     private int level;
@@ -18,15 +20,20 @@ public class GravityQuadTree {
     private FloatRect bounds;
     private GravityQuadTree[] nodes;
 
-    public GravityQuadTree(int level, FloatRect bounds) {
+    Vector2f centerOfGravity;
+    float totalMass;
+
+    public GravityQuadTree(int level, FloatRect bounds, GravityQuadTree parent) {
         this.level = level;
         objects = new ArrayList<>();
         this.bounds = bounds;
         nodes = new GravityQuadTree[4];
+        this.parent = parent;
     }
 
     public void printStatus() {
-        System.out.println("Level: " + level + ", objs: " + objects);
+        if(parent != null)
+        System.out.println("parent : " + parent + ", parent level: "+parent.level + ", my level: " + level + ", objs: " + objects);
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i] != null) {
                 nodes[i].printStatus();
@@ -58,7 +65,6 @@ public class GravityQuadTree {
     */
     public void clear() {
         objects.clear();
-
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i] != null) {
                 nodes[i].clear();
@@ -77,16 +83,16 @@ public class GravityQuadTree {
         float y = bounds.top;
 
         //top right
-        nodes[0] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y, subWidth, subHeight));
+        nodes[0] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y, subWidth, subHeight), this);
 
         //top left
-        nodes[1] = new GravityQuadTree(level + 1, new FloatRect(x, y, subWidth, subHeight));
+        nodes[1] = new GravityQuadTree(level + 1, new FloatRect(x, y, subWidth, subHeight), this);
 
         //bottom left
-        nodes[2] = new GravityQuadTree(level + 1, new FloatRect(x, y + subHeight, subWidth, subHeight));
+        nodes[2] = new GravityQuadTree(level + 1, new FloatRect(x, y + subHeight, subWidth, subHeight), this);
 
         //bottom right
-        nodes[3] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y + subHeight, subWidth, subHeight));
+        nodes[3] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y + subHeight, subWidth, subHeight), this);
     }
 
     /*
@@ -100,12 +106,12 @@ public class GravityQuadTree {
     *   |_____|_____|
     *
     */
-    private int getIndex(GameObject gameObject) {
+    private int getIndex(GameObject object) {
         int index = -1;
 
         //pos should be the center of the object
-        Vector2f pos = gameObject.getPosition();
-        Vector2f size = new Vector2f(gameObject.getBounds().width, gameObject.getBounds().height);
+        Vector2f pos = object.getPosition();
+        Vector2f size = new Vector2f(object.getBounds().width, object.getBounds().height);
 
         float verticalMidpoint = bounds.left + (bounds.width / 2);
         float horizontalMidpoint = bounds.top + (bounds.height / 2);
@@ -117,7 +123,7 @@ public class GravityQuadTree {
         boolean bottomQuadrant = pos.y > horizontalMidpoint;
 
         //object can fit completely within the left quadrants
-        if(pos.x < verticalMidpoint && pos.x + size.x < verticalMidpoint){
+        if (pos.x < verticalMidpoint && pos.x + size.x < verticalMidpoint) {
             if (topQuadrant) {
                 index = 1;
             } else if (bottomQuadrant) {
@@ -141,24 +147,39 @@ public class GravityQuadTree {
     *   If the node exceeds the capacity, it will split
     *   and add all objects to their corresponding nodes
     */
-    public void insert(GameObject gameObject) {
+    public void insert(GameObject obj) {
 
+        //if this quad has children, put the object straight into the children
         if (nodes[0] != null) {
-            int index = getIndex(gameObject);
+            int index = getIndex(obj);
             if (index != -1) {
-                nodes[index].insert(gameObject);
+                nodes[index].insert(obj);
                 return;
             }
         }
 
-        objects.add(gameObject);
+        //if it has no children, add the object to this level
+        objects.add(obj);
 
+        float x = 0, y = 0;
+        totalMass = 0;
+        for(GameObject o : objects){
+            x += o.getPosition().x * o.getMass();
+            y += o.getPosition().y * o.getMass();
+
+            totalMass += o.getMass();
+        }
+
+        centerOfGravity = new Vector2f(x / totalMass, y / totalMass);
+
+        //if this level has too many objects, split the quad into 4 child quads
         if (objects.size() > MAX_OBJECTS) {
             if (level < MAX_LEVELS) {
                 if (nodes[0] == null) {
                     split();
                 }
 
+                //and distribute its objects into the child quads
                 int i = 0;
                 while (i < objects.size()) {
                     int index = getIndex(objects.get(i));
@@ -178,11 +199,11 @@ public class GravityQuadTree {
     /*
     *   Return all objects in the same quad as the given object
     */
-    public List retrieve(List<GameObject> returnObjects, GameObject gameObject) {
-        int index = getIndex(gameObject);
+    public List retrieve(List<GameObject> returnObjects, GameObject object) {
+        int index = getIndex(object);
 
         if (index != -1 && nodes[0] != null) {
-            nodes[index].retrieve(returnObjects, gameObject);
+            nodes[index].retrieve(returnObjects, object);
         }
 
         returnObjects.addAll(objects);

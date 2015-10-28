@@ -39,7 +39,7 @@ public class Game {
                  window.clear(Color.BLACK);
                  peekState().update(dt);
                  peekState().draw(dt);
-                 System.out.println("dt = " + dt);
+                 //System.out.println("dt = " + dt);
                  window.display();
              }
     }

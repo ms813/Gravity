@@ -11,39 +11,44 @@ import java.util.Random;
  */
 public class MainState extends GameState {
 
-    private List<Dust> dustList = new ArrayList<>();
+    private List<GameObject> dustList = new ArrayList<>();
 
     private GravityQuadTree gravityQuad;
     private final float APPROXIMATION_CUTOFF = 50f;
 
-    public MainState(Game game){
+    public MainState(Game game) {
         super(game);
 
         //set quad origin to (0,0) and size to (0,0)
-        gravityQuad = new GravityQuadTree(0, new FloatRect(Vector2f.ZERO, Vector2f.ZERO));
+        gravityQuad = new GravityQuadTree(0, new FloatRect(Vector2f.ZERO, new Vector2f(game.getWindow().getSize())), null);
 
-        for(int i = 0; i < 500; i++){
-            Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(),new Random().nextFloat()*300), new Vector2f(300,300));
-            Dust d = new Dust(new Random().nextFloat() *3+ 1, pos);
-            d.setVelocity(new Vector2f(0, 0));
+        for (int i = 0; i < 500; i++) {
+            Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
+            Dust d = new Dust(new Random().nextFloat() * 3 + 1, pos);
+            d.setVelocity(new Vector2f(0.2f, 0));
             dustList.add(d);
         }
 
-        for(int i = 0; i < 500; i++){
-            Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(),new Random().nextFloat()*300), new Vector2f(500,500));
-            Dust d = new Dust(new Random().nextFloat() *3+ 1, pos);
-            d.setVelocity(new Vector2f(0, 0));
+        for (int i = 0; i < 500; i++) {
+            Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(500, 500));
+            Dust d = new Dust(new Random().nextFloat() * 3 + 1, pos);
+            d.setVelocity(new Vector2f(-0.2f, 0));
             dustList.add(d);
+        }
+
+        gravityQuad.clear();
+        for (GameObject o : dustList) {
+            gravityQuad.insert(o);
         }
 
         //this scales the quad for the first time
-        update(0);
+        gravityQuad.setBounds(getQuadBounds(dustList));
     }
 
     @Override
     public void draw(float dt) {
-        for(GameObject a : dustList){
-            a.draw(game.getWindow(), dt);
+        for (GameObject a : dustList) {
+            a.draw(game.getWindow());
         }
         gravityQuad.draw(game.getWindow());
     }
@@ -51,100 +56,58 @@ public class MainState extends GameState {
     @Override
     public void update(float dt) {
         System.out.println("Frame start");
-        float top = dustList.get(0).getPosition().y,
-                bottom  = dustList.get(0).getPosition().y,
-                left = dustList.get(0).getPosition().x,
-                right = dustList.get(0).getPosition().x;
-
-        //find the furthest away particles to scale the quad tree
-        for(Dust d : dustList){
-            if(d.getPosition().x < left){
-                left = d.getPosition().x;
-            }
-
-            if(d.getPosition().x > right){
-                right = d.getPosition().x;
-            }
-
-            if(d.getPosition().y < top){
-                top = d.getPosition().y;
-            }
-
-            if(d.getPosition().y > bottom){
-                bottom = d.getPosition().y;
-            }
-        }
 
         gravityQuad.clear();
-        Vector2f size = new Vector2f(right - left, bottom - top);
-        Vector2f pos = new Vector2f(left, top);
-        gravityQuad.setBounds(new FloatRect(pos, size));
-        for(Dust d : dustList){
-            gravityQuad.insert(d);
+        for (GameObject o : dustList) {
+            gravityQuad.insert(o);
         }
+
+        gravityQuad.setBounds(getQuadBounds(dustList));
 
         //gravityQuad.printStatus();
 
-        /*
+
         List<GameObject> returnObjects = new ArrayList<>();
+        List<GameObject> merging = new ArrayList<>();
+
         for(GameObject o : dustList){
+
             returnObjects.clear();
             gravityQuad.retrieve(returnObjects, o);
-            for(GameObject x : returnObjects){
-                //GameObject x is in same quad as o
-                //do collision detection here
-            }
-        }
-        */
+            if(merging.contains(o)) continue;
+            for (GameObject x : returnObjects) {
+                if(x == o) continue;
+                if(merging.contains(x)) continue;
+                //CoreGameObject x is in same quad as o
 
+                //determine the larger and smaller particle
+                GameObject smaller, larger;
+                if (o.getMass() < x.getMass()) {
+                    smaller = o;
+                    larger = x;
+                } else {
+                    smaller = x;
+                    larger = o;
+                }
 
-        //get a list of all quads on the screen
-        //particlesInQuads list is a dirty way to prevent duplicates
-        List<GravityQuad> quads = new ArrayList<>();
-        List<List<GameObject>> particlesInQuads = new ArrayList<>();
-
-        for(GameObject o : dustList){
-            List<GameObject> objs = new ArrayList<>();
-            gravityQuad.retrieve(objs, o);
-
-            if(!particlesInQuads.contains(objs)){
-                particlesInQuads.add(objs);
-                quads.add(new GravityQuad(objs));
-            }
-        }
-        System.out.println("No of quads: " + quads.size());
-
-        int detailedCount = 0, approxCount = 0;
-        for(GameObject o : dustList){
-            Vector2f sumForce = Vector2f.ZERO;
-            if(o.getPosition().x == 0 || o.getPosition().y ==0) System.out.println("stuff = 0");
-            for(GravityQuad q : quads){
-                //calculate distance between o and q's center of mass
-                Vector2f dir = Vector2f.sub(q.getCenterOfMass(), o.getPosition());
+                //check if circles overlap
+                Vector2f dir = Vector2f.sub(smaller.getPosition(), larger.getPosition());
                 float distance = VectorMath.magnitude(dir);
 
-                //close quads get a detailed calculation involving each object in the quad
-                if(distance < APPROXIMATION_CUTOFF){
-                    detailedCount++;
-                    List<GameObject> objs = q.getObjects();
-                    for(GameObject nearObj : objs){
-                        sumForce = Vector2f.add(sumForce, calculateGForce(o, nearObj));
-                    }
-                }
-                //further away quads get an approximation
-                else{
-                    approxCount++;
-                    sumForce = Vector2f.add(sumForce, calculateGForce(o, q));
+
+                //only need to check width as all particles are circles at present
+                if (distance < larger.getBounds().width/2) {
+                    larger.merge(smaller);
+                    merging.add(smaller);
                 }
             }
-            //System.out.println("Sumforce: " + sumForce);
-            o.applyForce(sumForce);
         }
+      //  System.out.println("Removing " + merging);
+        dustList.removeAll(merging);
 
-        System.out.println("Detailed count: " + detailedCount + ", approx count: " + approxCount);
 
         //run the update loop on all of the particles
-        for(GameObject a : dustList){
+        for (GameObject a : dustList) {
             a.update(dt);
         }
         System.out.println("Frame end");
@@ -159,7 +122,7 @@ public class MainState extends GameState {
         }
     }
 
-    public Vector2f calculateGForce(GameObject o1, GameObject o2){
+    public Vector2f calculateGForce(GameObject o1, GameObject o2) {
 
         //F = GmM / r^2
 
@@ -175,20 +138,34 @@ public class MainState extends GameState {
         return Vector2f.mul(VectorMath.normalize(dir), F);
     }
 
-    public Vector2f calculateGForce(GameObject o, GravityQuad q){
+    public FloatRect getQuadBounds(List<GameObject> list) {
 
-        //F = GmM / r^2
+        float top = list.get(0).getPosition().y,
+                bottom = list.get(0).getPosition().y,
+                left = list.get(0).getPosition().x,
+                right = list.get(0).getPosition().x;
 
-        Vector2f dir = Vector2f.sub(q.getCenterOfMass(), o.getPosition());
+        //find the furthest away particles to scale the quad tree
+        for (GameObject d : list) {
+            if (d.getPosition().x < left) {
+                left = d.getPosition().x;
+            }
 
-        float F, G, m, M, r;
-        G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-        m = o.getMass();
-        M = q.getTotalMass();
-        r = VectorMath.magnitude(dir);
+            if (d.getPosition().x > right) {
+                right = d.getPosition().x;
+            }
 
-        F = (G * m * M) / (float) Math.pow(r, 2);
+            if (d.getPosition().y < top) {
+                top = d.getPosition().y;
+            }
 
-        return Vector2f.mul(VectorMath.normalize(dir), F);
+            if (d.getPosition().y > bottom) {
+                bottom = d.getPosition().y;
+            }
+        }
+
+        Vector2f size = new Vector2f(right - left, bottom - top);
+        Vector2f pos = new Vector2f(left, top);
+        return new FloatRect(pos, size);
     }
 }

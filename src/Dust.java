@@ -5,7 +5,7 @@ import org.jsfml.system.Vector2f;
 /**
  * Created by Matthew on 26/10/2015.
  */
-public class Dust extends GameObject {
+public class Dust extends CoreGameObject implements GameObject {
 
     private float density;
 
@@ -34,7 +34,7 @@ public class Dust extends GameObject {
         return mass;
     }
 
-    private float getArea(){
+    public float getArea(){
         //area of a circle =  pi * r^2
         return ((float) Math.PI * (float) Math.pow(((CircleShape)shape).getRadius(), 2));
     }
@@ -43,7 +43,7 @@ public class Dust extends GameObject {
         return ((CircleShape) shape).getRadius();
     }
 
-    public void merge(Dust d){
+    public void merge(GameObject d){
 
         float totalArea = this.getArea() + d.getArea();
 
@@ -83,7 +83,7 @@ public class Dust extends GameObject {
         this.density = p;
     }
 
-    private float getDensity(){
+    public float getDensity(){
         return this.density;
     }
 
@@ -97,5 +97,18 @@ public class Dust extends GameObject {
     }
     public void setVelocity(Vector2f velocity){
         this.velocity = velocity;
+    }
+
+
+    public void move(Vector2f offset) {
+        if (sprite != null) {
+            sprite.move(offset);
+        } else{
+            shape.move(offset);
+        }
+    }
+
+    public void applyForce(Vector2f force){
+        appliedForce = force;
     }
 }
