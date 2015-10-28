@@ -8,7 +8,6 @@ import org.jsfml.system.Vector2f;
 public class Dust extends GameObject {
 
     private float density;
-    private float mass;
 
     public Dust(float radius, Vector2f pos){
         shape = new CircleShape();
@@ -78,8 +77,6 @@ public class Dust extends GameObject {
         } else if(mass > 3000){
             shape.setFillColor(Color.RED);
         }
-
-
     }
 
     private void setDensity(float p){

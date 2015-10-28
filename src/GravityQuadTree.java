@@ -1,38 +1,32 @@
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Matthew on 27/10/2015.
  */
-public class PointQuadTree {
+public class GravityQuadTree {
 
-    private int MAX_OBJECTS = 5;
+    private int MAX_OBJECTS = 7;
     private int MAX_LEVELS = 10;
 
     private int level;
     private List<GameObject> objects;
 
     private FloatRect bounds;
-    private PointQuadTree[] nodes;
+    private GravityQuadTree[] nodes;
 
-
-
-
-    public PointQuadTree(int level, FloatRect bounds) {
+    public GravityQuadTree(int level, FloatRect bounds) {
         this.level = level;
         objects = new ArrayList<>();
         this.bounds = bounds;
-        nodes = new PointQuadTree[4];
+        nodes = new GravityQuadTree[4];
     }
 
     public void printStatus() {
-        System.out.println("Level: " + level + ",objs: " + objects);
+        System.out.println("Level: " + level + ", objs: " + objects);
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i] != null) {
                 nodes[i].printStatus();
@@ -40,17 +34,19 @@ public class PointQuadTree {
         }
     }
 
+    /*
+    *   Draws a box around each quad
+    */
     public void draw(RenderWindow window) {
         RectangleShape outline = new RectangleShape(new Vector2f(bounds.width, bounds.height));
         outline.setPosition(bounds.left, bounds.top);
         outline.setFillColor(Color.TRANSPARENT);
-        outline.setOutlineThickness(0.5f);
+        outline.setOutlineThickness(1.0f);
         outline.setOutlineColor(Color.GREEN);
 
         window.draw(outline);
-        String n = Integer.toString(objects.size());
 
-        for (PointQuadTree t : nodes) {
+        for (GravityQuadTree t : nodes) {
             if (t != null) {
                 t.draw(window);
             }
@@ -81,16 +77,16 @@ public class PointQuadTree {
         float y = bounds.top;
 
         //top right
-        nodes[0] = new PointQuadTree(level + 1, new FloatRect(x + subWidth, y, subWidth, subHeight));
+        nodes[0] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y, subWidth, subHeight));
 
         //top left
-        nodes[1] = new PointQuadTree(level + 1, new FloatRect(x, y, subWidth, subHeight));
+        nodes[1] = new GravityQuadTree(level + 1, new FloatRect(x, y, subWidth, subHeight));
 
         //bottom left
-        nodes[2] = new PointQuadTree(level + 1, new FloatRect(x, y + subHeight, subWidth, subHeight));
+        nodes[2] = new GravityQuadTree(level + 1, new FloatRect(x, y + subHeight, subWidth, subHeight));
 
         //bottom right
-        nodes[3] = new PointQuadTree(level + 1, new FloatRect(x + subWidth, y + subHeight, subWidth, subHeight));
+        nodes[3] = new GravityQuadTree(level + 1, new FloatRect(x + subWidth, y + subHeight, subWidth, subHeight));
     }
 
     /*
@@ -109,18 +105,19 @@ public class PointQuadTree {
 
         //pos should be the center of the object
         Vector2f pos = gameObject.getPosition();
+        Vector2f size = new Vector2f(gameObject.getBounds().width, gameObject.getBounds().height);
 
         float verticalMidpoint = bounds.left + (bounds.width / 2);
         float horizontalMidpoint = bounds.top + (bounds.height / 2);
 
         //Object can completely fit within top quadrants
-        boolean topQuadrant = pos.y <= horizontalMidpoint;
+        boolean topQuadrant = pos.y < horizontalMidpoint && pos.y + size.y < horizontalMidpoint;
 
         //object can completely fit within the bottom quadrants
         boolean bottomQuadrant = pos.y > horizontalMidpoint;
 
         //object can fit completely within the left quadrants
-        if (pos.x <= verticalMidpoint) {
+        if(pos.x < verticalMidpoint && pos.x + size.x < verticalMidpoint){
             if (topQuadrant) {
                 index = 1;
             } else if (bottomQuadrant) {
@@ -173,7 +170,7 @@ public class PointQuadTree {
                     }
                 }
             } else {
-                throw new IndexOutOfBoundsException("[PointQuadTree.insert()] Max tree level reached");
+                throw new IndexOutOfBoundsException("[GravityQuadTree.insert()] Max tree level reached");
             }
         }
     }

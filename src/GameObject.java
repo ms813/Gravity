@@ -12,6 +12,8 @@ public abstract class GameObject {
     protected Vector2f velocity = Vector2f.ZERO;
     protected Vector2f appliedForce = Vector2f.ZERO;
 
+    protected float mass;
+
     public void draw(RenderWindow window, float dt){
         if (sprite != null) {
             window.draw(sprite);
@@ -48,5 +50,9 @@ public abstract class GameObject {
 
    public void applyForce(Vector2f force){
        appliedForce = force;
+   }
+
+   public float getMass(){
+       return mass;
    }
 }

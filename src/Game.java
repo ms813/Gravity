@@ -14,13 +14,15 @@ import java.util.Stack;
  */
 public class Game {
 
+    private final int FRAME_RATE = 30;
+
     private RenderWindow window = new RenderWindow();
     private Stack<GameState> gameStates = new Stack<GameState>();
 
     public Game(){
         window.create(new VideoMode(1024, 800), "Space Game");
         window.setVerticalSyncEnabled(true);
-
+        window.setFramerateLimit(FRAME_RATE);
         gameStates.push(new MainState(this));
     }
 
