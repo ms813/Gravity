@@ -39,4 +39,8 @@ public class GravityQuad {
     public boolean contains(GameObject o){
         return objects.contains(o);
     }
+
+    public List<GameObject> getObjects(){
+        return objects;
+    }
 }

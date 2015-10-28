@@ -18,17 +18,22 @@ public class VectorMath {
     private static final float vectorTolerance = 1.0f;
 
     public static strictfp Vector2f normalize(Vector2f v){
-        if(magnitude(v) != 0){
+        if(magnitude(v) > 0){
             return Vector2f.div(v, magnitude(v));
         } else{
             return Vector2f.ZERO;
+            //throw new ArithmeticException("Vector division by zero!");
         }
-
-       // return Vector2f.div(v, magnitude(v));
     }
 
     public static strictfp float magnitude(Vector2f v){
-        return (float) Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+        float f = (float) Math.pow(v.x, 2) + (float) Math.pow(v.y, 2);
+        if(f > 0){
+            return (float)Math.sqrt(f);
+        } else{
+            return 0;
+            //throw new ArithmeticException("Vector magnitude divide by zero!");
+        }
     }
 
     public static strictfp float dot(Vector2f a, Vector2f b){

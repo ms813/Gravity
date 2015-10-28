@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class GravityQuadTree {
 
-    private int MAX_OBJECTS = 7;
+    private int MAX_OBJECTS = 20;
     private int MAX_LEVELS = 10;
 
     private int level;

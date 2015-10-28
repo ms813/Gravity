@@ -14,7 +14,7 @@ import java.util.Stack;
  */
 public class Game {
 
-    private final int FRAME_RATE = 30;
+    private final int FRAME_RATE = 60;
 
     private RenderWindow window = new RenderWindow();
     private Stack<GameState> gameStates = new Stack<GameState>();
@@ -39,6 +39,7 @@ public class Game {
                  window.clear(Color.BLACK);
                  peekState().update(dt);
                  peekState().draw(dt);
+                 System.out.println("dt = " + dt);
                  window.display();
              }
     }
