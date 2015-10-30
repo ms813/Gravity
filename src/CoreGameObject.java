@@ -45,4 +45,12 @@ public abstract class CoreGameObject implements iCoreGameObject {
             return new Vector2f(shape.getGlobalBounds().width, shape.getGlobalBounds().height);
         }
     }
+
+    public void setFillColor(Color c) {
+        if (sprite != null) {
+            sprite.setColor(c);
+        } else {
+            shape.setFillColor(c);
+        }
+    }
 }

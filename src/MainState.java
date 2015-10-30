@@ -15,7 +15,7 @@ import java.util.Random;
 public class MainState extends GameState {
 
     private List<GameObject> dustList = new ArrayList<>();
-    private Grid grid = new Grid(Vector2f.ZERO, Vector2f.ZERO, 50.0f);
+    private Grid grid = new Grid(50.0f);
 
     private final float APPROXIMATION_CUTOFF = 50f;
 
@@ -38,7 +38,6 @@ public class MainState extends GameState {
             dustList.add(d);
         }
 
-        grid.setBounds(getGridBounds(dustList));
         for(GameObject o : dustList){
             grid.insert(o);
         }
@@ -73,6 +72,7 @@ public class MainState extends GameState {
         /*
         *   Collision detection
         */
+        startTime = System.nanoTime();
         List<GameObject> mergingObjects = new ArrayList<>();
         HashMap<Vector2i, ArrayList<GameObject>> cells = grid.getCells();
 
@@ -85,8 +85,10 @@ public class MainState extends GameState {
                     if(o == x) continue; //ignore collisions with self
                     if(mergingObjects.contains(x)) continue;          //ignore objects queued to be merged
 
-                    Vector2f dir = Vector2f.sub(x.getPosition(), o.getPosition());
-                    float dist = VectorMath.magnitude(dir);
+                    Vector2f xCenter = Vector2f.add(x.getPosition(), Vector2f.div(x.getSize(), 2));
+                    Vector2f oCenter = Vector2f.add(o.getPosition(), Vector2f.div(o.getSize(), 2));
+
+                    float dist = VectorMath.magnitude(Vector2f.sub(xCenter, oCenter));
 
                     GameObject larger, smaller;
 
@@ -106,8 +108,9 @@ public class MainState extends GameState {
                 }
             }
         }
-
         dustList.removeAll(mergingObjects);
+        endTime = System.nanoTime();
+        System.out.println("Collision checks took " + (endTime - startTime) / 1000000 + " millis");
 
         //run the update loop on all of the particles
         for (GameObject a : dustList) {
