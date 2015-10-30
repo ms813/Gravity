@@ -7,7 +7,8 @@ import org.jsfml.system.Vector2f;
  */
 public interface iCoreGameObject {
     Vector2f getPosition();
-    public IntRect getBounds();
+    IntRect getBounds();
+    Vector2f getSize();
 
     void update(float dt);
     void draw(RenderWindow window);

@@ -12,6 +12,8 @@ public class Dust extends CoreGameObject implements GameObject {
     public Dust(float radius, Vector2f pos){
         shape = new CircleShape();
         ((CircleShape)shape).setRadius(radius);
+        shape.setOutlineColor(Color.CYAN);
+        shape.setOutlineThickness(1.0f);
 
         shape.setPosition(pos);
         shape.setFillColor(new Color(139,69,19));
@@ -89,7 +91,7 @@ public class Dust extends CoreGameObject implements GameObject {
 
     private void setRadius(float r){
         ((CircleShape) shape).setRadius(r);
-        shape.setOrigin(r, r);
+        //shape.setOrigin(r, r);
     }
 
     public Vector2f getVelocity(){
