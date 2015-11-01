@@ -1,28 +1,60 @@
 package GameObjects;
 
+import Core.MainState;
+import Core.TextureManager;
 import Core.VectorMath;
-import org.jsfml.graphics.CircleShape;
-import org.jsfml.graphics.Color;
+import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2i;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Matthew on 26/10/2015.
  */
-public class Dust extends CoreGameObject implements GameObject {
+public class Dust implements GameObject {
+
+    private VertexArray velocityLine = new VertexArray();
+    private Color velocityLineColor = Color.MAGENTA;
+    private VertexArray trail = new VertexArray();
+    private Color trailColor = Color.WHITE;
+
+    private Sprite sprite = new Sprite();
+    private Texture texture = new Texture();
 
     private float density;
+    private float mass;
+    private Vector2f velocity = Vector2f.ZERO;
+    private Vector2f appliedForce = Vector2f.ZERO;
 
     public Dust(float radius, Vector2f pos) {
-        shape = new CircleShape();
-        ((CircleShape) shape).setRadius(radius);
-        shape.setOutlineColor(Color.WHITE);
-        shape.setOutlineThickness(-1.0f);
 
-        shape.setPosition(pos);
-        shape.setFillColor(new Color(139, 69, 19));
+        texture = TextureManager.getTexture("dust.png");
+        texture.setSmooth(true);
+        sprite.setTexture(texture);
+
+        List<IntRect> textureRects = new ArrayList<>();//coords of small particles on texture
+        textureRects.add(new IntRect(339, 262, 30, 29));
+        textureRects.add(new IntRect(384, 262, 30, 29));
+        textureRects.add(new IntRect(428, 262, 30, 29));
+        textureRects.add(new IntRect(341, 311, 31, 29));
+        textureRects.add(new IntRect(383, 311, 31, 29));
+        textureRects.add(new IntRect(427, 311, 31, 29));
+
+        sprite.setTextureRect(textureRects.get((int) Math.floor(Math.random() * 6)));
+
+        sprite.setPosition(pos);
+
+        sprite.scale(radius / sprite.getGlobalBounds().width, radius / sprite.getGlobalBounds().height);
 
         density = 5.0f;
         mass = getArea() * density;
+
+        velocityLine.setPrimitiveType(PrimitiveType.LINES);
     }
 
     @Override
@@ -40,22 +72,24 @@ public class Dust extends CoreGameObject implements GameObject {
         //finally, move the particle according to its current velocity, and reset the applied force to zero
         move(velocity);
         applyForce(Vector2f.ZERO);
-    }
 
-    public float getMass() {
-        return mass;
-    }
+        velocityLine.clear();
+        Vector2f center = Vector2f.add(getPosition(), Vector2f.div(getSize(), 2));
+        velocityLine.add(new Vertex(center, velocityLineColor));
+        velocityLine.add(new Vertex(Vector2f.add(center, Vector2f.mul(velocity, 10)), velocityLineColor));
 
-    public float getArea() {
-        //area of a circle =  pi * r^2
-        return ((float) Math.PI * (float) Math.pow(((CircleShape) shape).getRadius(), 2));
-    }
+        trail.add(new Vertex(center, trailColor));
+        trail.add(new Vertex(Vector2f.add(center, appliedForce), trailColor));
 
-    public float getRadius() {
-        return ((CircleShape) shape).getRadius();
+        if (trail.size() > 1000) {
+            trail.remove(0);
+        }
+
     }
 
     public void merge(GameObject d) {
+
+        Vector2f startSize = getSize(); //used to recenter the sprite
 
         float totalArea = this.getArea() + d.getArea();
 
@@ -67,7 +101,9 @@ public class Dust extends CoreGameObject implements GameObject {
         this.setDensity(v1 * this.density + v2 * d.getDensity());
 
         //radius of a sphere = sqrt(A / pi)
-        this.setRadius((float) Math.sqrt(totalArea / (float) Math.PI));
+        float radius = (float) Math.sqrt(totalArea / (float) Math.PI);
+        float ratio = radius / (sprite.getGlobalBounds().width / 2);
+        sprite.scale(ratio, ratio);
 
         //pTot = p1 * p2
         //mTot * vTot = m1 * v1 + m2 + v2
@@ -79,16 +115,48 @@ public class Dust extends CoreGameObject implements GameObject {
         this.velocity = Vector2f.div(pTot, mTot);
 
         mass = getArea() * density;
-
+               /*
         if (mass > 20000) {
-            shape.setFillColor(Color.BLUE);
+            setFillColor(Color.BLUE);
         } else if (mass > 12000) {
-            shape.setFillColor(Color.YELLOW);
+            setFillColor(Color.YELLOW);
         } else if (mass > 8000) {
-            shape.setFillColor(new Color(255, 165, 0));
+            setFillColor(new Color(255, 165, 0));
         } else if (mass > 3000) {
-            shape.setFillColor(Color.RED);
+            setFillColor(Color.RED);
         }
+            */
+        Vector2f endSize = getSize();
+        Vector2f dif = Vector2f.sub(endSize, startSize);
+        //since the sprite's origin is (0,0, we have to move it
+        //so that it's center stays in the same position
+        //Hence we move it by back towards the top left by half of the size increase
+        sprite.move(Vector2f.mul(dif, -0.5f));
+
+    }
+
+    @Override
+    public void draw(RenderWindow w) {
+        w.draw(sprite);
+
+    }
+
+    public void drawVelocity(RenderWindow w){
+        w.draw(velocityLine);
+    }
+
+    public void drawTrail(RenderWindow w){
+        w.draw(trail);
+    }
+
+    public float getMass() {
+        return mass;
+    }
+
+    public float getArea() {
+        //area of a circle =  pi * r^2
+        float r = sprite.getGlobalBounds().width / 2;
+        return (float) (Math.PI * Math.pow(r, 2));
     }
 
     private void setDensity(float p) {
@@ -97,11 +165,6 @@ public class Dust extends CoreGameObject implements GameObject {
 
     public float getDensity() {
         return this.density;
-    }
-
-    private void setRadius(float r) {
-        ((CircleShape) shape).setRadius(r);
-        //shape.setOrigin(r, r);
     }
 
     public Vector2f getVelocity() {
@@ -114,14 +177,31 @@ public class Dust extends CoreGameObject implements GameObject {
 
 
     public void move(Vector2f offset) {
-        if (sprite != null) {
-            sprite.move(offset);
-        } else {
-            shape.move(offset);
-        }
+        sprite.move(offset);
     }
 
     public void applyForce(Vector2f force) {
         appliedForce = force;
+    }
+
+
+    @Override
+    public Vector2f getPosition() {
+        return sprite.getPosition();
+    }
+
+    @Override
+    public FloatRect getBounds() {
+        return sprite.getGlobalBounds();
+    }
+
+    @Override
+    public Vector2f getSize() {
+        return new Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
+    }
+
+    @Override
+    public void setFillColor(Color c) {
+        sprite.setColor(c);
     }
 }

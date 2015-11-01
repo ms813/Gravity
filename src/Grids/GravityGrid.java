@@ -24,8 +24,8 @@ public class GravityGrid implements SpatialHashGrid {
 
     @Override
     public ArrayList<Vector2i> getCellsForObj(GameObject o) {
-        int col = (int) Math.floor(o.getPosition().x / cellSize);
-        int row = (int) Math.floor(o.getPosition().y / cellSize);
+        int col = (int) Math.floor((o.getPosition().x + o.getSize().x / 2) / cellSize);
+        int row = (int) Math.floor((o.getPosition().y +o.getSize().y / 2) / cellSize);
 
         ArrayList<Vector2i> l = new ArrayList<>();
         l.add(new Vector2i(col, row));

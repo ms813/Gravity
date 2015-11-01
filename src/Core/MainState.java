@@ -30,19 +30,24 @@ public class MainState extends GameState {
     private Font font = new Font();
     private Text label = new Text();
 
+    private Boolean DRAW_VELOCITY = false;
+    private Boolean DRAW_TRAILS = false;
+    private Boolean DRAW_GRID_COLLISION = false;
+    private Boolean DRAW_GRID_GRAVITY = false;
+
     public MainState(Game game) {
         super(game);
 
         for (int i = 0; i < 1000; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
-            Dust d = new Dust(new Random().nextFloat() * 3f+1, pos);
+            Dust d = new Dust(new Random().nextFloat() * 3f + 1, pos);
             d.setVelocity(new Vector2f(0.2f, 0));
             dustList.add(d);
         }
 
         for (int i = 0; i < 1000; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(500, 500));
-            Dust d = new Dust(new Random().nextFloat() * 3f+1, pos);
+            Dust d = new Dust(new Random().nextFloat() * 3f + 1, pos);
             d.setVelocity(new Vector2f(-0.2f, 0));
             dustList.add(d);
         }
@@ -56,7 +61,7 @@ public class MainState extends GameState {
         }
 
         label.setFont(font);
-        label.setPosition(50,50);
+        label.setPosition(50, 50);
         label.setCharacterSize(24);
         label.setColor(Color.CYAN);
         label.setString("Particles remaining: " + dustList.size());
@@ -69,13 +74,15 @@ public class MainState extends GameState {
     @Override
     public void draw(float dt) {
 
-        view.setCenter(getSceneMassCenter());
+        //view.setCenter(getSceneMassCenter());
         game.setView(view);
-
-        //collisionGrid.draw(game.getWindow());
-        //gravityGrid.draw(game.getWindow());
-        for (GameObject a : dustList) {
-            a.draw(game.getWindow());
+        RenderWindow window = game.getWindow();
+        if (DRAW_GRID_COLLISION) collisionGrid.draw(window);
+        if (DRAW_GRID_GRAVITY) gravityGrid.draw(window);
+        for (GameObject o : dustList) {
+            o.draw(window);
+            if (DRAW_TRAILS) o.draw(window);
+            if (DRAW_VELOCITY) o.draw(window);
         }
 
         game.setView(guiView);
@@ -160,7 +167,7 @@ public class MainState extends GameState {
         gravityGrid.updateProperties();   //Update the properties like Center of Mass for each cell
         endTime = System.nanoTime();
 
-       // System.out.println("Building Gravity Grid took: " + (endTime - startTime) / 1000000 + " millis");
+        // System.out.println("Building Gravity Grid took: " + (endTime - startTime) / 1000000 + " millis");
 
 
         /*
@@ -198,7 +205,7 @@ public class MainState extends GameState {
             }
 
             for (GravityGridCell c2 : gravityCells) {
-                //if(c1 == c2) continue; //ignore own cell
+                if (c1 == c2) continue; //ignore own cell
 
                 //Calculate the force from c2's center of mass acting on c1
                 //F = GmM / r^2
@@ -233,7 +240,7 @@ public class MainState extends GameState {
         for (GameObject a : dustList) {
             a.update(dt);
         }
-        label.setString("Particles remaining: " + dustList.size() + "\nFPS: " + Math.round(1/dt) );
+        label.setString("Particles remaining: " + dustList.size() + "\nFPS: " + Math.round(1 / dt));
         System.out.println("Frame end");
     }
 
