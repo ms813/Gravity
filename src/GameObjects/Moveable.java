@@ -9,8 +9,11 @@ import org.jsfml.system.Vector2f;
 public interface Moveable extends CoreGameObject {
     void move(Vector2f offset);
     Vector2f getVelocity();
+    void setVelocity(Vector2f velocity);
     float getMass();
     void applyForce(Vector2f force);
+
+    float getCollisionRadius();
 
     void drawVelocity(RenderWindow w);
     void drawTrail(RenderWindow w);

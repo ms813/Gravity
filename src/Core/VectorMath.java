@@ -19,6 +19,7 @@ public class VectorMath {
     private static final float floatTolerance = 3.0f;
     private static final float vectorTolerance = 1.0f;
 
+
     public static strictfp Vector2f normalize(Vector2f v){
         if(magnitude(v) > 0){
             return Vector2f.div(v, magnitude(v));
@@ -102,5 +103,13 @@ public class VectorMath {
     public static strictfp Vector2f randomUnit(){
         Random rnd = new Random();
         return normalize(new Vector2f(rnd.nextFloat() - 0.5f, rnd.nextFloat() - 0.5f));
+    }
+
+    public static strictfp float angle(Vector2f v){
+        return (float)Math.atan2(v.y, v.x);
+    }
+
+    public static boolean nearlyEquals(double a, double b, double eps){
+        return Math.abs(a-b)<eps;
     }
 }

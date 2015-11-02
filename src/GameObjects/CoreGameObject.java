@@ -11,6 +11,8 @@ import org.jsfml.system.Vector2f;
  */
 public interface CoreGameObject {
     Vector2f getPosition();
+    void setPosition(Vector2f position);
+    Vector2f getCenter();
     FloatRect getBounds();
     Vector2f getSize();
     void setFillColor(Color c);

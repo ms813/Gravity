@@ -1,16 +1,9 @@
 package GameObjects;
 
-import Core.MainState;
 import Core.TextureManager;
 import Core.VectorMath;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
-import org.jsfml.system.Vector2i;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -26,35 +19,38 @@ public class Dust implements GameObject {
     private Sprite sprite = new Sprite();
     private Texture texture = new Texture();
 
+    private float radius;
+    private CircleShape collisionRadius = new CircleShape();
+
     private float density;
     private float mass;
     private Vector2f velocity = Vector2f.ZERO;
     private Vector2f appliedForce = Vector2f.ZERO;
 
+    private ParticleType type = ParticleType.DUST_SMALL;
+
     public Dust(float radius, Vector2f pos) {
+
+        this.radius = radius;
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
-
-        List<IntRect> textureRects = new ArrayList<>();//coords of small particles on texture
-        textureRects.add(new IntRect(339, 262, 30, 29));
-        textureRects.add(new IntRect(384, 262, 30, 29));
-        textureRects.add(new IntRect(428, 262, 30, 29));
-        textureRects.add(new IntRect(341, 311, 31, 29));
-        textureRects.add(new IntRect(383, 311, 31, 29));
-        textureRects.add(new IntRect(427, 311, 31, 29));
-
-        sprite.setTextureRect(textureRects.get((int) Math.floor(Math.random() * 6)));
-
+        updateTextureRect();
         sprite.setPosition(pos);
 
-        sprite.scale(radius / sprite.getGlobalBounds().width, radius / sprite.getGlobalBounds().height);
+        rescale();
+        type = checkType();
+        updateTextureRect();
 
         density = 5.0f;
         mass = getArea() * density;
 
         velocityLine.setPrimitiveType(PrimitiveType.LINES);
+
+        collisionRadius.setFillColor(Color.TRANSPARENT);
+        collisionRadius.setOutlineColor(Color.GREEN);
+        collisionRadius.setOutlineThickness(-1.0f);
     }
 
     @Override
@@ -71,7 +67,8 @@ public class Dust implements GameObject {
 
         //finally, move the particle according to its current velocity, and reset the applied force to zero
         move(velocity);
-        applyForce(Vector2f.ZERO);
+        appliedForce = Vector2f.ZERO;
+        collisionRadius.setPosition(getPosition());
 
         velocityLine.clear();
         Vector2f center = Vector2f.add(getPosition(), Vector2f.div(getSize(), 2));
@@ -101,9 +98,12 @@ public class Dust implements GameObject {
         this.setDensity(v1 * this.density + v2 * d.getDensity());
 
         //radius of a sphere = sqrt(A / pi)
-        float radius = (float) Math.sqrt(totalArea / (float) Math.PI);
-        float ratio = radius / (sprite.getGlobalBounds().width / 2);
-        sprite.scale(ratio, ratio);
+        radius = (float) Math.sqrt(totalArea / (float) Math.PI);
+        rescale();
+        if (type != checkType()) {
+            type = checkType();
+            updateTextureRect();
+        }
 
         //pTot = p1 * p2
         //mTot * vTot = m1 * v1 + m2 + v2
@@ -135,17 +135,48 @@ public class Dust implements GameObject {
 
     }
 
+    //this scales the different sized textures according to the internal "radius" of the particle
+    private void rescale(){
+        sprite.setScale(1f, 1f);
+        float width = sprite.getGlobalBounds().width;
+        float height = sprite.getGlobalBounds().height;
+        sprite.scale((radius*2) / width, (radius * 2)/ height);
+        collisionRadius.setRadius(radius);
+    }
+
+    private ParticleType checkType() {
+        float width = sprite.getGlobalBounds().width;
+        if (width < 32f) {
+            return ParticleType.DUST_SMALL;
+        } else if (width < 64f) {
+            return ParticleType.DUST_MED;
+        } else {
+            return ParticleType.DUST_LARGE;
+        }
+    }
+
+    private void updateTextureRect() {
+        if (type == ParticleType.DUST_SMALL) {
+            sprite.setTextureRect(TextureManager.smallTextureRects[(int) Math.floor(Math.random() * TextureManager.smallTextureRects.length)]);
+        } else if (type == ParticleType.DUST_MED) {
+            sprite.setTextureRect(TextureManager.medTextureRects[(int) Math.floor(Math.random() * TextureManager.medTextureRects.length)]);
+        } else {
+            sprite.setTextureRect(TextureManager.largeTextureRects[(int) Math.floor(Math.random() * TextureManager.largeTextureRects.length)]);
+        }
+        rescale();
+    }
+
     @Override
     public void draw(RenderWindow w) {
         w.draw(sprite);
-
+        //w.draw(collisionRadius);
     }
 
-    public void drawVelocity(RenderWindow w){
+    public void drawVelocity(RenderWindow w) {
         w.draw(velocityLine);
     }
 
-    public void drawTrail(RenderWindow w){
+    public void drawTrail(RenderWindow w) {
         w.draw(trail);
     }
 
@@ -175,15 +206,18 @@ public class Dust implements GameObject {
         this.velocity = velocity;
     }
 
-
     public void move(Vector2f offset) {
         sprite.move(offset);
     }
 
     public void applyForce(Vector2f force) {
-        appliedForce = force;
+        appliedForce = Vector2f.add(appliedForce, force);
     }
 
+    @Override
+    public float getCollisionRadius() {
+        return radius;
+    }
 
     @Override
     public Vector2f getPosition() {
@@ -191,8 +225,26 @@ public class Dust implements GameObject {
     }
 
     @Override
+    public void setPosition(Vector2f position) {
+        sprite.setPosition(position);
+    }
+
+    @Override
+    public Vector2f getCenter() {
+        return new Vector2f(
+                sprite.getGlobalBounds().left + sprite.getGlobalBounds().width/2,
+                sprite.getGlobalBounds().top + sprite.getGlobalBounds().height/2
+        );
+    }
+
+    @Override
     public FloatRect getBounds() {
-        return sprite.getGlobalBounds();
+        float fringe = 0;
+        return new FloatRect(
+                sprite.getGlobalBounds().left + fringe,
+                sprite.getGlobalBounds().top + fringe,
+                sprite.getGlobalBounds().width - 2*fringe,
+                sprite.getGlobalBounds().height - 2*fringe);
     }
 
     @Override
@@ -204,4 +256,5 @@ public class Dust implements GameObject {
     public void setFillColor(Color c) {
         sprite.setColor(c);
     }
+
 }

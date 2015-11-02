@@ -6,6 +6,7 @@ import Grids.CollisionGrid;
 import Grids.GravityGrid;
 import Grids.GravityGridCell;
 import Grids.GridCell;
+import javafx.scene.shape.Circle;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 import org.jsfml.window.event.Event;
@@ -34,25 +35,48 @@ public class MainState extends GameState {
     private Boolean DRAW_TRAILS = false;
     private Boolean DRAW_GRID_COLLISION = false;
     private Boolean DRAW_GRID_GRAVITY = false;
+    private Boolean DRAW_COLLISION_POINTS = true;
+
+    private List<CircleShape> collisionPoints = new ArrayList<>();
 
     public MainState(Game game) {
         super(game);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
-            Dust d = new Dust(new Random().nextFloat() * 3f + 1, pos);
-            d.setVelocity(new Vector2f(0.2f, 0));
+            float radius = (float) Math.random() * 25f + 1;
+            Dust d = new Dust(radius, pos);
+            d.setVelocity(new Vector2f(0.2f, 0.2f));
             dustList.add(d);
         }
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(500, 500));
-            Dust d = new Dust(new Random().nextFloat() * 3f + 1, pos);
-            d.setVelocity(new Vector2f(-0.2f, 0));
+            Dust d = new Dust(new Random().nextFloat() * 25f + 1, pos);
+            d.setVelocity(new Vector2f(-0.2f, -0.2f));
             dustList.add(d);
         }
 
-        dustList.add(new Dust(10, new Vector2f(400, 400)));
+        List overlapping = new ArrayList<>();
+        for (GameObject o1 : dustList) {
+            for (GameObject o2 : dustList) {
+                if (o1 == o2) continue;
+                if (o1.getBounds().intersection(o2.getBounds()) != null && !overlapping.contains(o1)) {
+                    overlapping.add(o1);
+                }
+            }
+        }
+        System.out.println("number of overlapping starting objects removed: " + overlapping.size());
+        dustList.removeAll(overlapping);
+
+
+        Dust d1 = new Dust(25.0f, new Vector2f(200, 250));
+        d1.setVelocity(new Vector2f(1, 0));
+
+        Dust d2 = new Dust(25.0f, new Vector2f(400, 250));
+        d2.setVelocity(new Vector2f(-1, 0));
+        dustList.add(d1);
+        dustList.add(d2);
 
         try {
             font.loadFromFile(Paths.get("resources/fonts/arial.ttf"));
@@ -85,14 +109,27 @@ public class MainState extends GameState {
             if (DRAW_VELOCITY) o.draw(window);
         }
 
+        if (DRAW_COLLISION_POINTS) {
+            List<CircleShape> forRemoval = new ArrayList<>();
+            for (CircleShape c : collisionPoints) {
+                window.draw(c);
+                if (c.getRadius() < 1) {
+                    forRemoval.add(c);
+                }
+                c.setRadius(c.getRadius() - 1);
+                c.setPosition(c.getPosition().x + 1, c.getPosition().y + 1);
+            }
+
+            collisionPoints.removeAll(forRemoval);
+        }
+
         game.setView(guiView);
         game.getWindow().draw(label);
-
     }
 
     @Override
     public void update(float dt) {
-        System.out.println("Frame start");
+        //System.out.println("Frame start");
 
         //sort the dust so that the smaller particles are at the front
         //dustList.sort(new MassComparator());
@@ -102,9 +139,9 @@ public class MainState extends GameState {
         */
         long startTime = System.nanoTime();
         collisionGrid.clear();
-        for (GameObject o : dustList) {
-            collisionGrid.insert(o);
-        }
+
+        dustList.forEach(collisionGrid::insert);
+
         long endTime = System.nanoTime();
         //System.out.println("Building Collision Grid took: " + (endTime - startTime) / 1000000 + " millis");
 
@@ -119,41 +156,65 @@ public class MainState extends GameState {
 
         for (GridCell cell : collisionCells) {
             List<GameObject> cellObjects = cell.getObjects();
-            for (GameObject o : cellObjects) {
+            for (GameObject o1 : cellObjects) {
 
-                if (mergingObjects.contains(o)) continue;   //ignore objects queued to be merged
+                if (mergingObjects.contains(o1)) continue;   //ignore objects queued to be merged
 
-                for (GameObject x : cellObjects) {
-                    if (o == x) continue; //ignore collisions with self
+                for (GameObject o2 : cellObjects) {
+                    if (o1 == o2) continue; //ignore collisions with self
+                    if (mergingObjects.contains(o2)) continue; //ignore objects queued to be merged
 
-                    if (mergingObjects.contains(x)) continue; //ignore objects queued to be merged
+                    //see http://alexanderx.net/how-apply-collision/
+                    //http://gamedevelopment.tutsplus.com/tutorials/when-worlds-collide-simulating-circle-circle-collisions--gamedev-769
+                    //http://www.hoomanr.com/Demos/Elastic2/
+                    //https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
+                    //http://gamedev.stackexchange.com/questions/20516/ball-collisions-sticking-together
 
-                    Vector2f xCenter = Vector2f.add(x.getPosition(), Vector2f.div(x.getSize(), 2));
-                    Vector2f oCenter = Vector2f.add(o.getPosition(), Vector2f.div(o.getSize(), 2));
+                    float dist = VectorMath.magnitude(Vector2f.sub(o1.getCenter(), o2.getCenter()));
 
-                    float dist = VectorMath.magnitude(Vector2f.sub(xCenter, oCenter));
+                    //check squared distance between particle centers (cheaper than sqrt)
+                    if (dist < o1.getCollisionRadius() + o2.getCollisionRadius()) {
 
-                    GameObject larger, smaller;
+                        float collisionPointX = (o1.getCenter().x * o2.getCollisionRadius()
+                                + o2.getCenter().x * o1.getCollisionRadius())
+                                / (o1.getCollisionRadius() + o2.getCollisionRadius());
+                        float collisionPointY = (o1.getCenter().y * o2.getCollisionRadius()
+                                + o2.getCenter().y * o1.getCollisionRadius())
+                                / (o1.getCollisionRadius() + o2.getCollisionRadius());
 
-                    if (o.getMass() > x.getMass()) {
-                        larger = o;
-                        smaller = x;
-                    } else {
-                        larger = x;
-                        smaller = o;
+                        CircleShape c = new CircleShape(4);
+                        c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
+                        c.setPosition(collisionPointX, collisionPointY);
+                        collisionPoints.add(c);
+
+                        float partialMass1 = 2 * o2.getMass() / (o1.getMass() + o2.getMass());
+                        float partialMass2 = 2 * o1.getMass() / (o1.getMass() + o2.getMass());
+
+                        float dot = VectorMath.dot(Vector2f.sub(o1.getVelocity(), o2.getVelocity()), Vector2f.sub(o1.getCenter(), o2.getCenter()));
+                        float mag = VectorMath.magnitude(Vector2f.sub(o1.getCenter(), o2.getCenter()));
+
+                        Vector2f final1 = Vector2f.sub(o1.getVelocity(), Vector2f.mul(Vector2f.sub(o1.getCenter(), o2.getCenter()), partialMass1 * (dot / (mag * mag))));
+                        Vector2f final2 = Vector2f.sub(o2.getVelocity(), Vector2f.mul(Vector2f.sub(o2.getCenter(), o1.getCenter()), partialMass2 * (dot / (mag * mag))));
+
+                        o1.move(final1);
+                        o2.move(final2);
+                        o1.setVelocity(final1);
+                        o2.setVelocity(final2);
                     }
 
                     //only need to check one dimension as all particles are currently symmetrical
+                    /*
                     if (dist < larger.getSize().x / 2) {
                         larger.merge(smaller);           //always keep the larger
                         mergingObjects.add(smaller);    //add the smaller to the list to be cleaned up
                     }
+                    */
                 }
             }
         }
         dustList.removeAll(mergingObjects);
         endTime = System.nanoTime();
-        System.out.println("Collision checks took " + (endTime - startTime) / 1000000 + " millis");
+        //System.out.println("Collision checks took " + (endTime - startTime) / 1000000 + " millis");
 
 
         /*
@@ -161,13 +222,13 @@ public class MainState extends GameState {
         */
         startTime = System.nanoTime();
         gravityGrid.clear();
-        for (GameObject o : dustList) {
-            gravityGrid.insert(o);
-        }
+
+        dustList.forEach(gravityGrid::insert);
+
         gravityGrid.updateProperties();   //Update the properties like Center of Mass for each cell
         endTime = System.nanoTime();
 
-        // System.out.println("Building Gravity Grid took: " + (endTime - startTime) / 1000000 + " millis");
+        //System.out.println("Building Gravity Grid took: " + (endTime - startTime) / 1000000 + " millis");
 
 
         /*
@@ -184,10 +245,8 @@ public class MainState extends GameState {
                 for (GameObject o2 : c1Objs) {
                     if (o1 == o2) continue;
                     float F, G, m, M, r;
-                    Vector2f o2Center = Vector2f.add(o2.getPosition(), Vector2f.div(o2.getSize(), 2));
-                    Vector2f o1Center = Vector2f.add(o1.getPosition(), Vector2f.div(o1.getSize(), 2));
 
-                    Vector2f diff = Vector2f.sub(o2Center, o1Center);
+                    Vector2f diff = Vector2f.sub(o2.getCenter(), o1.getCenter());
                     Vector2f dir = VectorMath.normalize(diff);
                     assert !Float.isNaN(dir.x) && !Float.isNaN(dir.y);
 
@@ -234,14 +293,14 @@ public class MainState extends GameState {
             }
         }
         endTime = System.nanoTime();
-        System.out.println("Gravity calculations took: " + (endTime - startTime) / 1000000 + " millis");
+        //System.out.println("Gravity calculations took: " + (endTime - startTime) / 1000000 + " millis");
 
         //run the update loop on all of the particles
         for (GameObject a : dustList) {
             a.update(dt);
         }
         label.setString("Particles remaining: " + dustList.size() + "\nFPS: " + Math.round(1 / dt));
-        System.out.println("Frame end");
+        //System.out.println("Frame end");
     }
 
     @Override
@@ -256,8 +315,8 @@ public class MainState extends GameState {
     public Vector2f getSceneMassCenter() {
         float x = 0, y = 0, mass = 0;
         for (GameObject o : dustList) {
-            x += (o.getPosition().x + o.getSize().x / 2) * o.getMass();
-            y += (o.getPosition().y + o.getSize().y / 2) * o.getMass();
+            x += o.getCenter().x * o.getMass();
+            y += o.getCenter().y * o.getMass();
             mass += o.getMass();
         }
 
