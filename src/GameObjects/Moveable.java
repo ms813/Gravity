@@ -12,6 +12,7 @@ public interface Moveable extends CoreGameObject {
     void setVelocity(Vector2f velocity);
     float getMass();
     void applyForce(Vector2f force);
+    Vector2f getKineticEnergy();
 
     float getCollisionRadius();
 

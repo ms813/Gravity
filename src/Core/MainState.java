@@ -196,10 +196,19 @@ public class MainState extends GameState {
                         Vector2f final1 = Vector2f.sub(o1.getVelocity(), Vector2f.mul(Vector2f.sub(o1.getCenter(), o2.getCenter()), partialMass1 * (dot / (mag * mag))));
                         Vector2f final2 = Vector2f.sub(o2.getVelocity(), Vector2f.mul(Vector2f.sub(o2.getCenter(), o1.getCenter()), partialMass2 * (dot / (mag * mag))));
 
+                        float eK1before = VectorMath.magnitude(o1.getKineticEnergy());
+                        float eK2before = VectorMath.magnitude(o2.getKineticEnergy());
+
                         o1.move(final1);
                         o2.move(final2);
                         o1.setVelocity(final1);
                         o2.setVelocity(final2);
+
+                        float eK1after =  VectorMath.magnitude(o1.getKineticEnergy());
+                        float eK2after =  VectorMath.magnitude(o2.getKineticEnergy());
+                        System.out.println("1b = " + eK1before + ", 1a = " + eK1after);
+                        System.out.println("2b = " + eK2before + ", 2a = " + eK2after);
+                        System.out.println("1 bind = " + o1.getBindingEnergy() + ", 2 bind = " + o2.getBindingEnergy());
                     }
 
                     //only need to check one dimension as all particles are currently symmetrical

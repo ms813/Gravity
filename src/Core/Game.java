@@ -7,6 +7,7 @@ import org.jsfml.system.Clock;
 import org.jsfml.system.Time;
 import org.jsfml.window.VideoMode;
 
+import java.awt.*;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -21,7 +22,11 @@ public class Game {
     private Stack<GameState> gameStates = new Stack<GameState>();
 
     public Game(){
-        window.create(new VideoMode(1500, 900), "Space Game");
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
+
+        window.create(new VideoMode(screenWidth/2, screenHeight/2), "Space Game");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
         gameStates.push(new MainState(this));

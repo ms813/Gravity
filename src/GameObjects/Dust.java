@@ -1,9 +1,12 @@
 package GameObjects;
 
+import Core.GlobalConstants;
 import Core.TextureManager;
 import Core.VectorMath;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
+
+import java.util.List;
 
 
 /**
@@ -136,11 +139,11 @@ public class Dust implements GameObject {
     }
 
     //this scales the different sized textures according to the internal "radius" of the particle
-    private void rescale(){
+    private void rescale() {
         sprite.setScale(1f, 1f);
         float width = sprite.getGlobalBounds().width;
         float height = sprite.getGlobalBounds().height;
-        sprite.scale((radius*2) / width, (radius * 2)/ height);
+        sprite.scale((radius * 2) / width, (radius * 2) / height);
         collisionRadius.setRadius(radius);
     }
 
@@ -215,6 +218,13 @@ public class Dust implements GameObject {
     }
 
     @Override
+    public Vector2f getKineticEnergy() {
+        float x = 0.5f * mass * velocity.x * velocity.x;
+        float y = 0.5f * mass * velocity.y * velocity.y;
+        return new Vector2f(x, y);
+    }
+
+    @Override
     public float getCollisionRadius() {
         return radius;
     }
@@ -232,8 +242,8 @@ public class Dust implements GameObject {
     @Override
     public Vector2f getCenter() {
         return new Vector2f(
-                sprite.getGlobalBounds().left + sprite.getGlobalBounds().width/2,
-                sprite.getGlobalBounds().top + sprite.getGlobalBounds().height/2
+                sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2,
+                sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2
         );
     }
 
@@ -243,8 +253,8 @@ public class Dust implements GameObject {
         return new FloatRect(
                 sprite.getGlobalBounds().left + fringe,
                 sprite.getGlobalBounds().top + fringe,
-                sprite.getGlobalBounds().width - 2*fringe,
-                sprite.getGlobalBounds().height - 2*fringe);
+                sprite.getGlobalBounds().width - 2 * fringe,
+                sprite.getGlobalBounds().height - 2 * fringe);
     }
 
     @Override
@@ -257,4 +267,14 @@ public class Dust implements GameObject {
         sprite.setColor(c);
     }
 
+    @Override
+    public List<GameObject> breakInto() {
+        return null;
+    }
+
+    @Override
+    public float getBindingEnergy() {
+        //2D gravitational binding energy = (2/3) * Gm^2/r
+        return (2f / 3f) * GlobalConstants.GRAVITATIONAL_CONSTANT * mass * mass / radius;
+    }
 }
