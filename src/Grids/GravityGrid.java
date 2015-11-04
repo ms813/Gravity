@@ -2,7 +2,6 @@ package Grids;
 
 import GameObjects.GameObject;
 import org.jsfml.graphics.RenderWindow;
-import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
 
 import java.util.ArrayList;

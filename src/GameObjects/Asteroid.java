@@ -3,6 +3,8 @@ package GameObjects;
 import Core.GlobalConstants;
 import Core.TextureManager;
 import Core.VectorMath;
+import GameObjects.Colliders.Collider;
+import GameObjects.Colliders.RockyCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
@@ -12,7 +14,9 @@ import java.util.List;
 /**
  * Created by Matthew on 26/10/2015.
  */
-public class Dust implements GameObject {
+public class Asteroid implements GameObject {
+
+    private Collider collider;
 
     private VertexArray velocityLine = new VertexArray();
     private Color velocityLineColor = Color.MAGENTA;
@@ -22,19 +26,21 @@ public class Dust implements GameObject {
     private Sprite sprite = new Sprite();
     private Texture texture = new Texture();
 
-    private float radius;
-    private CircleShape collisionRadius = new CircleShape();
-
     private float density;
     private float mass;
+    private float temperature;
+
     private Vector2f velocity = Vector2f.ZERO;
     private Vector2f appliedForce = Vector2f.ZERO;
 
     private ParticleType type = ParticleType.DUST_SMALL;
 
-    public Dust(float radius, Vector2f pos) {
+    public Asteroid(float mass, Vector2f pos) {
 
-        this.radius = radius;
+        density = 5.0f;
+        this.mass = mass;
+
+        collider = new RockyCollider(this);
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
@@ -42,18 +48,13 @@ public class Dust implements GameObject {
         updateTextureRect();
         sprite.setPosition(pos);
 
-        rescale();
+        float radius = (float) Math.sqrt(mass / (Math.PI * density));
+        System.out.println("mass: " + mass + ", radius: " + radius);
+        rescale(radius * 2);
         type = checkType();
         updateTextureRect();
 
-        density = 5.0f;
-        mass = getArea() * density;
-
         velocityLine.setPrimitiveType(PrimitiveType.LINES);
-
-        collisionRadius.setFillColor(Color.TRANSPARENT);
-        collisionRadius.setOutlineColor(Color.GREEN);
-        collisionRadius.setOutlineThickness(-1.0f);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class Dust implements GameObject {
         //finally, move the particle according to its current velocity, and reset the applied force to zero
         move(velocity);
         appliedForce = Vector2f.ZERO;
-        collisionRadius.setPosition(getPosition());
+
 
         velocityLine.clear();
         Vector2f center = Vector2f.add(getPosition(), Vector2f.div(getSize(), 2));
@@ -84,6 +85,8 @@ public class Dust implements GameObject {
         if (trail.size() > 1000) {
             trail.remove(0);
         }
+
+        collider.update();
 
     }
 
@@ -101,8 +104,9 @@ public class Dust implements GameObject {
         this.setDensity(v1 * this.density + v2 * d.getDensity());
 
         //radius of a sphere = sqrt(A / pi)
-        radius = (float) Math.sqrt(totalArea / (float) Math.PI);
-        rescale();
+        float size = 2f * (float) Math.sqrt(totalArea / (float) Math.PI);
+
+        rescale(size);
         if (type != checkType()) {
             type = checkType();
             updateTextureRect();
@@ -139,12 +143,12 @@ public class Dust implements GameObject {
     }
 
     //this scales the different sized textures according to the internal "radius" of the particle
-    private void rescale() {
+    private void rescale(float size) {
         sprite.setScale(1f, 1f);
         float width = sprite.getGlobalBounds().width;
         float height = sprite.getGlobalBounds().height;
-        sprite.scale((radius * 2) / width, (radius * 2) / height);
-        collisionRadius.setRadius(radius);
+        sprite.scale(size / width, size / height);
+        collider.rescale(size);
     }
 
     private ParticleType checkType() {
@@ -166,13 +170,13 @@ public class Dust implements GameObject {
         } else {
             sprite.setTextureRect(TextureManager.largeTextureRects[(int) Math.floor(Math.random() * TextureManager.largeTextureRects.length)]);
         }
-        rescale();
+        rescale(collider.getRadius());
     }
 
     @Override
     public void draw(RenderWindow w) {
         w.draw(sprite);
-        //w.draw(collisionRadius);
+        collider.draw(w);
     }
 
     public void drawVelocity(RenderWindow w) {
@@ -189,7 +193,7 @@ public class Dust implements GameObject {
 
     public float getArea() {
         //area of a circle =  pi * r^2
-        float r = sprite.getGlobalBounds().width / 2;
+        float r = (sprite.getGlobalBounds().width + sprite.getGlobalBounds().height) / 4;
         return (float) (Math.PI * Math.pow(r, 2));
     }
 
@@ -225,8 +229,8 @@ public class Dust implements GameObject {
     }
 
     @Override
-    public float getCollisionRadius() {
-        return radius;
+    public Collider getCollider() {
+        return collider;
     }
 
     @Override
@@ -249,12 +253,7 @@ public class Dust implements GameObject {
 
     @Override
     public FloatRect getBounds() {
-        float fringe = 0;
-        return new FloatRect(
-                sprite.getGlobalBounds().left + fringe,
-                sprite.getGlobalBounds().top + fringe,
-                sprite.getGlobalBounds().width - 2 * fringe,
-                sprite.getGlobalBounds().height - 2 * fringe);
+        return sprite.getGlobalBounds();
     }
 
     @Override
@@ -265,16 +264,5 @@ public class Dust implements GameObject {
     @Override
     public void setFillColor(Color c) {
         sprite.setColor(c);
-    }
-
-    @Override
-    public List<GameObject> breakInto() {
-        return null;
-    }
-
-    @Override
-    public float getBindingEnergy() {
-        //2D gravitational binding energy = (2/3) * Gm^2/r
-        return (2f / 3f) * GlobalConstants.GRAVITATIONAL_CONSTANT * mass * mass / radius;
     }
 }
