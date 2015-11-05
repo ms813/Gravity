@@ -4,6 +4,7 @@ import GameObjects.Asteroid;
 import GameObjects.Colliders.Collider;
 import GameObjects.Colliders.DiffuseCollider;
 import GameObjects.Colliders.SolidCollider;
+import GameObjects.DustCloud;
 import GameObjects.GameObject;
 import Grids.CollisionGrid;
 import Grids.GravityGrid;
@@ -38,8 +39,6 @@ public class MainState extends GameState {
     private Font font = new Font();
     private Text label = new Text();
 
-    private Boolean DRAW_VELOCITY = false;
-    private Boolean DRAW_TRAILS = false;
     private Boolean DRAW_GRID_COLLISION = false;
     private Boolean DRAW_GRID_GRAVITY = false;
     private Boolean DRAW_COLLISION_POINTS = false;
@@ -49,7 +48,7 @@ public class MainState extends GameState {
 
     public MainState(Game game) {
         super(game);
-
+/*
         for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
             float mass = (float) Math.random() * 10000f + 100f;
@@ -77,18 +76,18 @@ public class MainState extends GameState {
                 }
             }
         }
+
         System.out.println("number of overlapping starting objects removed: " + overlapping.size());
         colliders.removeAll(overlapping);
+        */
 
-/*
-        Asteroid d1 = new Asteroid(25.0f, new Vector2f(200, 250));
-        d1.setVelocity(new Vector2f(1, 0));
 
-        Asteroid d2 = new Asteroid(25.0f, new Vector2f(400, 250));
-        d2.setVelocity(new Vector2f(-1, 0));
-        colliders.add(d1);
-        colliders.add(d2);
-*/
+        addAsteroid(10000f, new Vector2f(200, 200), VectorMath.RIGHT);
+        //addAsteroid(10000f, new Vector2f(400, 210), VectorMath.LEFT);
+
+        DustCloud cloud = new DustCloud(1000f, new Vector2f(350, 200));
+        colliders.add(cloud);
+
         try {
             font.loadFromFile(Paths.get("resources/fonts/arial.ttf"));
         } catch (IOException e) {
@@ -116,8 +115,6 @@ public class MainState extends GameState {
         if (DRAW_GRID_GRAVITY) gravityGrid.draw(window);
         for (GameObject o : colliders) {
             o.draw(window);
-            if (DRAW_TRAILS) o.draw(window);
-            if (DRAW_VELOCITY) o.draw(window);
         }
 
         if (DRAW_COLLISION_POINTS) {
@@ -227,6 +224,7 @@ public class MainState extends GameState {
 
                     } else {
                         FloatRect intersect = col1.getBounds().intersection(col2.getBounds());
+
                         if (intersect != null) {
                             collision = true;
 
@@ -245,8 +243,8 @@ public class MainState extends GameState {
                         col2.calculateCollision(col1);
 
                         //we then apply the calculated collisions in the next step
-                        col1.applyCollision();
-                        col2.applyCollision();
+                        col1.applyCollision(col2);
+                        col2.applyCollision(col1);
                     }
                 }
             }
@@ -331,11 +329,7 @@ public class MainState extends GameState {
         //System.out.println("Gravity calculations took: " + (endTime - startTime) / 1000000 + " millis");
 
         //run the update loop on all of the particles
-        for (
-                GameObject a
-                : colliders)
-
-        {
+        for (GameObject a : colliders) {
             a.update(dt);
         }
 

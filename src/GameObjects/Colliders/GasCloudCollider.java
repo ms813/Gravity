@@ -12,12 +12,12 @@ import sun.util.resources.cldr.ve.CalendarData_ve_ZA;
 public class GasCloudCollider implements DiffuseCollider {
 
     private GameObject parent;
-    private Vector2f collisionVelocity = Vector2f.ZERO;
+    private Vector2f collisionForce = Vector2f.ZERO;
     private Shape hitbox;
     private float viscosity;
 
 
-    public GasCloudCollider(GameObject parent, Vector2f[] hitboxPoints){
+    public GasCloudCollider(GameObject parent, Vector2f[] hitboxPoints) {
         this.parent = parent;
         VertexArray v = new VertexArray();
         hitbox = new ConvexShape(hitboxPoints);
@@ -25,34 +25,52 @@ public class GasCloudCollider implements DiffuseCollider {
         viscosity = parent.getDensity() * 1.0f;
     }
 
-    public float getViscosity(){
+    @Override
+    public float getViscosity() {
         return viscosity;
     }
 
     @Override
     public void calculateCollision(Collider collider) {
-        //F = 6 *pi * viscosity * radius of object passing through * relative velocty
 
-        if(collider instanceof SolidCollider) {
+        //F proportional to - velocity depending on shape and fluid properties
+
+        if (collider instanceof SolidCollider) {
 
             SolidCollider solidCollider = (SolidCollider) collider;
 
-            float relativeVel = VectorMath.magnitude(Vector2f.sub(solidCollider.getVelocity(), this.getVelocity()));
+            Vector2f relativeVel = Vector2f.sub(this.getVelocity(), solidCollider.getVelocity());
 
-            float force = 6 * (float) Math.PI * parent.getDensity() * solidCollider.getRadius() * relativeVel;
+            float xForce = getViscosity() * solidCollider.getRadius() * relativeVel.x;
+            float yForce = getViscosity() * solidCollider.getRadius() * relativeVel.y;
 
-            collisionVelocity = Vector2f.mul(VectorMath.normalize(solidCollider.getVelocity()), force);
-
-        } else if(collider instanceof DiffuseCollider){
-
+            collisionForce = Vector2f.mul(new Vector2f(xForce, yForce), -1.0f);
+            System.out.println("force on dust: " + collisionForce);
+        } else if (collider instanceof DiffuseCollider) {
+            System.out.println("diffuse on diffuse collision");
         }
-
     }
 
     @Override
-    public void applyCollision() {
-        setVelocity(Vector2f.add(getVelocity(), collisionVelocity));
+    public void applyCollision(Collider collider) {
+        //setVelocity(Vector2f.add(getVelocity(), collisionForce));
+        parent.applyForce(collisionForce);
     }
+
+    @Override
+    public float getDrag(Collider collider) {
+        //drag = 1/2 * fluid density * relative vel ^2 * cross section * shape coefficient
+
+        float shapeCoefficient = 0.47f; //drag coefficient of a circle
+
+        float relativeVel = VectorMath.magnitude(Vector2f.sub(getVelocity(), collider.getVelocity()));
+
+        float crossSection = collider.getParent().getBounds().width; //cross section of a circle is 2r
+
+        return 0.5f * parent.getDensity() * relativeVel * relativeVel * crossSection * shapeCoefficient;
+    }
+
+
 
     @Override
     public void rescale(float size) {
@@ -91,7 +109,12 @@ public class GasCloudCollider implements DiffuseCollider {
     }
 
     @Override
-    public FloatRect getBounds(){
+    public FloatRect getBounds() {
         return parent.getBounds();
+    }
+
+    @Override
+    public float getDensity(){
+        return parent.getDensity();
     }
 }

@@ -7,13 +7,18 @@ import GameObjects.Colliders.GasCloudCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by Matthew on 04/11/2015.
  */
 public class DustCloud implements GameObject {
 
     private ConvexShape shape;
-    private float density;
+    private float density = 1f;
     private float temperature = 200f;
     private float mass;
     private float heatCapacity = 2.0f; //estimate
@@ -23,7 +28,12 @@ public class DustCloud implements GameObject {
 
     DiffuseCollider collider;
 
-    public DustCloud(float density) {
+    public DustCloud(float mass, Vector2f position) {
+
+        this.mass = mass;
+        shape = new ConvexShape(generateConvexPoints(50, 20.0f));
+        shape.setFillColor(Color.MAGENTA);
+        setPosition(position);
         collider = new GasCloudCollider(this, shape.getPoints());
     }
 
@@ -34,7 +44,7 @@ public class DustCloud implements GameObject {
         Vector2f dir = VectorMath.normalize(appliedForce);
         float F = VectorMath.magnitude(appliedForce);
 
-        //calcualte the acceleration this frame and add it to the current velocity of the particle
+        //calculate the acceleration this frame and add it to the current velocity of the particle
         //F = ma
         Vector2f a = Vector2f.mul(dir, (F / mass) * dt);
         velocity = Vector2f.add(velocity, a);
@@ -50,14 +60,19 @@ public class DustCloud implements GameObject {
         window.draw(shape);
     }
 
-    @Override
-    public void drawVelocity(RenderWindow w) {
+    private Vector2f[] generateConvexPoints(int n, float maxRadius) {
+        Vector2f[] points = new Vector2f[n];
 
-    }
+        for (int i = 0; i < n; i++) {
+            float angle = (float) Math.random() * 2f * (float) Math.PI;
+            float r = (float) Math.random() * maxRadius;
 
-    @Override
-    public void drawTrail(RenderWindow w) {
+            float x = r * (float) Math.cos(angle);
+            float y = r * (float) Math.sin(angle);
 
+            points[i] = new Vector2f(x, y);
+        }
+        return points;
     }
 
     @Override
@@ -129,12 +144,12 @@ public class DustCloud implements GameObject {
             j = i;
         }
 
-        return area/2;
+        return area / 2;
     }
 
     @Override
     public float getDensity() {
-        return 0;
+        return density;
     }
 
     @Override
@@ -154,6 +169,6 @@ public class DustCloud implements GameObject {
 
     @Override
     public Collider getCollider() {
-        return null;
+        return collider;
     }
 }

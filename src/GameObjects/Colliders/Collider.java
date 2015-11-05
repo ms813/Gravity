@@ -12,7 +12,7 @@ import org.jsfml.system.Vector2f;
 public interface Collider  {
 
     void calculateCollision(Collider collider);
-    void applyCollision();
+    void applyCollision(Collider collider);
 
     void rescale(float size);
     FloatRect getBounds();

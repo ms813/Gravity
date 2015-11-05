@@ -2,9 +2,8 @@ package GameObjects;
 
 import Core.TextureManager;
 import Core.VectorMath;
+import GameObjects.Colliders.CircleCollider;
 import GameObjects.Colliders.Collider;
-import GameObjects.Colliders.ElasticCircleCollider;
-import GameObjects.Colliders.InelasticCircleCollider;
 import GameObjects.Colliders.SolidCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
@@ -16,11 +15,6 @@ import org.jsfml.system.Vector2f;
 public class Asteroid implements GameObject {
 
     private SolidCollider collider;
-
-    private VertexArray velocityLine = new VertexArray();
-    private Color velocityLineColor = Color.MAGENTA;
-    private VertexArray trail = new VertexArray();
-    private Color trailColor = Color.WHITE;
 
     private Sprite sprite = new Sprite();
     private Texture texture = new Texture();
@@ -41,7 +35,7 @@ public class Asteroid implements GameObject {
         density = 5.0f;
         this.mass = mass;
 
-        collider = new InelasticCircleCollider(this);
+        collider = new CircleCollider(this, 0.95f);
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
@@ -54,7 +48,6 @@ public class Asteroid implements GameObject {
         type = checkType();
         updateTextureRect();
 
-        velocityLine.setPrimitiveType(PrimitiveType.LINES);
     }
 
     @Override
@@ -73,21 +66,7 @@ public class Asteroid implements GameObject {
         move(velocity);
         appliedForce = Vector2f.ZERO;
 
-
-        velocityLine.clear();
-        Vector2f center = Vector2f.add(getPosition(), Vector2f.div(getSize(), 2));
-        velocityLine.add(new Vertex(center, velocityLineColor));
-        velocityLine.add(new Vertex(Vector2f.add(center, Vector2f.mul(velocity, 10)), velocityLineColor));
-
-        trail.add(new Vertex(center, trailColor));
-        trail.add(new Vertex(Vector2f.add(center, appliedForce), trailColor));
-
-        if (trail.size() > 1000) {
-            trail.remove(0);
-        }
-
         collider.update();
-
     }
 
     public void merge(GameObject d) {
@@ -177,14 +156,6 @@ public class Asteroid implements GameObject {
     public void draw(RenderWindow w) {
         w.draw(sprite);
         collider.draw(w);
-    }
-
-    public void drawVelocity(RenderWindow w) {
-        w.draw(velocityLine);
-    }
-
-    public void drawTrail(RenderWindow w) {
-        w.draw(trail);
     }
 
     public float getMass() {

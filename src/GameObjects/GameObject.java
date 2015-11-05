@@ -16,8 +16,6 @@ public interface GameObject {
     */
     void update(float dt);
     void draw(RenderWindow window);
-    void drawVelocity(RenderWindow w);
-    void drawTrail(RenderWindow w);
 
     /*
         Basic shape manipulation
