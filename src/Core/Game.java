@@ -5,6 +5,8 @@ import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
 import org.jsfml.system.Clock;
 import org.jsfml.system.Time;
+import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2i;
 import org.jsfml.window.VideoMode;
 
 import java.awt.*;
@@ -64,6 +66,10 @@ public class Game {
 
     public RenderWindow getWindow(){
         return window;
+    }
+
+    public Vector2f mapPixelToCoords(Vector2i pixelPos) {
+        return window.mapPixelToCoords(pixelPos);
     }
 
     public void setView(View view){

@@ -5,20 +5,22 @@ import Core.VectorMath;
 import GameObjects.GameObject;
 import org.jsfml.graphics.CircleShape;
 import org.jsfml.graphics.Color;
+import org.jsfml.graphics.FloatRect;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.system.Vector2f;
 
 /**
  * Created by smithma on 04/11/15.
  */
-public class RockyCollider implements Collider {
+public class ElasticCircleCollider implements SolidCollider {
 
     GameObject parent;
     private CircleShape hitbox = new CircleShape();
 
     Vector2f collisionVelocity;
+    float tempChange;
 
-    public RockyCollider(GameObject parent) {
+    public ElasticCircleCollider(GameObject parent) {
         this.parent = parent;
 
         hitbox.setFillColor(Color.TRANSPARENT);
@@ -39,6 +41,11 @@ public class RockyCollider implements Collider {
     @Override
     public void rescale(float size) {
         hitbox.setRadius(size / 2);
+    }
+
+    @Override
+    public FloatRect getBounds() {
+        return parent.getBounds();
     }
 
     @Override
@@ -70,17 +77,25 @@ public class RockyCollider implements Collider {
     @Override
     public void calculateCollision(Collider collider) {
 
-        float partialMass = 2 * collider.getMass() / (getMass() + collider.getMass());
+        if(collider instanceof SolidCollider) {
 
-        float dot = VectorMath.dot(Vector2f.sub(getVelocity(), collider.getVelocity()), Vector2f.sub(getCenter(), collider.getCenter()));
-        float mag = VectorMath.magnitude(Vector2f.sub(getCenter(), collider.getCenter()));
+            SolidCollider solidCollider = (SolidCollider) collider;
 
-        collisionVelocity = Vector2f.sub(getVelocity(), Vector2f.mul(Vector2f.sub(getCenter(), collider.getCenter()), partialMass * (dot / (mag * mag))));
+            float partialMass = 2 * solidCollider.getMass() / (getMass() + solidCollider.getMass());
+
+            float dot = VectorMath.dot(Vector2f.sub(getVelocity(), solidCollider.getVelocity()), Vector2f.sub(getCenter(), solidCollider.getCenter()));
+            float mag = VectorMath.magnitude(Vector2f.sub(getCenter(), solidCollider.getCenter()));
+
+            collisionVelocity = Vector2f.sub(getVelocity(), Vector2f.mul(Vector2f.sub(getCenter(), solidCollider.getCenter()), partialMass * (dot / (mag * mag))));
+        } else if(collider instanceof DiffuseCollider){
+
+        }
     }
 
     public void applyCollision(){
-        move(collisionVelocity);
+        move(Vector2f.mul(collisionVelocity, 1.05f));
         setVelocity(collisionVelocity);
+        parent.setTemperature(parent.getTemperature() + tempChange);
     }
 
     @Override

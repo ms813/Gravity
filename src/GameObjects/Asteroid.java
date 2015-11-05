@@ -1,14 +1,13 @@
 package GameObjects;
 
-import Core.GlobalConstants;
 import Core.TextureManager;
 import Core.VectorMath;
 import GameObjects.Colliders.Collider;
-import GameObjects.Colliders.RockyCollider;
+import GameObjects.Colliders.ElasticCircleCollider;
+import GameObjects.Colliders.InelasticCircleCollider;
+import GameObjects.Colliders.SolidCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
-
-import java.util.List;
 
 
 /**
@@ -16,7 +15,7 @@ import java.util.List;
  */
 public class Asteroid implements GameObject {
 
-    private Collider collider;
+    private SolidCollider collider;
 
     private VertexArray velocityLine = new VertexArray();
     private Color velocityLineColor = Color.MAGENTA;
@@ -28,7 +27,9 @@ public class Asteroid implements GameObject {
 
     private float density;
     private float mass;
-    private float temperature;
+
+    private float temperature = 200; //estimate 200 K
+    private float heatCapacity = 0.84f; //basalt
 
     private Vector2f velocity = Vector2f.ZERO;
     private Vector2f appliedForce = Vector2f.ZERO;
@@ -40,7 +41,7 @@ public class Asteroid implements GameObject {
         density = 5.0f;
         this.mass = mass;
 
-        collider = new RockyCollider(this);
+        collider = new InelasticCircleCollider(this);
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
@@ -49,7 +50,6 @@ public class Asteroid implements GameObject {
         sprite.setPosition(pos);
 
         float radius = (float) Math.sqrt(mass / (Math.PI * density));
-        System.out.println("mass: " + mass + ", radius: " + radius);
         rescale(radius * 2);
         type = checkType();
         updateTextureRect();
@@ -221,7 +221,6 @@ public class Asteroid implements GameObject {
         appliedForce = Vector2f.add(appliedForce, force);
     }
 
-    @Override
     public Vector2f getKineticEnergy() {
         float x = 0.5f * mass * velocity.x * velocity.x;
         float y = 0.5f * mass * velocity.y * velocity.y;
@@ -264,5 +263,19 @@ public class Asteroid implements GameObject {
     @Override
     public void setFillColor(Color c) {
         sprite.setColor(c);
+    }
+
+    public float getTemperatureChange(float energy){
+        return energy / (mass * heatCapacity);
+    }
+
+    @Override
+    public float getTemperature() {
+        return temperature;
+    }
+
+    @Override
+    public void setTemperature(float temperature){
+        this.temperature = temperature;
     }
 }
