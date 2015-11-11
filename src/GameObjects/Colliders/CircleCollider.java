@@ -15,11 +15,17 @@ import org.jsfml.system.Vector2f;
 public class CircleCollider implements SolidCollider {
 
     GameObject parent;
+
+    /*
+    *   1.0 is perfectly elastic (all velocity maintained after collision, no heat increase)
+    *   0.0 is perfectly inelastic (no velocity maintained after collision, all energy converted to temperature increase)
+    */
     float efficiency = 1.0f;
 
     private CircleShape hitbox = new CircleShape();
 
     Vector2f collisionVelocity = Vector2f.ZERO;
+    Vector2f collisionOffset = Vector2f.ZERO;
     float tempChange;
 
     public CircleCollider(GameObject parent, float efficiency) {
@@ -29,7 +35,6 @@ public class CircleCollider implements SolidCollider {
         hitbox.setOutlineColor(Color.GREEN);
         hitbox.setOutlineThickness(-1.0f);
     }
-
 
     @Override
     public float getRadius() {
@@ -88,15 +93,31 @@ public class CircleCollider implements SolidCollider {
             float dot = VectorMath.dot(Vector2f.sub(getVelocity(), solidCollider.getVelocity()), Vector2f.sub(getCenter(), solidCollider.getCenter()));
             float mag = VectorMath.magnitude(Vector2f.sub(getCenter(), solidCollider.getCenter()));
 
-            collisionVelocity = Vector2f.sub(getVelocity(), Vector2f.mul(Vector2f.sub(getCenter(), solidCollider.getCenter()), partialMass * (dot / (mag * mag))));
-        } else if (collider instanceof DiffuseCollider) {
+            Vector2f vel = Vector2f.sub(getVelocity(), Vector2f.mul(Vector2f.sub(getCenter(), solidCollider.getCenter()), partialMass * (dot / (mag * mag))));
+            collisionVelocity = Vector2f.add(collisionVelocity, vel);
 
-            DiffuseCollider diffuseCol = (DiffuseCollider) collider;
 
-            Vector2f drag = Vector2f.mul(VectorMath.normalize(getVelocity()), -diffuseCol.getDrag(this));
-
-            collisionVelocity = drag;
-            System.out.println("force on ball: " + collisionVelocity);
+            //calculate offset to move object out of collision
+            FloatRect intersect = getBounds().intersection(collider.getBounds());
+            if (intersect != null) {
+                if (intersect.width > intersect.height) {
+                    if (intersect.contains(intersect.left, parent.getPosition().y)) {
+                        //collision on the top side so move down
+                        collisionOffset = new Vector2f(0, intersect.height / 2);
+                    } else {
+                        //collision on bottom side so move up
+                        collisionOffset = new Vector2f(0, -intersect.height / 2);
+                    }
+                } else if (intersect.width < intersect.height) {
+                    if (intersect.contains(parent.getPosition().x, intersect.top)) {
+                        //left side so move right
+                        collisionOffset = new Vector2f(intersect.width / 2, 0);
+                    } else {
+                        //right side so move left
+                        collisionOffset = new Vector2f(-intersect.width / 2, 0);
+                    }
+                }
+            }
         }
 
         //calculate the amount of kinetic energy the object will have after the collision
@@ -106,25 +127,23 @@ public class CircleCollider implements SolidCollider {
         tempChange = parent.getTemperatureChange(kE_after * (1f - efficiency));
 
         //reduce the velocity proportionally to the energy lost
+        //Kinetic energy E = 1/2 mv^2 => v = sqrt(2E/m)
 
-        float velRemaining = (float) Math.sqrt((kE_after * efficiency)/getMass());
-        float fractionalVel = velRemaining/VectorMath.magnitude(collisionVelocity);
+        float velRemaining = (float) Math.sqrt((2.0f * kE_after * efficiency) / getMass());
+        float fractionalVel = velRemaining / VectorMath.magnitude(collisionVelocity);
 
         collisionVelocity = Vector2f.mul(collisionVelocity, fractionalVel);
     }
 
-    public void applyCollision(Collider collider) {
-        if (collider instanceof SolidCollider) {
-            //move the object out of collision
-            move(Vector2f.mul(collisionVelocity, 1.05f));
-            //overwrite the velocity with the new vel calculated after collision
-            setVelocity(collisionVelocity);
-        } else if(collider instanceof DiffuseCollider){
-            //setVelocity(Vector2f.add(getVelocity(), collisionVelocity));
-            parent.applyForce(collisionVelocity);
-        }
+    public void applyCollision() {
+        move(collisionOffset);
+        move(collisionVelocity);
+        setVelocity(collisionVelocity);
 
         parent.setTemperature(parent.getTemperature() + tempChange);
+
+        collisionVelocity = Vector2f.ZERO;
+        collisionOffset = Vector2f.ZERO;
     }
 
     @Override

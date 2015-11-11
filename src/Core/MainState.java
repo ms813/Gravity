@@ -1,10 +1,6 @@
 package Core;
 
 import GameObjects.Asteroid;
-import GameObjects.Colliders.Collider;
-import GameObjects.Colliders.DiffuseCollider;
-import GameObjects.Colliders.SolidCollider;
-import GameObjects.DustCloud;
 import GameObjects.GameObject;
 import Grids.CollisionGrid;
 import Grids.GravityGrid;
@@ -15,12 +11,10 @@ import org.jsfml.system.Vector2f;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.event.Event;
 import org.jsfml.window.event.MouseButtonEvent;
-import org.w3c.dom.css.Rect;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -39,19 +33,19 @@ public class MainState extends GameState {
     private Font font = new Font();
     private Text label = new Text();
 
-    private Boolean DRAW_GRID_COLLISION = false;
-    private Boolean DRAW_GRID_GRAVITY = false;
-    private Boolean DRAW_COLLISION_POINTS = false;
+    private boolean DRAW_GRID_COLLISION = false;
+    private boolean DRAW_GRID_GRAVITY = false;
+    private boolean DRAW_COLLISION_POINTS = true;
 
     private List<CircleShape> collisionPoints = new ArrayList<>();
-    private List<RectangleShape> collisionIntersects = new ArrayList<>();
 
     public MainState(Game game) {
         super(game);
-/*
+
         for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
             float mass = (float) Math.random() * 10000f + 100f;
+            //Vector2f vel = new Vector2f(2.0f*((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
             Vector2f vel = Vector2f.ZERO;
             addAsteroid(mass, pos, vel);
         }
@@ -59,6 +53,7 @@ public class MainState extends GameState {
         for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(500, 500));
             float mass = (float) Math.random() * 10000f + 100f;
+            //Vector2f vel = new Vector2f(((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
             Vector2f vel = Vector2f.ZERO;
             addAsteroid(mass, pos, vel);
         }
@@ -79,14 +74,6 @@ public class MainState extends GameState {
 
         System.out.println("number of overlapping starting objects removed: " + overlapping.size());
         colliders.removeAll(overlapping);
-        */
-
-
-        addAsteroid(10000f, new Vector2f(200, 200), VectorMath.RIGHT);
-        //addAsteroid(10000f, new Vector2f(400, 210), VectorMath.LEFT);
-
-        DustCloud cloud = new DustCloud(1000f, new Vector2f(350, 200));
-        colliders.add(cloud);
 
         try {
             font.loadFromFile(Paths.get("resources/fonts/arial.ttf"));
@@ -130,19 +117,6 @@ public class MainState extends GameState {
 
             collisionPoints.subList(count, collisionPoints.size()).clear();
             System.out.println(collisionPoints.size());
-
-
-            Iterator<RectangleShape> iter = collisionIntersects.iterator();
-            while (iter.hasNext()) {
-                RectangleShape shape = iter.next();
-                window.draw(shape);
-                Vector2f size = new Vector2f(shape.getGlobalBounds().width, shape.getGlobalBounds().height);
-                if (size.x < 2 || size.y < 2) {
-                    iter.remove();
-                }
-                shape.setSize(new Vector2f(0.75f * size.x, 0.75f * size.y));
-                shape.setPosition(shape.getPosition().x + 0.25f * size.x, shape.getPosition().y + 0.25f * size.y);
-            }
         }
 
         game.setView(guiView);
@@ -183,7 +157,6 @@ public class MainState extends GameState {
 
                 for (int j = i + 1; j < cellObjects.size(); j++) {
                     if (cellObjects.get(i) == cellObjects.get(j)) {
-                        System.out.println("fail");
                         continue; //ignore collisions with self
                     }
 
@@ -192,27 +165,30 @@ public class MainState extends GameState {
                     //http://www.hoomanr.com/Demos/Elastic2/
                     //https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
                     //http://gamedev.stackexchange.com/questions/20516/ball-collisions-sticking-together
-
-                    Collider col1 = cellObjects.get(i).getCollider();
-                    Collider col2 = cellObjects.get(j).getCollider();
+                    GameObject o1 = cellObjects.get(i);
+                    GameObject o2 = cellObjects.get(j);
                     boolean collision = false;
 
-                    if (col1 instanceof SolidCollider && col2 instanceof SolidCollider) {
+                    if (o1.isSolid() && o2.isSolid()) {
                         //2 solid objects are colliding
-                        SolidCollider solidCol1 = (SolidCollider) col1;
-                        SolidCollider solidCol2 = (SolidCollider) col2;
 
-                        float dist = VectorMath.magnitude(Vector2f.sub(solidCol1.getCenter(), solidCol2.getCenter()));
-                        if (dist < solidCol1.getRadius() + solidCol2.getRadius()) {
+                        //Vector2f pos1 = o1.getNextPos(dt);
+                        //Vector2f pos2 = o2.getNextPos(dt);
+                        Vector2f pos1 = o1.getPosition();
+                        Vector2f pos2 = o2.getPosition();
+
+
+
+                        if (o1.getBounds().intersection(o2.getBounds()) != null) {
                             collision = true;
 
                             if (DRAW_COLLISION_POINTS) {
-                                float collisionPointX = (solidCol1.getCenter().x * solidCol2.getRadius()
-                                        + solidCol2.getCenter().x * solidCol1.getRadius())
-                                        / (solidCol1.getRadius() + solidCol2.getRadius());
-                                float collisionPointY = (solidCol1.getCenter().y * solidCol2.getRadius()
-                                        + solidCol2.getCenter().y * solidCol1.getRadius())
-                                        / (solidCol1.getRadius() + solidCol2.getRadius());
+                                float collisionPointX = (o1.getCenter().x * o2.getSize().x/2
+                                        + o2.getCenter().x * o1.getSize().x/2)
+                                        / (o1.getSize().x/2 + o2.getSize().x/2);
+                                float collisionPointY = (o1.getCenter().y * o2.getSize().x/2
+                                        + o2.getCenter().y * o1.getSize().x/2)
+                                        / (o1.getSize().x/2 + o2.getSize().x/2);
 
                                 CircleShape c = new CircleShape(4);
                                 c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
@@ -220,31 +196,16 @@ public class MainState extends GameState {
                                 collisionPoints.add(c);
                             }
                         }
-
-
-                    } else {
-                        FloatRect intersect = col1.getBounds().intersection(col2.getBounds());
-
-                        if (intersect != null) {
-                            collision = true;
-
-                            if (DRAW_COLLISION_POINTS) {
-                                RectangleShape r = new RectangleShape(new Vector2f(intersect.width, intersect.top));
-                                r.setPosition(intersect.left, intersect.top);
-                                collisionIntersects.add(r);
-                            }
-                        }
                     }
-
 
                     if (collision) {
                         //we have to calculate the collision first, so that both objects use the same values during the calculation
-                        col1.calculateCollision(col2);
-                        col2.calculateCollision(col1);
+                        o1.calculateCollision(o2);
+                        o2.calculateCollision(o1);
 
                         //we then apply the calculated collisions in the next step
-                        col1.applyCollision(col2);
-                        col2.applyCollision(col1);
+                        o1.applyCollision();
+                        o2.applyCollision();
                     }
                 }
             }

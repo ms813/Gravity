@@ -21,7 +21,6 @@ public class Asteroid implements GameObject {
 
     private float density;
     private float mass;
-
     private float temperature = 200; //estimate 200 K
     private float heatCapacity = 0.84f; //basalt
 
@@ -35,7 +34,7 @@ public class Asteroid implements GameObject {
         density = 5.0f;
         this.mass = mass;
 
-        collider = new CircleCollider(this, 0.95f);
+        collider = new CircleCollider(this, 0.90f);
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
@@ -53,20 +52,24 @@ public class Asteroid implements GameObject {
     @Override
     public void update(float dt) {
 
-        //get the direction and size of the applied force
-        Vector2f dir = VectorMath.normalize(appliedForce);
-        float F = VectorMath.magnitude(appliedForce);
+        velocity = getUpdatedVelocity(dt);
 
-        //calcualte the acceleration this frame and add it to the current velocity of the particle
-        //F = ma
-        Vector2f a = Vector2f.mul(dir, (F / mass) * dt);
-        velocity = Vector2f.add(velocity, a);
-
-        //finally, move the particle according to its current velocity, and reset the applied force to zero
+        //move the particle according to its current velocity, and reset the applied force to zero
         move(velocity);
         appliedForce = Vector2f.ZERO;
 
         collider.update();
+    }
+
+    private Vector2f getUpdatedVelocity(float dt){
+        //get the direction and size of the applied force
+        Vector2f dir = VectorMath.normalize(appliedForce);
+        float F = VectorMath.magnitude(appliedForce);
+
+        //calculate the acceleration this frame and add it to the current velocity of the particle
+        //F = ma
+        Vector2f a = Vector2f.mul(dir, (F / mass) * dt);
+        return Vector2f.add(velocity, a);
     }
 
     public void merge(GameObject d) {
@@ -248,5 +251,21 @@ public class Asteroid implements GameObject {
     @Override
     public void setTemperature(float temperature){
         this.temperature = temperature;
+    }
+
+    public Vector2f getNextPos(float dt){
+        return Vector2f.add(getUpdatedVelocity(dt), getPosition());
+    }
+
+    public boolean isSolid(){
+        return collider instanceof SolidCollider;
+    }
+
+    public void calculateCollision(GameObject o){
+        collider.calculateCollision(o.getCollider());
+    }
+
+    public void applyCollision(){
+        collider.applyCollision();
     }
 }

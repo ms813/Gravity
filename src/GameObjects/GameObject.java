@@ -31,6 +31,8 @@ public interface GameObject {
     /*
        Physics
     */
+    Vector2f getNextPos(float dt);
+    boolean isSolid();
     void applyForce(Vector2f force);
     Vector2f getVelocity();
     void setVelocity(Vector2f velocity);
@@ -40,6 +42,8 @@ public interface GameObject {
     float getTemperatureChange(float energy);
     float getTemperature();
     void  setTemperature(float temperature);
+    void calculateCollision(GameObject object);
+    void applyCollision();
 
     /*
         Collider
