@@ -3,10 +3,7 @@ package GameObjects.Colliders;
 import Core.GlobalConstants;
 import Core.VectorMath;
 import GameObjects.GameObject;
-import org.jsfml.graphics.CircleShape;
-import org.jsfml.graphics.Color;
-import org.jsfml.graphics.FloatRect;
-import org.jsfml.graphics.RenderWindow;
+import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
 /**
@@ -31,97 +28,83 @@ public class CircleCollider implements SolidCollider {
     public CircleCollider(GameObject parent, float efficiency) {
         this.parent = parent;
         this.efficiency = efficiency;
+        hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
+        hitbox.setPosition(parent.getPosition());
         hitbox.setFillColor(Color.TRANSPARENT);
         hitbox.setOutlineColor(Color.GREEN);
         hitbox.setOutlineThickness(-1.0f);
     }
 
     @Override
-    public float getRadius() {
-        return hitbox.getRadius();
-    }
-
-    public void setRadius(float radius) {
-        hitbox.setRadius(radius);
-    }
-
-    @Override
-    public void rescale(float size) {
-        hitbox.setRadius(size / 2);
-    }
-
-    @Override
-    public FloatRect getBounds() {
-        return parent.getBounds();
-    }
-
-    @Override
-    public float getMass() {
-        return parent.getMass();
-    }
-
-    @Override
-    public Vector2f getVelocity() {
-        return parent.getVelocity();
-    }
-
-    @Override
-    public void move(Vector2f offset) {
-        parent.move(offset);
-    }
-
-    @Override
-    public void setVelocity(Vector2f velocity) {
-        parent.setVelocity(velocity);
-    }
-
-    @Override
     public float getBreakForce() {
         //2D gravitational binding energy = (2/3) * Gm^2/r
-        return (2f / 3f) * GlobalConstants.GRAVITATIONAL_CONSTANT * parent.getMass() * parent.getMass() / hitbox.getRadius();
+        return (2f / 3f) * GlobalConstants.GRAVITATIONAL_CONSTANT * parent.getMass() * parent.getMass() / hitbox.getGlobalBounds().width / 2;
     }
 
     @Override
-    public void calculateCollision(Collider collider) {
+    public boolean isColliding(GameObject obj) {
+        if (obj.getCollider() instanceof CircleCollider) {
+            CircleCollider col = (CircleCollider) obj.getCollider();
 
-        if (collider instanceof SolidCollider) {
+            float dist = VectorMath.magnitude(Vector2f.sub(this.getCenter(), col.getCenter()));
 
-            SolidCollider solidCollider = (SolidCollider) collider;
+            return dist < (this.getRadius() + col.getRadius());
+        } else {
+            return obj.isSolid() && parent.getBounds().intersection(obj.getBounds()) != null;
+        }
+    }
 
-            float partialMass = 2 * solidCollider.getMass() / (getMass() + solidCollider.getMass());
+    @Override
+    public void calculateCollision(GameObject object) {
 
-            float dot = VectorMath.dot(Vector2f.sub(getVelocity(), solidCollider.getVelocity()), Vector2f.sub(getCenter(), solidCollider.getCenter()));
-            float mag = VectorMath.magnitude(Vector2f.sub(getCenter(), solidCollider.getCenter()));
+        if (object.isSolid()) {
 
-            Vector2f vel = Vector2f.sub(getVelocity(), Vector2f.mul(Vector2f.sub(getCenter(), solidCollider.getCenter()), partialMass * (dot / (mag * mag))));
+            float partialMass = 2 * object.getMass() / (parent.getMass() + object.getMass());
+
+            float dot = VectorMath.dot(Vector2f.sub(parent.getVelocity(), object.getVelocity()), Vector2f.sub(parent.getCenter(), object.getCenter()));
+            float mag = VectorMath.magnitude(Vector2f.sub(parent.getCenter(), object.getCenter()));
+
+            Vector2f vel = Vector2f.sub(parent.getVelocity(), Vector2f.mul(Vector2f.sub(parent.getCenter(), object.getCenter()), partialMass * (dot / (mag * mag))));
             collisionVelocity = Vector2f.add(collisionVelocity, vel);
 
+            if (object.getCollider() instanceof CircleCollider) {
+                CircleCollider col = (CircleCollider) object.getCollider();
+                Vector2f dif = Vector2f.sub(col.getCenter(), this.getCenter());
+                Vector2f dir = VectorMath.normalize(dif);
+                float dist = VectorMath.magnitude(dif);
+                float overlap = this.getRadius() + col.getRadius() - dist;
 
-            //calculate offset to move object out of collision
-            FloatRect intersect = getBounds().intersection(collider.getBounds());
-            if (intersect != null) {
-                if (intersect.width > intersect.height) {
-                    if (intersect.contains(intersect.left, parent.getPosition().y)) {
-                        //collision on the top side so move down
-                        collisionOffset = new Vector2f(0, intersect.height / 2);
-                    } else {
-                        //collision on bottom side so move up
-                        collisionOffset = new Vector2f(0, -intersect.height / 2);
-                    }
-                } else if (intersect.width < intersect.height) {
-                    if (intersect.contains(parent.getPosition().x, intersect.top)) {
-                        //left side so move right
-                        collisionOffset = new Vector2f(intersect.width / 2, 0);
-                    } else {
-                        //right side so move left
-                        collisionOffset = new Vector2f(-intersect.width / 2, 0);
+                collisionOffset = Vector2f.mul(dir, overlap*-1.01f);
+
+            } else {
+
+                //calculate offset to move object out of collision
+                FloatRect intersect = this.getBounds().intersection(object.getCollider().getBounds());
+                if (intersect != null) {
+                    if (intersect.width > intersect.height) {
+                        if (intersect.contains(intersect.left, hitbox.getPosition().y)) {
+                            //collision on the top side so move down
+                            collisionOffset = new Vector2f(0, intersect.height / 2 + 1);
+                        } else {
+                            //collision on bottom side so move up
+                            collisionOffset = new Vector2f(0, -intersect.height / 2 - 1);
+                        }
+                    } else /*if (intersect.width < intersect.height)*/ {
+                        if (intersect.contains(hitbox.getPosition().x, intersect.top)) {
+                            //left side so move right
+                            collisionOffset = new Vector2f(intersect.width / 2 + 1, 0);
+                        } else {
+                            //right side so move left
+                            collisionOffset = new Vector2f(-intersect.width / 2 - 1, 0);
+                        }
                     }
                 }
             }
         }
 
         //calculate the amount of kinetic energy the object will have after the collision
-        float kE_after = 0.5f * getMass() * (float) Math.pow(VectorMath.magnitude(collisionVelocity), 2);
+        //Kinetic energy E = 1/2 mv^2
+        float kE_after = 0.5f * parent.getMass() * (float) Math.pow(VectorMath.magnitude(collisionVelocity), 2);
 
         //spend the waste energy from the collision on creating heat
         tempChange = parent.getTemperatureChange(kE_after * (1f - efficiency));
@@ -129,26 +112,25 @@ public class CircleCollider implements SolidCollider {
         //reduce the velocity proportionally to the energy lost
         //Kinetic energy E = 1/2 mv^2 => v = sqrt(2E/m)
 
-        float velRemaining = (float) Math.sqrt((2.0f * kE_after * efficiency) / getMass());
+        float velRemaining = (float) Math.sqrt((2.0f * kE_after * efficiency) / parent.getMass());
         float fractionalVel = velRemaining / VectorMath.magnitude(collisionVelocity);
 
         collisionVelocity = Vector2f.mul(collisionVelocity, fractionalVel);
+
+        System.out.println("intercept before move: " + this.getBounds().intersection(object.getCollider().getBounds()));
+        parent.move(collisionOffset);
+        System.out.println("intercept after move: " + this.getBounds().intersection(object.getCollider().getBounds()));
     }
 
+    @Override
     public void applyCollision() {
-        move(collisionOffset);
-        move(collisionVelocity);
-        setVelocity(collisionVelocity);
+        parent.move(collisionVelocity);
+        parent.setVelocity(collisionVelocity);
 
         parent.setTemperature(parent.getTemperature() + tempChange);
 
         collisionVelocity = Vector2f.ZERO;
         collisionOffset = Vector2f.ZERO;
-    }
-
-    @Override
-    public Vector2f getCenter() {
-        return parent.getCenter();
     }
 
     @Override
@@ -158,9 +140,22 @@ public class CircleCollider implements SolidCollider {
 
     @Override
     public void update() {
-        hitbox.setPosition(parent.getPosition());
+        hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
+        hitbox.setPosition(parent.getCenter().x  - getRadius(), parent.getCenter().y - getRadius());
+
     }
 
+    public float getRadius() {
+        return hitbox.getRadius();
+    }
+
+    private Vector2f getCenter() {
+        return new Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2, hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
+    }
+
+    public FloatRect getBounds() {
+        return hitbox.getGlobalBounds();
+    }
 
     public GameObject getParent() {
         return parent;

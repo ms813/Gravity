@@ -14,7 +14,10 @@ import org.jsfml.system.Vector2f;
  */
 public class Asteroid implements GameObject {
 
-    private SolidCollider collider;
+    private CircleCollider collider;
+
+    private boolean visible = true;
+    private boolean active = true;
 
     private Sprite sprite = new Sprite();
     private Texture texture = new Texture();
@@ -35,7 +38,6 @@ public class Asteroid implements GameObject {
         this.mass = mass;
 
         collider = new CircleCollider(this, 0.90f);
-
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
@@ -51,17 +53,16 @@ public class Asteroid implements GameObject {
 
     @Override
     public void update(float dt) {
+        if (active) {
+            velocity = getUpdatedVelocity(dt);
 
-        velocity = getUpdatedVelocity(dt);
-
-        //move the particle according to its current velocity, and reset the applied force to zero
-        move(velocity);
-        appliedForce = Vector2f.ZERO;
-
-        collider.update();
+            //move the particle according to its current velocity, and reset the applied force to zero
+            move(velocity);
+            appliedForce = Vector2f.ZERO;
+        }
     }
 
-    private Vector2f getUpdatedVelocity(float dt){
+    private Vector2f getUpdatedVelocity(float dt) {
         //get the direction and size of the applied force
         Vector2f dir = VectorMath.normalize(appliedForce);
         float F = VectorMath.magnitude(appliedForce);
@@ -71,7 +72,7 @@ public class Asteroid implements GameObject {
         Vector2f a = Vector2f.mul(dir, (F / mass) * dt);
         return Vector2f.add(velocity, a);
     }
-
+    /*
     public void merge(GameObject d) {
 
         Vector2f startSize = getSize(); //used to recenter the sprite
@@ -104,17 +105,17 @@ public class Asteroid implements GameObject {
         this.velocity = Vector2f.div(pTot, mTot);
 
         mass = getArea() * density;
-               /*
-        if (mass > 20000) {
-            setFillColor(Color.BLUE);
-        } else if (mass > 12000) {
-            setFillColor(Color.YELLOW);
-        } else if (mass > 8000) {
-            setFillColor(new Color(255, 165, 0));
-        } else if (mass > 3000) {
-            setFillColor(Color.RED);
-        }
-            */
+
+//        if (mass > 20000) {
+//            setFillColor(Color.BLUE);
+//        } else if (mass > 12000) {
+//            setFillColor(Color.YELLOW);
+//        } else if (mass > 8000) {
+//            setFillColor(new Color(255, 165, 0));
+//        } else if (mass > 3000) {
+//            setFillColor(Color.RED);
+//        }
+
         Vector2f endSize = getSize();
         Vector2f dif = Vector2f.sub(endSize, startSize);
         //since the sprite's origin is (0,0, we have to move it
@@ -123,14 +124,13 @@ public class Asteroid implements GameObject {
         sprite.move(Vector2f.mul(dif, -0.5f));
 
     }
+*/
 
     //this scales the different sized textures according to the internal "radius" of the particle
     private void rescale(float size) {
         sprite.setScale(1f, 1f);
-        float width = sprite.getGlobalBounds().width;
-        float height = sprite.getGlobalBounds().height;
-        sprite.scale(size / width, size / height);
-        collider.rescale(size);
+        sprite.scale(size / sprite.getGlobalBounds().width, size / sprite.getGlobalBounds().height);
+        collider.update();
     }
 
     private ParticleType checkType() {
@@ -145,6 +145,7 @@ public class Asteroid implements GameObject {
     }
 
     private void updateTextureRect() {
+        ParticleType prevType = type;
         if (type == ParticleType.DUST_SMALL) {
             sprite.setTextureRect(TextureManager.smallTextureRects[(int) Math.floor(Math.random() * TextureManager.smallTextureRects.length)]);
         } else if (type == ParticleType.DUST_MED) {
@@ -152,45 +153,56 @@ public class Asteroid implements GameObject {
         } else {
             sprite.setTextureRect(TextureManager.largeTextureRects[(int) Math.floor(Math.random() * TextureManager.largeTextureRects.length)]);
         }
-        rescale(collider.getRadius());
+        rescale((getSize().x + getSize().y) / 4);
     }
 
     @Override
     public void draw(RenderWindow w) {
-        w.draw(sprite);
-        collider.draw(w);
+        if (visible) {
+            w.draw(sprite);
+            collider.draw(w);
+        }
     }
 
+    @Override
+    public boolean isColliding(GameObject obj){
+        return collider.isColliding(obj);
+    }
+
+    @Override
+    public Collider getCollider(){
+        return collider;
+    }
+
+    @Override
     public float getMass() {
         return mass;
     }
-
+/*
     public float getArea() {
         //area of a circle =  pi * r^2
         float r = (sprite.getGlobalBounds().width + sprite.getGlobalBounds().height) / 4;
         return (float) (Math.PI * Math.pow(r, 2));
     }
+*/
 
-    private void setDensity(float p) {
-        this.density = p;
-    }
-
-    public float getDensity() {
-        return this.density;
-    }
-
+    @Override
     public Vector2f getVelocity() {
         return velocity;
     }
 
+    @Override
     public void setVelocity(Vector2f velocity) {
         this.velocity = velocity;
     }
 
+    @Override
     public void move(Vector2f offset) {
         sprite.move(offset);
+        collider.update();
     }
 
+    @Override
     public void applyForce(Vector2f force) {
         appliedForce = Vector2f.add(appliedForce, force);
     }
@@ -199,11 +211,6 @@ public class Asteroid implements GameObject {
         float x = 0.5f * mass * velocity.x * velocity.x;
         float y = 0.5f * mass * velocity.y * velocity.y;
         return new Vector2f(x, y);
-    }
-
-    @Override
-    public Collider getCollider() {
-        return collider;
     }
 
     @Override
@@ -239,7 +246,7 @@ public class Asteroid implements GameObject {
         sprite.setColor(c);
     }
 
-    public float getTemperatureChange(float energy){
+    public float getTemperatureChange(float energy) {
         return energy / (mass * heatCapacity);
     }
 
@@ -249,23 +256,42 @@ public class Asteroid implements GameObject {
     }
 
     @Override
-    public void setTemperature(float temperature){
+    public void setTemperature(float temperature) {
         this.temperature = temperature;
     }
 
-    public Vector2f getNextPos(float dt){
-        return Vector2f.add(getUpdatedVelocity(dt), getPosition());
-    }
-
-    public boolean isSolid(){
+    @Override
+    public boolean isSolid() {
         return collider instanceof SolidCollider;
     }
 
-    public void calculateCollision(GameObject o){
-        collider.calculateCollision(o.getCollider());
+    @Override
+    public void calculateCollision(GameObject o) {
+        collider.calculateCollision(o);
     }
 
-    public void applyCollision(){
+    @Override
+    public void applyCollision() {
         collider.applyCollision();
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean active){
+        this.active = active;
+    }
+
+    @Override
+    public void setVisible(boolean visible){
+        this.visible = visible;
     }
 }

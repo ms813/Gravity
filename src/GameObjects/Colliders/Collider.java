@@ -11,15 +11,11 @@ import org.jsfml.system.Vector2f;
  */
 public interface Collider  {
 
-    void calculateCollision(Collider collider);
+    boolean isColliding(GameObject object);
+    void calculateCollision(GameObject object);
     void applyCollision();
 
-    void rescale(float size);
     FloatRect getBounds();
-
-    Vector2f getVelocity();
-    void setVelocity(Vector2f velocity);
-    void move(Vector2f offset);
 
     void draw(RenderWindow window);
     void update();

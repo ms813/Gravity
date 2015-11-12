@@ -98,10 +98,14 @@ public class MainState extends GameState {
         //view.setCenter(getSceneMassCenter());
         game.setView(view);
         RenderWindow window = game.getWindow();
+
         if (DRAW_GRID_COLLISION) collisionGrid.draw(window);
         if (DRAW_GRID_GRAVITY) gravityGrid.draw(window);
+
         for (GameObject o : colliders) {
-            o.draw(window);
+            if(o.isVisible() && o.isActive()){
+                o.draw(window);
+            }
         }
 
         if (DRAW_COLLISION_POINTS) {
@@ -116,7 +120,6 @@ public class MainState extends GameState {
             }
 
             collisionPoints.subList(count, collisionPoints.size()).clear();
-            System.out.println(collisionPoints.size());
         }
 
         game.setView(guiView);
@@ -156,9 +159,7 @@ public class MainState extends GameState {
             for (int i = 0; i < cellObjects.size() - 1; i++) {
 
                 for (int j = i + 1; j < cellObjects.size(); j++) {
-                    if (cellObjects.get(i) == cellObjects.get(j)) {
-                        continue; //ignore collisions with self
-                    }
+
 
                     //see http://alexanderx.net/how-apply-collision/
                     //http://gamedevelopment.tutsplus.com/tutorials/when-worlds-collide-simulating-circle-circle-collisions--gamedev-769
@@ -167,19 +168,21 @@ public class MainState extends GameState {
                     //http://gamedev.stackexchange.com/questions/20516/ball-collisions-sticking-together
                     GameObject o1 = cellObjects.get(i);
                     GameObject o2 = cellObjects.get(j);
+
+                    //don't bother wasting cycles on inactive objects
+                    if(!o1.isActive() || !o2.isActive()){
+                        continue;
+                    }
+
                     boolean collision = false;
 
                     if (o1.isSolid() && o2.isSolid()) {
-                        //2 solid objects are colliding
 
-                        //Vector2f pos1 = o1.getNextPos(dt);
-                        //Vector2f pos2 = o2.getNextPos(dt);
                         Vector2f pos1 = o1.getPosition();
                         Vector2f pos2 = o2.getPosition();
+                        float dist = VectorMath.magnitude(Vector2f.sub(pos1, pos2));
 
-
-
-                        if (o1.getBounds().intersection(o2.getBounds()) != null) {
+                        if (o1.isColliding(o2)) {
                             collision = true;
 
                             if (DRAW_COLLISION_POINTS) {
@@ -307,7 +310,7 @@ public class MainState extends GameState {
                 MouseButtonEvent mouseEvt = e.asMouseButtonEvent();
                 if (mouseEvt.button == Mouse.Button.LEFT) {
                     Vector2f worldPos = game.mapPixelToCoords(mouseEvt.position);
-                    addAsteroid(15000f, worldPos);
+
                 }
             }
         }

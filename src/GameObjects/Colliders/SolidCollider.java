@@ -8,7 +8,4 @@ import org.jsfml.system.Vector2f;
 public interface SolidCollider extends Collider {
 
     float getBreakForce();
-    Vector2f getCenter();
-    float getMass();
-    float getRadius();
 }
