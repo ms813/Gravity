@@ -117,13 +117,12 @@ public class CircleCollider implements SolidCollider {
 
         collisionVelocity = Vector2f.mul(collisionVelocity, fractionalVel);
 
-        System.out.println("intercept before move: " + this.getBounds().intersection(object.getCollider().getBounds()));
-        parent.move(collisionOffset);
-        System.out.println("intercept after move: " + this.getBounds().intersection(object.getCollider().getBounds()));
+
     }
 
     @Override
     public void applyCollision() {
+        parent.move(collisionOffset);
         parent.move(collisionVelocity);
         parent.setVelocity(collisionVelocity);
 

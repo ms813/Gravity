@@ -24,6 +24,7 @@ import java.util.Random;
 public class MainState extends GameState {
 
     private List<GameObject> colliders = new ArrayList<>();
+    private CollisionHandler collisionHandler = new CollisionHandler();
 
     private CollisionGrid collisionGrid = new CollisionGrid(10.0f);
     private GravityGrid gravityGrid = new GravityGrid(50.0f);
@@ -103,24 +104,12 @@ public class MainState extends GameState {
         if (DRAW_GRID_GRAVITY) gravityGrid.draw(window);
 
         for (GameObject o : colliders) {
-            if(o.isVisible() && o.isActive()){
+            if (o.isVisible() && o.isActive()) {
                 o.draw(window);
             }
         }
 
-        if (DRAW_COLLISION_POINTS) {
-            int count = 0;
-            for (CircleShape c : collisionPoints) {
-                window.draw(c);
-                if (c.getRadius() < 1) {
-                    count++;
-                }
-                c.setRadius(c.getRadius() - 1);
-                c.setPosition(c.getPosition().x + 1, c.getPosition().y + 1);
-            }
-
-            collisionPoints.subList(count, collisionPoints.size()).clear();
-        }
+        collisionHandler.draw(window);
 
         game.setView(guiView);
         game.getWindow().draw(label);
@@ -138,103 +127,31 @@ public class MainState extends GameState {
         /*
         *   Populate the Collision Grid
         */
-        long startTime = System.nanoTime();
-        collisionGrid.clear();
 
-        colliders.forEach(collisionGrid::insert);
+        collisionHandler.reset();
+        colliders.forEach(collisionHandler::insert);
 
-        long endTime = System.nanoTime();
-        // System.out.println("Building Collision Grid took: " + (endTime - startTime) / 1000000 + " millis");
+
 
         /*
         *   Collision detection
         */
 
-        startTime = System.nanoTime();
-
-        List<GridCell> collisionCells = collisionGrid.getCells();
-
-        for (GridCell cell : collisionCells) {
-            List<GameObject> cellObjects = cell.getObjects();
-            for (int i = 0; i < cellObjects.size() - 1; i++) {
-
-                for (int j = i + 1; j < cellObjects.size(); j++) {
-
-
-                    //see http://alexanderx.net/how-apply-collision/
-                    //http://gamedevelopment.tutsplus.com/tutorials/when-worlds-collide-simulating-circle-circle-collisions--gamedev-769
-                    //http://www.hoomanr.com/Demos/Elastic2/
-                    //https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
-                    //http://gamedev.stackexchange.com/questions/20516/ball-collisions-sticking-together
-                    GameObject o1 = cellObjects.get(i);
-                    GameObject o2 = cellObjects.get(j);
-
-                    //don't bother wasting cycles on inactive objects
-                    if(!o1.isActive() || !o2.isActive()){
-                        continue;
-                    }
-
-                    boolean collision = false;
-
-                    if (o1.isSolid() && o2.isSolid()) {
-
-                        Vector2f pos1 = o1.getPosition();
-                        Vector2f pos2 = o2.getPosition();
-                        float dist = VectorMath.magnitude(Vector2f.sub(pos1, pos2));
-
-                        if (o1.isColliding(o2)) {
-                            collision = true;
-
-                            if (DRAW_COLLISION_POINTS) {
-                                float collisionPointX = (o1.getCenter().x * o2.getSize().x/2
-                                        + o2.getCenter().x * o1.getSize().x/2)
-                                        / (o1.getSize().x/2 + o2.getSize().x/2);
-                                float collisionPointY = (o1.getCenter().y * o2.getSize().x/2
-                                        + o2.getCenter().y * o1.getSize().x/2)
-                                        / (o1.getSize().x/2 + o2.getSize().x/2);
-
-                                CircleShape c = new CircleShape(4);
-                                c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
-                                c.setPosition(collisionPointX, collisionPointY);
-                                collisionPoints.add(c);
-                            }
-                        }
-                    }
-
-                    if (collision) {
-                        //we have to calculate the collision first, so that both objects use the same values during the calculation
-                        o1.calculateCollision(o2);
-                        o2.calculateCollision(o1);
-
-                        //we then apply the calculated collisions in the next step
-                        o1.applyCollision();
-                        o2.applyCollision();
-                    }
-                }
-            }
-        }
-
-        endTime = System.nanoTime();
-        //System.out.println("Collision checks took " + (endTime - startTime) / 1000000 + " millis");
+        collisionHandler.resolveCollisions(colliders);
 
         /*
         *   Populate the gravity grid
         */
-        startTime = System.nanoTime();
         gravityGrid.clear();
 
         colliders.forEach(gravityGrid::insert);
 
         gravityGrid.updateProperties();   //Update the properties like Center of Mass for each cell
-        endTime = System.nanoTime();
-
-        // System.out.println("Building Gravity Grid took: " + (endTime - startTime) / 1000000 + " millis");
 
 
         /*
         *   Gravity calculations
         */
-        startTime = System.nanoTime();
         List<GravityGridCell> gravityCells = gravityGrid.getCells(); //get a list of references to the cells in the collisionGrid
         for (GravityGridCell c1 : gravityCells) {
 
@@ -257,7 +174,7 @@ public class MainState extends GameState {
                     m = o1.getMass();
                     M = o2.getMass();
 
-                    F = (G * m * M) / r;
+                    F = (G * m * M) / (r*r);
                     //add it to the running total of forces acting on c1
                     totalForce = Vector2f.add(totalForce, Vector2f.mul(dir, F));
                 }
@@ -280,7 +197,7 @@ public class MainState extends GameState {
                     m = c1.getTotalMass();
                     M = c2.getTotalMass();
 
-                    F = (G * m * M) / r;
+                    F = (G * m * M) / (r*r);
                     //add it to the running total of forces acting on c1
                     totalForce = Vector2f.add(totalForce, Vector2f.mul(dir, F));
                     // System.out.println(totalForce);
@@ -288,9 +205,6 @@ public class MainState extends GameState {
                 o1.applyForce(totalForce);
             }
         }
-
-        endTime = System.nanoTime();
-        //System.out.println("Gravity calculations took: " + (endTime - startTime) / 1000000 + " millis");
 
         //run the update loop on all of the particles
         for (GameObject a : colliders) {
