@@ -5,6 +5,8 @@ import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
 import org.jsfml.system.Clock;
 import org.jsfml.system.Time;
+import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2i;
 import org.jsfml.window.VideoMode;
 
 import java.awt.*;
@@ -29,7 +31,7 @@ public class Game {
         window.create(new VideoMode(screenWidth/2, screenHeight/2), "Space Game");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
-        gameStates.push(new MainState(this));
+        gameStates.push(new AsteroidTestState(this));
     }
 
     public void start(){
@@ -64,6 +66,10 @@ public class Game {
 
     public RenderWindow getWindow(){
         return window;
+    }
+
+    public Vector2f mapPixelToCoords(Vector2i pixelPos) {
+        return window.mapPixelToCoords(pixelPos);
     }
 
     public void setView(View view){

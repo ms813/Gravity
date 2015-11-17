@@ -32,8 +32,8 @@ public class GravityGridCell extends GridCell {
         float x = 0, y = 0, tMass = 0;
 
         for (GameObject o : objs) {
-            x += (o.getPosition().x + o.getSize().x / 2) * o.getMass();
-            y += (o.getPosition().y + o.getSize().y / 2) * o.getMass();
+            x += o.getCenter().x * o.getMass();
+            y += o.getCenter().y * o.getMass();
             tMass += o.getMass();
         }
 

@@ -2,7 +2,6 @@ package Grids;
 
 import GameObjects.GameObject;
 import org.jsfml.graphics.RenderWindow;
-import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class GravityGrid implements SpatialHashGrid {
         }
     }
 
-    public void updateProperties(){
+    public void recalculatePhysicalProperties(){
         for(GravityGridCell cell : cells.values()){
             cell.updateProperties();
         }
