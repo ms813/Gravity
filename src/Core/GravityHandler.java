@@ -93,11 +93,16 @@ public class GravityHandler {
     }
 
     public void insertAll(List<GameObject> objects){
-        objects.forEach(grid::insert);
+        for(GameObject object : objects){
+            insert(object);
+        }
     }
 
     public void insert(GameObject object){
         grid.insert(object);
+        if(object.getChildren().size() > 0){
+            insertAll(object.getChildren());
+        }
     }
 
     public void recalculatePhysicalProperties(){

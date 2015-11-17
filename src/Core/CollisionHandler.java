@@ -20,14 +20,6 @@ public class CollisionHandler {
     private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
 
-    public void insert(GameObject object){
-        grid.insert(object);
-    }
-
-    public void insertAll(List<GameObject> objects){
-        objects.forEach(grid::insert);
-    }
-
     public void showGrid(){
         GRID_VISIBLE = true;
     }
@@ -113,6 +105,18 @@ public class CollisionHandler {
         collisionPoints.clear();
     }
 
+    public void insertAll(List<GameObject> objects){
+        for(GameObject object : objects){
+            insert(object);
+        }
+    }
+
+    public void insert(GameObject object){
+        grid.insert(object);
+        if(object.getChildren().size() > 0){
+            insertAll(object.getChildren());
+        }
+    }
 
     public void draw(RenderWindow window){
         if (GRID_VISIBLE) grid.draw(window);
