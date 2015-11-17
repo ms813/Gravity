@@ -80,7 +80,7 @@ C  [KERNELBASE.dll+0x4aea8]
 
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
 J 728  org.jsfml.graphics.CircleShape.nativeCreate()J (0 bytes) @ 0x0000000002b850bb [0x0000000002b85080+0x3b]
-J 677 C2 Core.MainState.update(F)V (1208 bytes) @ 0x0000000002b62034 [0x0000000002b60a20+0x1614]
+J 677 C2 Core.AsteroidTestState.update(F)V (1208 bytes) @ 0x0000000002b62034 [0x0000000002b60a20+0x1614]
 j  Core.Game.start()V+56
 j  Core.Main.main([Ljava/lang/String;)V+9
 v  ~StubRoutines::call_stub

@@ -31,7 +31,7 @@ public class Game {
         window.create(new VideoMode(screenWidth/2, screenHeight/2), "Space Game");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
-        gameStates.push(new MainState(this));
+        gameStates.push(new AsteroidTestState(this));
     }
 
     public void start(){

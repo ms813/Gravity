@@ -16,18 +16,35 @@ import java.util.List;
 public class CollisionHandler {
 
     private CollisionGrid grid = new CollisionGrid(10.0f);
-    private boolean DRAW_COLLISION_POINTS = false;
+    private boolean COLLISION_POINTS_VISIBLE = false;
+    private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
 
     public void insert(GameObject object){
         grid.insert(object);
     }
 
-    public void setCollisionPointsVisible(boolean vis){
-        DRAW_COLLISION_POINTS = vis;
+    public void insertAll(List<GameObject> objects){
+        objects.forEach(grid::insert);
     }
 
-    public void resolveCollisions(List<GameObject> objects){
+    public void showGrid(){
+        GRID_VISIBLE = true;
+    }
+
+    public void hideGrid(){
+        GRID_VISIBLE = false;
+    }
+
+    public void showCollisionPoints(){
+        COLLISION_POINTS_VISIBLE = true;
+    }
+
+    public void hideCollisionPoints(){
+        COLLISION_POINTS_VISIBLE = false;
+    }
+
+    public void resolveCollisions(){
         List<GridCell> collisionCells = grid.getCells();
 
         for (GridCell cell : collisionCells) {
@@ -61,7 +78,7 @@ public class CollisionHandler {
                         if (o1.isColliding(o2)) {
                             collision = true;
 
-                            if (DRAW_COLLISION_POINTS) {
+                            if (COLLISION_POINTS_VISIBLE) {
                                 float collisionPointX = (o1.getCenter().x * o2.getSize().x/2
                                         + o2.getCenter().x * o1.getSize().x/2)
                                         / (o1.getSize().x/2 + o2.getSize().x/2);
@@ -93,11 +110,13 @@ public class CollisionHandler {
 
     public void reset(){
         grid.clear();
+        collisionPoints.clear();
     }
 
 
     public void draw(RenderWindow window){
-        if (DRAW_COLLISION_POINTS) {
+        if (GRID_VISIBLE) grid.draw(window);
+        if (COLLISION_POINTS_VISIBLE) {
             int count = 0;
             for (CircleShape c : collisionPoints) {
                 window.draw(c);

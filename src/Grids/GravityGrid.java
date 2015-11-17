@@ -60,7 +60,7 @@ public class GravityGrid implements SpatialHashGrid {
         }
     }
 
-    public void updateProperties(){
+    public void recalculatePhysicalProperties(){
         for(GravityGridCell cell : cells.values()){
             cell.updateProperties();
         }
