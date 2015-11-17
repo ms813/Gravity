@@ -23,33 +23,35 @@ public class Game {
     private RenderWindow window = new RenderWindow();
     private Stack<GameState> gameStates = new Stack<GameState>();
 
-    public Game(){
+    public Game() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
 
-        window.create(new VideoMode(screenWidth/2, screenHeight/2), "Space Game");
+        window.create(new VideoMode(screenWidth / 2, screenHeight / 2), "Gravity");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
-        gameStates.push(new AsteroidTestState(this));
+
+        //gameStates.push(new AsteroidTestState(this));
+        gameStates.push(new PlanetTestState(this));
     }
 
-    public void start(){
+    public void start() {
 
         Clock clock = new Clock();
 
-             while (window.isOpen()){
-                 Time elapsed = clock.restart();
-                 Float dt = elapsed.asSeconds();
+        while (window.isOpen()) {
+            Time elapsed = clock.restart();
+            Float dt = elapsed.asSeconds();
 
-                 peekState().handleInput();
+            peekState().handleInput();
 
-                 window.clear(Color.BLACK);
-                 peekState().update(dt);
-                 peekState().draw(dt);
-                 //System.out.println("dt = " + dt);
-                 window.display();
-             }
+            window.clear(Color.BLACK);
+            peekState().update(dt);
+            peekState().draw(dt);
+            //System.out.println("dt = " + dt);
+            window.display();
+        }
     }
 
     public GameState peekState() {
@@ -64,7 +66,7 @@ public class Game {
         return gameStates.peek();
     }
 
-    public RenderWindow getWindow(){
+    public RenderWindow getWindow() {
         return window;
     }
 
@@ -72,7 +74,7 @@ public class Game {
         return window.mapPixelToCoords(pixelPos);
     }
 
-    public void setView(View view){
+    public void setView(View view) {
         window.setView(view);
     }
 }

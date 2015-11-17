@@ -6,6 +6,8 @@ import org.jsfml.graphics.FloatRect;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.system.Vector2f;
 
+import java.util.List;
+
 /**
  * Created by smithma on 28/10/15.
  */
@@ -20,6 +22,7 @@ public interface GameObject {
     void setVisible(boolean visible);
     boolean isActive();
     void setActive(boolean active);
+    List<GameObject> getChildren();
 
     /*
         Basic shape manipulation
@@ -30,7 +33,6 @@ public interface GameObject {
     FloatRect getBounds();
     Vector2f getSize();
     void move(Vector2f offset);
-    void setFillColor(Color c);
 
     /*
        Physics

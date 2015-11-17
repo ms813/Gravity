@@ -8,6 +8,9 @@ import GameObjects.Colliders.SolidCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Matthew on 26/10/2015.
@@ -58,6 +61,7 @@ public class Asteroid implements GameObject {
 
             //move the particle according to its current velocity, and reset the applied force to zero
             move(velocity);
+            collider.update();
             appliedForce = Vector2f.ZERO;
         }
     }
@@ -199,7 +203,6 @@ public class Asteroid implements GameObject {
     @Override
     public void move(Vector2f offset) {
         sprite.move(offset);
-        collider.update();
     }
 
     @Override
@@ -239,11 +242,6 @@ public class Asteroid implements GameObject {
     @Override
     public Vector2f getSize() {
         return new Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height);
-    }
-
-    @Override
-    public void setFillColor(Color c) {
-        sprite.setColor(c);
     }
 
     public float getTemperatureChange(float energy) {
@@ -293,5 +291,9 @@ public class Asteroid implements GameObject {
     @Override
     public void setVisible(boolean visible){
         this.visible = visible;
+    }
+
+    public List<GameObject> getChildren(){
+        return new ArrayList<>();
     }
 }
