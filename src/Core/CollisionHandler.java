@@ -20,6 +20,10 @@ public class CollisionHandler {
     private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
 
+    public CollisionHandler(float gridSize){
+        grid = new CollisionGrid(gridSize);
+    }
+
     public void showGrid(){
         GRID_VISIBLE = true;
     }

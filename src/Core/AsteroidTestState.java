@@ -24,9 +24,9 @@ public class AsteroidTestState implements GameState {
     private Game game;
 
     private List<GameObject> colliders = new ArrayList<>();
-    private CollisionHandler collisionHandler = new CollisionHandler();
+    private CollisionHandler collisionHandler = new CollisionHandler(10);
 
-    private GravityHandler gravityHandler = new GravityHandler();
+    private GravityHandler gravityHandler = new GravityHandler(50);
 
     private View view = new View();
     private View guiView = new View();
@@ -34,10 +34,9 @@ public class AsteroidTestState implements GameState {
     private Font font = new Font();
     private Text label = new Text();
 
-    private List<CircleShape> collisionPoints = new ArrayList<>();
-
     public AsteroidTestState(Game game) {
         this.game = game;
+        collisionHandler.showGrid();
 
         for (int i = 0; i < 50; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));

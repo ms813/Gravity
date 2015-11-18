@@ -16,6 +16,9 @@ public interface Collider  {
     void applyCollision();
 
     FloatRect getBounds();
+    Vector2f getSize();
+    Vector2f getCenter();
+    Vector2f getPosition();
 
     void draw(RenderWindow window);
     void update();

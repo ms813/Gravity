@@ -141,17 +141,28 @@ public class CircleCollider implements SolidCollider {
     public void update() {
         hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
         hitbox.setPosition(parent.getCenter().x  - getRadius(), parent.getCenter().y - getRadius());
-
     }
 
     public float getRadius() {
         return hitbox.getRadius();
     }
 
-    private Vector2f getCenter() {
+    @Override
+    public Vector2f getCenter() {
         return new Vector2f(hitbox.getGlobalBounds().left + hitbox.getGlobalBounds().width / 2, hitbox.getGlobalBounds().top + hitbox.getGlobalBounds().height / 2);
     }
 
+    @Override
+    public Vector2f getPosition(){
+        return hitbox.getPosition();
+    }
+
+    @Override
+    public Vector2f getSize(){
+        return new Vector2f(hitbox.getGlobalBounds().width, hitbox.getGlobalBounds().height);
+    }
+
+    @Override
     public FloatRect getBounds() {
         return hitbox.getGlobalBounds();
     }

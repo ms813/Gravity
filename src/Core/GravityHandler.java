@@ -25,6 +25,10 @@ public class GravityHandler {
         GRID_VISIBLE = false;
     }
 
+    public GravityHandler(float gridSize){
+        grid = new GravityGrid(gridSize);
+    }
+
     public void draw(RenderWindow window){
         if(GRID_VISIBLE){
             grid.draw(window);

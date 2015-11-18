@@ -4,6 +4,7 @@ import GameObjects.Asteroid;
 import GameObjects.GameObject;
 import GameObjects.Planet;
 import org.jsfml.graphics.RenderWindow;
+import org.jsfml.graphics.View;
 import org.jsfml.system.Vector2f;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.event.Event;
@@ -21,15 +22,21 @@ public class PlanetTestState implements GameState {
 
     private List<GameObject> planets = new ArrayList<>();
 
-    private GravityHandler gravityHandler = new GravityHandler();
-    private CollisionHandler collisionHandler = new CollisionHandler();
+    private GravityHandler gravityHandler;
+    private CollisionHandler collisionHandler;
 
     public PlanetTestState(Game game) {
         this.game = game;
-        Planet planet = new Planet(10000, new Vector2f(300,300));
-        planet.addSatellite(new Asteroid(5000, new Vector2f(350,350)));
+        Planet planet = new Planet(100000, new Vector2f(50,50));
 
+        Asteroid asteroid = new Asteroid(10000, new Vector2f(350, 350));
+
+        planet.addSatellite(asteroid);
         planets.add(planet);
+
+        gravityHandler = new GravityHandler(50);
+        collisionHandler = new CollisionHandler(10);
+        collisionHandler.showGrid();
     }
 
     @Override
@@ -39,6 +46,9 @@ public class PlanetTestState implements GameState {
         for(GameObject planet : planets){
             planet.draw(window);
         }
+
+        gravityHandler.draw(window);
+        collisionHandler.draw(window);
     }
 
     @Override
