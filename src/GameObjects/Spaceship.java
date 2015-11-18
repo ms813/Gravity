@@ -13,57 +13,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by smithma on 17/11/15.
+ * Created by smithma on 18/11/15.
  */
-public class Planet implements GameObject {
+public class Spaceship implements GameObject {
 
     private boolean visible = true;
     private boolean active = true;
 
-    //private Sprite sprite;
-    private CircleShape sprite;
+    private float mass = 10000;
+    private float temperature = 273;
 
-    private Vector2f velocity = Vector2f.ZERO;
-    private float mass;
-    private float density = 5.51f;
-    private float temperature = 200;
     private Vector2f appliedForce = Vector2f.ZERO;
+    private Vector2f velocity = Vector2f.ZERO;
 
-    private CircleCollider collider;
+    private RectangleShape sprite = new RectangleShape();
 
-    private List<GameObject> satellites = new ArrayList<>();
+    private Collider collider;
 
-    public Planet(float mass, Vector2f position) {
-        this.mass = mass;
-        float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
+    private Thruster thruster;
 
-        sprite = new CircleShape(radius);
-        sprite.setPosition(position);
-        sprite.setOutlineThickness(-1.0f);
-        sprite.setOutlineColor(Color.GREEN);
+    public Spaceship(Vector2f position) {
+        setPosition(position);
+        sprite.setSize(new Vector2f(1, 1));
+        sprite.setFillColor(Color.RED);
 
-        collider = new CircleCollider(this, 1.0f);
+        collider = new CircleCollider(this, 1);
+        thruster = new Thruster();
+        thruster.setRotation(Math.toRadians(sprite.getRotation()));
     }
 
     @Override
     public void update(float dt) {
         if (active) {
-
             if (Game.leapfrogStep) {
+                appliedForce = Vector2f.add(appliedForce, thruster.getThrustVector());
                 velocity = getUpdatedVelocity(dt);
                 appliedForce = Vector2f.ZERO;
             } else {
                 move(velocity);
-            }
-
-            for (GameObject satellite : satellites) {
-                satellite.update(dt);
             }
         }
     }
 
     private Vector2f getUpdatedVelocity(float dt) {
         //get the direction and size of the applied force
+
         Vector2f dir = VectorMath.normalize(appliedForce);
         float F = VectorMath.magnitude(appliedForce);
 
@@ -75,13 +69,7 @@ public class Planet implements GameObject {
 
     @Override
     public void draw(RenderWindow window) {
-        if (visible) {
-            window.draw(sprite);
-
-            for (GameObject satellite : satellites) {
-                satellite.draw(window);
-            }
-        }
+        window.draw(sprite);
     }
 
     @Override
@@ -92,10 +80,6 @@ public class Planet implements GameObject {
     @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
-
-        for (GameObject o : satellites) {
-            o.setVisible(visible);
-        }
     }
 
     @Override
@@ -106,15 +90,11 @@ public class Planet implements GameObject {
     @Override
     public void setActive(boolean active) {
         this.active = active;
-
-        for (GameObject o : satellites) {
-            o.setActive(active);
-        }
     }
 
     @Override
     public List<GameObject> getChildren() {
-        return satellites;
+        return new ArrayList<>();
     }
 
     @Override
@@ -177,8 +157,8 @@ public class Planet implements GameObject {
 
     @Override
     public float getTemperatureChange(float energy) {
-        //TODO implement planet temperature change
-        return temperature;
+        //TODO implement spaceship temperature change
+        return 0;
     }
 
     @Override
@@ -209,13 +189,5 @@ public class Planet implements GameObject {
     @Override
     public Collider getCollider() {
         return collider;
-    }
-
-    public void addSatellite(GameObject satellite) {
-        if (!satellites.contains(satellite)) {
-            satellites.add(satellite);
-        } else {
-            System.out.println("[Planet.addSatellite()] This satellite already belongs to this body");
-        }
     }
 }

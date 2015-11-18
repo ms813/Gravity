@@ -3,6 +3,7 @@ package Core;
 import GameObjects.Asteroid;
 import GameObjects.GameObject;
 import GameObjects.Planet;
+import GameObjects.Spaceship;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
 import org.jsfml.system.Vector2f;
@@ -25,25 +26,37 @@ public class PlanetTestState implements GameState {
     private GravityHandler gravityHandler;
     private CollisionHandler collisionHandler;
 
+    private View shipView;
+
+    private Spaceship ship;
+
     public PlanetTestState(Game game) {
         this.game = game;
-        Planet planet = new Planet(100000, new Vector2f(50,50));
 
-        Asteroid asteroid = new Asteroid(10000, new Vector2f(350, 350));
+        Vector2f windowCenter = Vector2f.div(new Vector2f(game.getWindow().getSize()), 2);
 
-        planet.addSatellite(asteroid);
+        Planet planet = new Planet(100000, Vector2f.ZERO);
+        planet.setPosition(Vector2f.sub(windowCenter, Vector2f.div(planet.getSize(), 2)));
+
         planets.add(planet);
+        ship = new Spaceship(new Vector2f(windowCenter.x - 10, 20));
+        planets.add(ship);
 
         gravityHandler = new GravityHandler(50);
         collisionHandler = new CollisionHandler(10);
         collisionHandler.showGrid();
+
+        shipView = new View();
+        float dist = VectorMath.magnitude(Vector2f.sub(ship.getCenter(), planet.getCenter()));
+        shipView.setSize(dist * 3, dist * 3);
     }
 
     @Override
     public void draw(float dt) {
         RenderWindow window = game.getWindow();
-
-        for(GameObject planet : planets){
+        shipView.setCenter(ship.getCenter());
+        window.setView(shipView);
+        for (GameObject planet : planets) {
             planet.draw(window);
         }
 
@@ -63,7 +76,7 @@ public class PlanetTestState implements GameState {
         gravityHandler.recalculatePhysicalProperties();
         gravityHandler.applyGravityForces();
 
-        for(GameObject planet : planets){
+        for (GameObject planet : planets) {
             planet.update(dt);
         }
     }

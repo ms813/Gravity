@@ -1,5 +1,7 @@
 package GameObjects;
 
+import Core.Game;
+import Core.GlobalConstants;
 import Core.TextureManager;
 import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
@@ -47,7 +49,7 @@ public class Asteroid implements GameObject {
         updateTextureRect();
         sprite.setPosition(pos);
 
-        float radius = (float) Math.sqrt(mass / (Math.PI * density));
+        float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
         rescale(radius * 2);
         type = checkType();
         updateTextureRect();
@@ -57,11 +59,12 @@ public class Asteroid implements GameObject {
     @Override
     public void update(float dt) {
         if (active) {
-            velocity = getUpdatedVelocity(dt);
-
-            //move the particle according to its current velocity, and reset the applied force to zero
-            move(velocity);
-            appliedForce = Vector2f.ZERO;
+            if (Game.leapfrogStep) {
+                velocity = getUpdatedVelocity(dt);
+                appliedForce = Vector2f.ZERO;
+            } else {
+                move(velocity);
+            }
         }
     }
 
@@ -168,12 +171,12 @@ public class Asteroid implements GameObject {
     }
 
     @Override
-    public boolean isColliding(GameObject obj){
+    public boolean isColliding(GameObject obj) {
         return collider.isColliding(obj);
     }
 
     @Override
-    public Collider getCollider(){
+    public Collider getCollider() {
         return collider;
     }
 
@@ -284,16 +287,16 @@ public class Asteroid implements GameObject {
     }
 
     @Override
-    public void setActive(boolean active){
+    public void setActive(boolean active) {
         this.active = active;
     }
 
     @Override
-    public void setVisible(boolean visible){
+    public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
-    public List<GameObject> getChildren(){
+    public List<GameObject> getChildren() {
         return new ArrayList<>();
     }
 }

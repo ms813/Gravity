@@ -18,6 +18,8 @@ import java.util.Stack;
  */
 public class Game {
 
+    public static boolean leapfrogStep = false;
+
     private final int FRAME_RATE = 60;
 
     private RenderWindow window = new RenderWindow();
@@ -32,8 +34,8 @@ public class Game {
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
 
-        gameStates.push(new AsteroidTestState(this));
-        //gameStates.push(new PlanetTestState(this));
+        //gameStates.push(new AsteroidTestState(this));
+        gameStates.push(new PlanetTestState(this));
     }
 
     public void start() {
@@ -51,6 +53,7 @@ public class Game {
             peekState().draw(dt);
             //System.out.println("dt = " + dt);
             window.display();
+            leapfrogStep = !leapfrogStep;
         }
     }
 

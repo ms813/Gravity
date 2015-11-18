@@ -34,6 +34,8 @@ public class AsteroidTestState implements GameState {
     private Font font = new Font();
     private Text label = new Text();
 
+    private List<CircleShape> collisionPoints = new ArrayList<>();
+
     public AsteroidTestState(Game game) {
         this.game = game;
         collisionHandler.showGrid();
