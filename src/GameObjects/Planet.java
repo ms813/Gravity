@@ -50,7 +50,6 @@ public class Planet implements GameObject {
 
             //move the particle according to its current velocity, and reset the applied force to zero
             move(velocity);
-            collider.update();
             appliedForce = Vector2f.ZERO;
 
             for(GameObject satellite : satellites){
@@ -144,6 +143,7 @@ public class Planet implements GameObject {
     @Override
     public void move(Vector2f offset) {
         sprite.move(offset);
+        collider.update();
     }
 
     @Override
