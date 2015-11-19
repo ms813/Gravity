@@ -2,12 +2,12 @@ package Core;
 
 import GameObjects.Asteroid;
 import GameObjects.GameObject;
-import Grids.GravityGrid;
-import Grids.GravityGridCell;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
+import org.jsfml.window.Keyboard;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.event.Event;
+import org.jsfml.window.event.KeyEvent;
 import org.jsfml.window.event.MouseButtonEvent;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class AsteroidTestState implements GameState {
 
     private Game game;
 
-    private List<GameObject> colliders = new ArrayList<>();
+    private List<GameObject> asteroids = new ArrayList<>();
     private CollisionHandler collisionHandler = new CollisionHandler(10);
 
     private GravityHandler gravityHandler = new GravityHandler(50);
@@ -35,6 +35,8 @@ public class AsteroidTestState implements GameState {
     private Text label = new Text();
 
     private boolean VERLET_STATE = false;
+
+    private GameObject focusedObject = null;
 
     public AsteroidTestState(Game game) {
         this.game = game;
@@ -57,12 +59,12 @@ public class AsteroidTestState implements GameState {
         }
 
 
-        colliders.add(new Asteroid(10f, new Vector2f(100, 400)));
-        colliders.add(new Asteroid(20000f, new Vector2f(150, 400)));
+        asteroids.add(new Asteroid(10f, new Vector2f(100, 400)));
+        asteroids.add(new Asteroid(20000f, new Vector2f(150, 400)));
 
         List overlapping = new ArrayList<>();
-        for (GameObject o1 : colliders) {
-            for (GameObject o2 : colliders) {
+        for (GameObject o1 : asteroids) {
+            for (GameObject o2 : asteroids) {
                 if (o1 == o2) continue;
                 if (o1.getBounds().intersection(o2.getBounds()) != null && !overlapping.contains(o1)) {
                     overlapping.add(o1);
@@ -71,7 +73,7 @@ public class AsteroidTestState implements GameState {
         }
 
         System.out.println("number of overlapping starting objects removed: " + overlapping.size());
-        colliders.removeAll(overlapping);
+        asteroids.removeAll(overlapping);
 
         try {
             font.loadFromFile(Paths.get("resources/fonts/arial.ttf"));
@@ -83,7 +85,7 @@ public class AsteroidTestState implements GameState {
         label.setPosition(50, 50);
         label.setCharacterSize(24);
         label.setColor(Color.CYAN);
-        label.setString("Particles remaining: " + colliders.size());
+        label.setString("Particles remaining: " + asteroids.size());
 
         view.setCenter(getSceneMassCenter());
         view.setSize(new Vector2f(game.getWindow().getSize()));
@@ -94,10 +96,13 @@ public class AsteroidTestState implements GameState {
     public void draw(float dt) {
 
         //view.setCenter(getSceneMassCenter());
+
+        centerView(focusedObject);
+
         game.setView(view);
         RenderWindow window = game.getWindow();
 
-        for (GameObject o : colliders) {
+        for (GameObject o : asteroids) {
             if (o.isVisible() && o.isActive()) {
                 o.draw(window);
             }
@@ -117,14 +122,14 @@ public class AsteroidTestState implements GameState {
         // System.out.println("Update start");
 
         //sort the dust so that the smaller particles are at the front
-        //colliders.sort(new MassComparator());
+        //asteroids.sort(new MassComparator());
 
         /*
         *   Populate the Collision Grid
         */
 
         collisionHandler.reset();
-        collisionHandler.insertAll(colliders);
+        collisionHandler.insertAll(asteroids);
 
         /*
         *   Collision detection
@@ -135,24 +140,24 @@ public class AsteroidTestState implements GameState {
         *   Populate the gravity grid
         */
         gravityHandler.reset();
-        gravityHandler.insertAll(colliders);
+        gravityHandler.insertAll(asteroids);
 
         gravityHandler.recalculatePhysicalProperties();   //Update the properties like Center of Mass for each cell
 
         //velocity Verlet requires all of the positions to be updated first, then the velocities
         if (VERLET_STATE) {
-            for (GameObject o : colliders) {
+            for (GameObject o : asteroids) {
                 o.updatePosition(dt);
             }
         } else {
-            for (GameObject o : colliders) {
+            for (GameObject o : asteroids) {
                 o.applyForce(gravityHandler.getForce(o));
                 o.updateVelocity(dt);
             }
         }
         VERLET_STATE = !VERLET_STATE;
 
-        label.setString("Particles remaining: " + colliders.size() + "\nFPS: " + Math.round(1 / dt));
+        label.setString("Particles remaining: " + asteroids.size() + "\nFPS: " + Math.round(1 / dt));
         // System.out.println("Frame end");
     }
 
@@ -166,6 +171,16 @@ public class AsteroidTestState implements GameState {
                 if (mouseEvt.button == Mouse.Button.LEFT) {
                     Vector2f worldPos = game.mapPixelToCoords(mouseEvt.position);
 
+                    for (GameObject o : asteroids) {
+                        if (o.getBounds().contains(worldPos)) {
+                            focusedObject = o;
+                        }
+                    }
+                }
+            } else if (e.type == Event.Type.KEY_PRESSED) {
+                KeyEvent keyEvt = e.asKeyEvent();
+                if (keyEvt.key == Keyboard.Key.ESCAPE) {
+                    focusedObject = null;
                 }
             }
         }
@@ -178,12 +193,12 @@ public class AsteroidTestState implements GameState {
     private void addAsteroid(float mass, Vector2f pos, Vector2f vel) {
         Asteroid a = new Asteroid(mass, pos);
         a.setVelocity(vel);
-        colliders.add(a);
+        asteroids.add(a);
     }
 
     public Vector2f getSceneMassCenter() {
         float x = 0, y = 0, mass = 0;
-        for (GameObject o : colliders) {
+        for (GameObject o : asteroids) {
             x += o.getCenter().x * o.getMass();
             y += o.getCenter().y * o.getMass();
             mass += o.getMass();
@@ -191,4 +206,23 @@ public class AsteroidTestState implements GameState {
 
         return new Vector2f(x / mass, y / mass);
     }
+
+    private void centerView(GameObject object) {
+        if (object == null) {
+            view.setCenter(getSceneMassCenter());
+            view.setSize(new Vector2f(game.getWindow().getSize()));
+        } else {
+            Vector2f size = new Vector2f(game.getWindow().getSize());
+            view.setCenter(object.getCenter());
+
+            float ZOOM = 0.1f;
+
+            if (object.getSize().x >= object.getSize().y) {
+                view.setSize(1 / ZOOM * object.getSize().x * size.x / size.y, 1 / ZOOM * object.getSize().x);
+            } else {
+                view.setSize(1 / ZOOM * object.getSize().y * size.x / size.y, 1 / ZOOM * object.getSize().y);
+            }
+        }
+    }
+
 }

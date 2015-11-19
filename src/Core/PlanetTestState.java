@@ -30,7 +30,7 @@ public class PlanetTestState implements GameState {
 
     private Spaceship ship;
 
-    private boolean VERLET_STATE = false;
+    private boolean VERLET_STATE = false; //used to update either the position or the velocity
 
     public PlanetTestState(Game game) {
         this.game = game;
