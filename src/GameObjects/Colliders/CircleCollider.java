@@ -123,7 +123,6 @@ public class CircleCollider implements SolidCollider {
     @Override
     public void applyCollision() {
         parent.move(collisionOffset);
-        parent.move(collisionVelocity);
         parent.setVelocity(collisionVelocity);
 
         parent.setTemperature(parent.getTemperature() + tempChange);

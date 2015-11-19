@@ -30,6 +30,8 @@ public class PlanetTestState implements GameState {
 
     private Spaceship ship;
 
+    private boolean VERLET_STATE = false;
+
     public PlanetTestState(Game game) {
         this.game = game;
 
@@ -74,11 +76,18 @@ public class PlanetTestState implements GameState {
         gravityHandler.reset();
         gravityHandler.insertAll(planets);
         gravityHandler.recalculatePhysicalProperties();
-        gravityHandler.applyGravityForces();
 
-        for (GameObject planet : planets) {
-            planet.update(dt);
+        if (VERLET_STATE) {
+            for (GameObject p : planets) {
+                p.updatePosition(dt);
+            }
+        } else {
+            for (GameObject p : planets) {
+                p.applyForce(gravityHandler.getForce(p));
+                p.updateVelocity(dt);
+            }
         }
+        VERLET_STATE = !VERLET_STATE;
     }
 
     @Override

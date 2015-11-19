@@ -69,88 +69,100 @@
     <favorites_list name="Gravity" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="AsteroidTestState.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/Core/AsteroidTestState.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="179" column="0" selection-start="5437" selection-end="5437" vertical-scroll-proportion="0.0" vertical-offset="2635" max-vertical-offset="3179">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="PlanetTestState.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/Core/PlanetTestState.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="60" column="9" selection-start="1750" selection-end="1750" vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="1751">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Planet.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Planet.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="15" column="34" selection-start="375" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Game.java" pinned="false" current="true" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="34" column="10" selection-start="1023" selection-end="1023" vertical-scroll-proportion="0.5644531" vertical-offset="102" max-vertical-offset="1241">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Spaceship.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Spaceship.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="27" column="8" selection-start="625" selection-end="625" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="697">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Asteroid.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Asteroid.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="44" column="0" selection-start="1095" selection-end="1095" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2074">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="GameObject.java" pinned="false" current="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="30" column="22" selection-start="739" selection-end="739" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2584">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CircleCollider.java" pinned="false" current="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state line="33" column="41" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.6378987" vertical-offset="153" max-vertical-offset="2941">
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf>
+      <file leaf-file-name="AsteroidTestState.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/AsteroidTestState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="142" column="7" selection-start="4425" selection-end="4762" vertical-scroll-proportion="0.0" vertical-offset="1887" max-vertical-offset="3162">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlanetTestState.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Core/PlanetTestState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="89" column="37" selection-start="2526" selection-end="2526" vertical-scroll-proportion="0.5504762" vertical-offset="1020" max-vertical-offset="1700">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Planet.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GameObjects/Planet.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="0" selection-start="587" selection-end="587" vertical-scroll-proportion="0.0" vertical-offset="104" max-vertical-offset="629">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Game.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="35" column="10" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1241">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CircleCollider.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="125" column="9" selection-start="5248" selection-end="5248" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="2924">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Spaceship.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GameObjects/Spaceship.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="0" selection-start="572" selection-end="572" vertical-scroll-proportion="0.0" vertical-offset="138" max-vertical-offset="663">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Asteroid.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GameObjects/Asteroid.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="32" selection-start="690" selection-end="690" vertical-scroll-proportion="0.0" vertical-offset="797" max-vertical-offset="1921">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GameObject.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="53" column="5" selection-start="1465" selection-end="1465" vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="3009">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GravityHandler.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/GravityHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="95" column="0" selection-start="2830" selection-end="2830" vertical-scroll-proportion="0.0" vertical-offset="1311" max-vertical-offset="2091">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GlobalConstants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="57" selection-start="219" selection-end="219" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -176,7 +188,6 @@
         <option value="$PROJECT_DIR$/src/GameObjects/DustCloud.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Colliders/GasCloudCollider.java" />
         <option value="$PROJECT_DIR$/src/Core/MainState.java" />
-        <option value="$PROJECT_DIR$/src/Core/GravityHandler.java" />
         <option value="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
         <option value="$PROJECT_DIR$/src/Core/GameState.java" />
         <option value="$PROJECT_DIR$/../SpaceGame/src/Tests/GameObjects/GameObjectTest.java" />
@@ -186,15 +197,16 @@
         <option value="$PROJECT_DIR$/src/GameObjects/Atmosphere.java" />
         <option value="$PROJECT_DIR$/src/Core/VectorMath.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Thruster.java" />
-        <option value="$PROJECT_DIR$/src/Core/GlobalConstants.java" />
-        <option value="$PROJECT_DIR$/src/Core/AsteroidTestState.java" />
-        <option value="$PROJECT_DIR$/src/Core/PlanetTestState.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Planet.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Spaceship.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Asteroid.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" />
         <option value="$PROJECT_DIR$/src/Core/Game.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Planet.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Asteroid.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Spaceship.java" />
+        <option value="$PROJECT_DIR$/src/Core/GravityHandler.java" />
+        <option value="$PROJECT_DIR$/src/Core/GlobalConstants.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" />
+        <option value="$PROJECT_DIR$/src/Core/AsteroidTestState.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
+        <option value="$PROJECT_DIR$/src/Core/PlanetTestState.java" />
       </list>
     </option>
   </component>
@@ -848,15 +860,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/GravityHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="41" selection-start="587" selection-end="587" vertical-scroll-proportion="0.6809728" vertical-offset="0" max-vertical-offset="2057">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Core/GameState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="0" selection-start="213" selection-end="213" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="272">
@@ -937,65 +940,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="66" selection-start="228" selection-end="228" vertical-scroll-proportion="0.22709924" vertical-offset="0" max-vertical-offset="524">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/PlanetTestState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="9" selection-start="1750" selection-end="1750" vertical-scroll-proportion="0.0" vertical-offset="404" max-vertical-offset="1547">
+        <state line="35" column="10" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="1241">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Planet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="34" selection-start="375" selection-end="375" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+        <state line="24" column="0" selection-start="587" selection-end="587" vertical-scroll-proportion="0.0" vertical-offset="104" max-vertical-offset="629">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Spaceship.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="8" selection-start="625" selection-end="625" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="697">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="22" selection-start="739" selection-end="739" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2584">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="41" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.6378987" vertical-offset="153" max-vertical-offset="2941">
+        <state line="25" column="0" selection-start="572" selection-end="572" vertical-scroll-proportion="0.0" vertical-offset="138" max-vertical-offset="663">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Asteroid.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="0" selection-start="1095" selection-end="1095" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="2074">
+        <state line="27" column="32" selection-start="690" selection-end="690" vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1921">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="57" selection-start="219" selection-end="219" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="9" selection-start="5248" selection-end="5248" vertical-scroll-proportion="0.0" vertical-offset="1785" max-vertical-offset="2924">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/GravityHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="0" selection-start="2830" selection-end="2830" vertical-scroll-proportion="0.0" vertical-offset="1311" max-vertical-offset="2091">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="5" selection-start="1465" selection-end="1465" vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="3009">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Core/AsteroidTestState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="179" column="0" selection-start="5437" selection-end="5437" vertical-scroll-proportion="0.0" vertical-offset="2635" max-vertical-offset="3179">
+        <state line="142" column="7" selection-start="4425" selection-end="4762" vertical-scroll-proportion="0.0" vertical-offset="1887" max-vertical-offset="3162">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
+    <entry file="file://$PROJECT_DIR$/src/Core/PlanetTestState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="10" selection-start="1023" selection-end="1023" vertical-scroll-proportion="0.5644531" vertical-offset="102" max-vertical-offset="1241">
+        <state line="89" column="37" selection-start="2526" selection-end="2526" vertical-scroll-proportion="0.5504762" vertical-offset="1020" max-vertical-offset="1700">
           <folding />
         </state>
       </provider>

@@ -17,99 +17,101 @@ public class GravityHandler {
 
     private boolean GRID_VISIBLE = false;
 
-    public void showGrid(){
+    public void showGrid() {
         GRID_VISIBLE = true;
     }
 
-    public void hideGrid(){
+    public void hideGrid() {
         GRID_VISIBLE = false;
     }
 
-    public GravityHandler(float gridSize){
+    public GravityHandler(float gridSize) {
         grid = new GravityGrid(gridSize);
     }
 
-    public void draw(RenderWindow window){
-        if(GRID_VISIBLE){
+    public void draw(RenderWindow window) {
+        if (GRID_VISIBLE) {
             grid.draw(window);
         }
     }
 
-    public void applyGravityForces(){
+    public Vector2f getForce(GameObject o) {
+        List<GravityGridCell> gravityCells = grid.getCells();
 
-        List<GravityGridCell> gravityCells = grid.getCells(); //get a list of references to the cells in the collisionGrid
-        for (GravityGridCell c1 : gravityCells) {
+        Vector2f totalForce = Vector2f.ZERO;    //running total of forces acting on object o
 
-            Vector2f totalForce = Vector2f.ZERO; //running total of forces acting on c1
-
-            List<GameObject> c1Objs = c1.getObjects();
-            for (GameObject o1 : c1Objs) {
-                for (GameObject o2 : c1Objs) {
-                    if (o1 == o2) continue;
-                    float F, G, m, M, r;
-
-                    Vector2f diff = Vector2f.sub(o2.getCenter(), o1.getCenter());
-                    Vector2f dir = VectorMath.normalize(diff);
-                    assert !Float.isNaN(dir.x) && !Float.isNaN(dir.y);
-
-                    r = VectorMath.magnitude(dir);
-                    if (r == 0) continue;
-
-                    G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-                    m = o1.getMass();
-                    M = o2.getMass();
-
-                    F = (G * m * M) / (r*r);
-                    //add it to the running total of forces acting on c1
-                    totalForce = Vector2f.add(totalForce, Vector2f.mul(dir, F));
-                }
-
-                for (GravityGridCell c2 : gravityCells) {
-                    if (c1 == c2) continue; //ignore own cell
-
-                    //Calculate the force from c2's center of mass acting on c1
-                    //F = GmM / r in 2D (not over r squared!)
-
-                    float F, G, m, M, r;
-                    Vector2f diff = Vector2f.sub(c2.getCenterOfMass(), c1.getCenterOfMass());
-                    Vector2f dir = VectorMath.normalize(diff);
-                    assert !Float.isNaN(dir.x) && !Float.isNaN(dir.y);
-
-                    r = VectorMath.magnitude(dir);
-                    if (r == 0) continue;
-
-                    G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-                    m = c1.getTotalMass();
-                    M = c2.getTotalMass();
-
-                    F = (G * m * M) / (r*r);
-                    //add it to the running total of forces acting on c1
-                    totalForce = Vector2f.add(totalForce, Vector2f.mul(dir, F));
-                    // System.out.println(totalForce);
-                }
-                o1.applyForce(totalForce);
+        //find the cell that object o is in
+        GravityGridCell oCell = null;
+        for (GravityGridCell cell : gravityCells) {
+            if (cell.contains(o)) {
+                oCell = cell;
             }
         }
+
+        //get the forces from all of the particles in the same cell as o
+        if (oCell != null) {
+            for (GameObject object : oCell.getObjects()) {
+                if (object == o) continue; //don't calculate force contribution from self
+
+                float F, G, m, M, r;
+                Vector2f centerToCenter = Vector2f.sub(object.getCenter(), o.getCenter());
+                Vector2f direction = VectorMath.normalize(centerToCenter);
+
+                G = GlobalConstants.GRAVITATIONAL_CONSTANT;
+                m = o.getMass();
+                M = object.getMass();
+                r = VectorMath.magnitude(centerToCenter);
+
+
+                F = (G * m * M) / (r * r);
+
+                totalForce = Vector2f.add(totalForce, Vector2f.mul(direction, F));
+            }
+        } else {
+            System.err.println("Object not found in gravity grid");
+        }
+
+
+        //now add an approximate force from the cell's center of mass
+        for (GravityGridCell cell : gravityCells) {
+            //ignore contribution from same cell that object is in as we have already considered it
+            if (cell == oCell) continue;
+
+            float F, G, m, M, r;
+            Vector2f centerToCenter = Vector2f.sub(cell.getCenterOfMass(), o.getCenter());
+            Vector2f direction = VectorMath.normalize(centerToCenter);
+
+            G = GlobalConstants.GRAVITATIONAL_CONSTANT;
+            m = o.getMass();
+            M = cell.getTotalMass();
+            r = VectorMath.magnitude(centerToCenter);
+
+            F = (G * m * M) / (r * r);
+
+            totalForce = Vector2f.add(totalForce, Vector2f.mul(direction, F));
+        }
+
+        return totalForce;
     }
 
-    public void reset(){
+    public void reset() {
         grid.clear();
     }
 
-    public void insertAll(List<GameObject> objects){
-        for(GameObject object : objects){
+    public void insertAll(List<GameObject> objects) {
+        for (GameObject object : objects) {
             insert(object);
         }
     }
 
-    public void insert(GameObject object){
+    public void insert(GameObject object) {
         grid.insert(object);
-        if(object.getChildren().size() > 0){
+        if (object.getChildren().size() > 0) {
             insertAll(object.getChildren());
         }
     }
 
-    public void recalculatePhysicalProperties(){
+    public void recalculatePhysicalProperties() {
         grid.recalculatePhysicalProperties();
     }
 }

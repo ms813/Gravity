@@ -1,17 +1,8 @@
 package GameObjects;
 
-import Core.Game;
-import Core.GlobalConstants;
 import Core.TextureManager;
-import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
-import GameObjects.Colliders.Collider;
-import GameObjects.Colliders.SolidCollider;
-import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -41,15 +32,6 @@ public class Asteroid extends GameObject {
         type = checkType();
         updateTextureRect();
 
-    }
-
-    @Override
-    public void update(float dt) {
-        if (active) {
-                velocity = getUpdatedVelocity(dt);
-                appliedForce = Vector2f.ZERO;
-                move(velocity);
-        }
     }
 
     /*

@@ -37,7 +37,33 @@ public abstract class GameObject {
     /*
         Core
     */
-    public abstract void update(float dt);
+
+    //Verlet method requires updating position and velocity in separate steps
+    //http://gamedev.stackexchange.com/questions/15708/how-can-i-implement-gravity
+    private Vector2f acceleration = Vector2f.ZERO;
+    private Vector2f newAcceleration = Vector2f.ZERO;
+
+    public void updatePosition(float dt){
+        acceleration = getAcceleration(dt);
+        Vector2f movestep = Vector2f.mul(Vector2f.add(velocity, Vector2f.mul(acceleration, dt / 2)), dt);
+        move(movestep);
+
+        for(GameObject child : children){
+            child.updatePosition(dt);
+        }
+    }
+
+    public void updateVelocity(float dt){
+        newAcceleration = getAcceleration(dt);
+        velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt/2));
+        appliedForce = Vector2f.ZERO;
+
+        for(GameObject child : children){
+            child.updateVelocity(dt);
+        }
+
+        acceleration = newAcceleration;
+    }
 
     public void draw(RenderWindow window) {
         if (visible && active) {
@@ -49,15 +75,14 @@ public abstract class GameObject {
         }
     }
 
-    protected Vector2f getUpdatedVelocity(float dt) {
+    protected Vector2f getAcceleration(float dt) {
         //get the direction and size of the applied force
         Vector2f dir = VectorMath.normalize(appliedForce);
         float F = VectorMath.magnitude(appliedForce);
 
         //calculate the acceleration this frame and add it to the current velocity of the particle
         //F = ma
-        Vector2f a = Vector2f.mul(dir, (F / mass) * dt);
-        return Vector2f.add(velocity, a);
+        return Vector2f.mul(dir, (F / mass) * dt);
     }
 
     public boolean isVisible() {

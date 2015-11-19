@@ -34,7 +34,7 @@ public class AsteroidTestState implements GameState {
     private Font font = new Font();
     private Text label = new Text();
 
-    private List<CircleShape> collisionPoints = new ArrayList<>();
+    private boolean VERLET_STATE = false;
 
     public AsteroidTestState(Game game) {
         this.game = game;
@@ -126,11 +126,9 @@ public class AsteroidTestState implements GameState {
         collisionHandler.reset();
         collisionHandler.insertAll(colliders);
 
-
         /*
         *   Collision detection
         */
-
         collisionHandler.resolveCollisions();
 
         /*
@@ -141,17 +139,18 @@ public class AsteroidTestState implements GameState {
 
         gravityHandler.recalculatePhysicalProperties();   //Update the properties like Center of Mass for each cell
 
-
-        /*
-        *   Gravity calculations
-        */
-
-        gravityHandler.applyGravityForces();
-
-        //run the update loop on all of the particles
-        for (GameObject a : colliders) {
-            a.update(dt);
+        //velocity Verlet requires all of the positions to be updated first, then the velocities
+        if (VERLET_STATE) {
+            for (GameObject o : colliders) {
+                o.updatePosition(dt);
+            }
+        } else {
+            for (GameObject o : colliders) {
+                o.applyForce(gravityHandler.getForce(o));
+                o.updateVelocity(dt);
+            }
         }
+        VERLET_STATE = !VERLET_STATE;
 
         label.setString("Particles remaining: " + colliders.size() + "\nFPS: " + Math.round(1 / dt));
         // System.out.println("Frame end");
