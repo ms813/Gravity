@@ -31,7 +31,7 @@ public class CircleCollider implements SolidCollider {
         hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
         hitbox.setPosition(parent.getPosition());
         hitbox.setFillColor(Color.TRANSPARENT);
-        hitbox.setOutlineColor(Color.GREEN);
+        hitbox.setOutlineColor(Color.CYAN);
         hitbox.setOutlineThickness(-1.0f);
     }
 

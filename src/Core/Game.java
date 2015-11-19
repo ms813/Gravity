@@ -18,8 +18,6 @@ import java.util.Stack;
  */
 public class Game {
 
-    public static boolean leapfrogStep = false;
-
     private final int FRAME_RATE = 60;
 
     private RenderWindow window = new RenderWindow();
@@ -53,7 +51,6 @@ public class Game {
             peekState().draw(dt);
             //System.out.println("dt = " + dt);
             window.display();
-            leapfrogStep = !leapfrogStep;
         }
     }
 
