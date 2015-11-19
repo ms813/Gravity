@@ -1,6 +1,8 @@
 package GameObjects;
 
+import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
+import org.jsfml.graphics.Sprite;
 import org.jsfml.system.Vector2f;
 
 /**
@@ -17,6 +19,12 @@ public class Spaceship extends GameObject {
         this.heatCapacity = 1;
         this.density = 10;
 
+        texture = TextureManager.getTexture("spaceship.png");
+        sprite.setTexture(texture);
+
+        float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
+        sprite.setScale(2 * radius / sprite.getGlobalBounds().width, 2 * radius / sprite.getGlobalBounds().height);
+
         setPosition(position);
 
         collider = new CircleCollider(this, 1);
@@ -25,10 +33,11 @@ public class Spaceship extends GameObject {
     }
 
     @Override
-    public void updateVelocity(float dt){
-        if(active){
+    public void updateVelocity(float dt) {
+        if (active) {
             appliedForce = Vector2f.add(appliedForce, thruster.getThrustVector());
         }
         super.updateVelocity(dt);
+        System.out.println(velocity);
     }
 }

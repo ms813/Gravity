@@ -95,8 +95,6 @@ public class AsteroidTestState implements GameState {
     @Override
     public void draw(float dt) {
 
-        //view.setCenter(getSceneMassCenter());
-
         centerView(focusedObject);
 
         game.setView(view);
@@ -113,8 +111,6 @@ public class AsteroidTestState implements GameState {
 
         game.setView(guiView);
         game.getWindow().draw(label);
-
-        game.setView(view);
     }
 
     @Override

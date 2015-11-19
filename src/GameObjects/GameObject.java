@@ -18,7 +18,7 @@ public abstract class GameObject {
     protected boolean active = true;
 
     protected Sprite sprite = new Sprite();
-    protected Texture texture = new Texture();
+    protected Texture texture;
 
     protected Collider collider;
 
@@ -42,8 +42,6 @@ public abstract class GameObject {
     //http://gamedev.stackexchange.com/questions/15708/how-can-i-implement-gravity
     private Vector2f acceleration = Vector2f.ZERO;
     private Vector2f newAcceleration = Vector2f.ZERO;
-    private float old_dt;
-    private Vector2f old_pos;
 
     public void updatePosition(float dt){
         acceleration = getAcceleration();

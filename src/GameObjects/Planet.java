@@ -1,8 +1,10 @@
 package GameObjects;
 
+import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2i;
 
 /**
  * Created by smithma on 17/11/15.
@@ -17,7 +19,11 @@ public class Planet extends GameObject {
 
         float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
 
-        sprite = new Sprite();
+        texture = TextureManager.getTexture("earth.png");
+        sprite.setTexture(texture);
+        sprite.setTextureRect(new IntRect(Vector2i.ZERO, texture.getSize()));
+
+        sprite.setScale(2 * radius / sprite.getTextureRect().width, 2 * radius / sprite.getTextureRect().height);
         sprite.setPosition(position);
 
         collider = new CircleCollider(this, 1.0f);

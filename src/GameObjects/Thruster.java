@@ -7,15 +7,13 @@ import org.jsfml.system.Vector2f;
  */
 public class Thruster {
 
-    private double rotation = 0; //between -pi and pi, 0 is towards the right of the screen
-
+    private double rotation = 0; //between -π and π, 0 is towards the right of the screen
     private float throttle = 1; //between 0 and 1. Fraction of thrust to be applied
     private float maxThrust = 0;
 
     public Vector2f getThrustVector() {
         float x = (float) Math.cos(rotation) * maxThrust * throttle;
         float y = (float) Math.sin(rotation) * maxThrust * throttle;
-
         return new Vector2f(x, y);
     }
 
