@@ -42,11 +42,13 @@ public abstract class GameObject {
     //http://gamedev.stackexchange.com/questions/15708/how-can-i-implement-gravity
     private Vector2f acceleration = Vector2f.ZERO;
     private Vector2f newAcceleration = Vector2f.ZERO;
+    private float old_dt;
+    private Vector2f old_pos;
 
     public void updatePosition(float dt){
-        acceleration = getAcceleration(dt);
-        Vector2f movestep = Vector2f.mul(Vector2f.add(velocity, Vector2f.mul(acceleration, dt / 2)), dt);
-        move(movestep);
+        acceleration = getAcceleration();
+        //position  += timestep * (velocity + timestep * acceleration / 2)
+        move(Vector2f.mul(Vector2f.add(velocity, Vector2f.mul(acceleration, dt / 2)), dt));
 
         for(GameObject child : children){
             child.updatePosition(dt);
@@ -54,14 +56,13 @@ public abstract class GameObject {
     }
 
     public void updateVelocity(float dt){
-        newAcceleration = getAcceleration(dt);
+        newAcceleration = getAcceleration();
         velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt/2));
         appliedForce = Vector2f.ZERO;
 
         for(GameObject child : children){
             child.updateVelocity(dt);
         }
-
         acceleration = newAcceleration;
     }
 
@@ -75,14 +76,14 @@ public abstract class GameObject {
         }
     }
 
-    protected Vector2f getAcceleration(float dt) {
+    protected Vector2f getAcceleration() {
         //get the direction and size of the applied force
         Vector2f dir = VectorMath.normalize(appliedForce);
         float F = VectorMath.magnitude(appliedForce);
 
         //calculate the acceleration this frame and add it to the current velocity of the particle
-        //F = ma
-        return Vector2f.mul(dir, (F / mass) * dt);
+        //F = ma => a = F/m
+        return Vector2f.mul(dir, F / mass);
     }
 
     public boolean isVisible() {

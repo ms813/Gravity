@@ -40,25 +40,25 @@ public class AsteroidTestState implements GameState {
 
     public AsteroidTestState(Game game) {
         this.game = game;
-        collisionHandler.showGrid();
+        //collisionHandler.showGrid();
 
-        for (int i = 0; i < 50; i++) {
-            Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(300, 300));
+        for (int i = 0; i < 500; i++) {
+
+            float x = (float)(Math.random() - 0.5f) * 1000;
+            float y = (float)(Math.random() - 0.5f)*1000;
+            Vector2f pos = new Vector2f(x, y);
             float mass = (float) Math.random() * 10000f + 100f;
-            //Vector2f vel = new Vector2f(2.0f*((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
-            Vector2f vel = Vector2f.ZERO;
+            Vector2f vel = new Vector2f(((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
             addAsteroid(mass, pos, vel);
         }
-
-        for (int i = 0; i < 50; i++) {
+/*
+        for (int i = 0; i < 500; i++) {
             Vector2f pos = Vector2f.add(Vector2f.mul(VectorMath.randomUnit(), new Random().nextFloat() * 300), new Vector2f(500, 500));
             float mass = (float) Math.random() * 10000f + 100f;
-            //Vector2f vel = new Vector2f(((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
-            Vector2f vel = Vector2f.ZERO;
+            Vector2f vel = new Vector2f(((float)Math.random()-0.5f), ((float)Math.random()-0.5f));
             addAsteroid(mass, pos, vel);
         }
-
-
+*/
         asteroids.add(new Asteroid(10f, new Vector2f(100, 400)));
         asteroids.add(new Asteroid(20000f, new Vector2f(150, 400)));
 

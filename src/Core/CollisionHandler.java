@@ -16,7 +16,7 @@ import java.util.List;
 public class CollisionHandler {
 
     private CollisionGrid grid = new CollisionGrid(10.0f);
-    private boolean COLLISION_POINTS_VISIBLE = false;
+    private boolean COLLISION_POINTS_VISIBLE = true;
     private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
 
