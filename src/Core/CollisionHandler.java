@@ -1,6 +1,7 @@
 package Core;
 
 import GameObjects.GameObject;
+import GameObjects.Tools.Bullet;
 import Grids.CollisionGrid;
 import Grids.GridCell;
 import org.jsfml.graphics.CircleShape;
@@ -19,28 +20,29 @@ public class CollisionHandler {
     private boolean COLLISION_POINTS_VISIBLE = true;
     private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
+    private List<GameObject> objectsToRemove = new ArrayList<>();
 
-    public CollisionHandler(float gridSize){
+    public CollisionHandler(float gridSize) {
         grid = new CollisionGrid(gridSize);
     }
 
-    public void showGrid(){
+    public void showGrid() {
         GRID_VISIBLE = true;
     }
 
-    public void hideGrid(){
+    public void hideGrid() {
         GRID_VISIBLE = false;
     }
 
-    public void showCollisionPoints(){
+    public void showCollisionPoints() {
         COLLISION_POINTS_VISIBLE = true;
     }
 
-    public void hideCollisionPoints(){
+    public void hideCollisionPoints() {
         COLLISION_POINTS_VISIBLE = false;
     }
 
-    public void resolveCollisions(){
+    public void resolveCollisions() {
         List<GridCell> collisionCells = grid.getCells();
 
         for (GridCell cell : collisionCells) {
@@ -59,38 +61,27 @@ public class CollisionHandler {
                     GameObject o2 = cellObjects.get(j);
 
                     //don't bother wasting cycles on inactive objects
-                    if(!o1.isActive() || !o2.isActive()){
-                        continue;
-                    }
 
-                    boolean collision = false;
+                    if (o1.isActive() && o2.isActive()                           //check both objects are active
+                            && !(o1 instanceof Bullet && o2 instanceof Bullet)  //bullets can't collide with each other
+                            && o1.isSolid() && o2.isSolid()                     //check both objects are solid
+                            && o1.isColliding(o2)                               //check that objects are colliding
+                            ) {
 
-                    if (o1.isSolid() && o2.isSolid()) {
+                        if (COLLISION_POINTS_VISIBLE) {
+                            float collisionPointX = (o1.getCenter().x * o2.getSize().x / 2
+                                    + o2.getCenter().x * o1.getSize().x / 2)
+                                    / (o1.getSize().x / 2 + o2.getSize().x / 2);
+                            float collisionPointY = (o1.getCenter().y * o2.getSize().x / 2
+                                    + o2.getCenter().y * o1.getSize().x / 2)
+                                    / (o1.getSize().x / 2 + o2.getSize().x / 2);
 
-                        Vector2f pos1 = o1.getPosition();
-                        Vector2f pos2 = o2.getPosition();
-                        float dist = VectorMath.magnitude(Vector2f.sub(pos1, pos2));
-
-                        if (o1.isColliding(o2)) {
-                            collision = true;
-
-                            if (COLLISION_POINTS_VISIBLE) {
-                                float collisionPointX = (o1.getCenter().x * o2.getSize().x/2
-                                        + o2.getCenter().x * o1.getSize().x/2)
-                                        / (o1.getSize().x/2 + o2.getSize().x/2);
-                                float collisionPointY = (o1.getCenter().y * o2.getSize().x/2
-                                        + o2.getCenter().y * o1.getSize().x/2)
-                                        / (o1.getSize().x/2 + o2.getSize().x/2);
-
-                                CircleShape c = new CircleShape(4);
-                                c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
-                                c.setPosition(collisionPointX, collisionPointY);
-                                collisionPoints.add(c);
-                            }
+                            CircleShape c = new CircleShape(4);
+                            c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
+                            c.setPosition(collisionPointX, collisionPointY);
+                            collisionPoints.add(c);
                         }
-                    }
 
-                    if (collision) {
                         //we have to calculate the collision first, so that both objects use the same values during the calculation
                         o1.calculateCollision(o2);
                         o2.calculateCollision(o1);
@@ -98,31 +89,41 @@ public class CollisionHandler {
                         //we then apply the calculated collisions in the next step
                         o1.applyCollision();
                         o2.applyCollision();
+                        System.out.println("collision: " + o1 + ", " + o2);
+
+                        if (o1.isDestroyOnHit()) {
+                            objectsToRemove.add(o1);
+                        }
+
+                        if (o2.isDestroyOnHit()) {
+                            objectsToRemove.add(o2);
+                        }
+
                     }
                 }
             }
         }
     }
 
-    public void reset(){
+    public void reset() {
         grid.clear();
         collisionPoints.clear();
     }
 
-    public void insertAll(List<GameObject> objects){
-        for(GameObject object : objects){
+    public void insertAll(List<GameObject> objects) {
+        for (GameObject object : objects) {
             insert(object);
         }
     }
 
-    public void insert(GameObject object){
+    public void insert(GameObject object) {
         grid.insert(object);
-        if(object.getChildren().size() > 0){
+        if (object.getChildren().size() > 0) {
             insertAll(object.getChildren());
         }
     }
 
-    public void draw(RenderWindow window){
+    public void draw(RenderWindow window) {
         if (GRID_VISIBLE) grid.draw(window);
         if (COLLISION_POINTS_VISIBLE) {
             int count = 0;
@@ -131,11 +132,22 @@ public class CollisionHandler {
                 if (c.getRadius() < 1) {
                     count++;
                 }
-                c.setRadius(c.getRadius() - 1);
+                c.setRadius(c.getRadius() - 0.5f);
                 c.setPosition(c.getPosition().x + 1, c.getPosition().y + 1);
             }
 
             collisionPoints.subList(count, collisionPoints.size()).clear();
         }
     }
+
+    public boolean hasObjectsToRemove() {
+        return objectsToRemove.size() > 0;
+    }
+
+    public List<GameObject> getObjectsToRemove() {
+        return objectsToRemove;
+    }
 }
+
+
+

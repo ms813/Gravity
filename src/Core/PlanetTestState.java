@@ -1,13 +1,11 @@
 package Core;
 
-import GameObjects.Asteroid;
 import GameObjects.GameObject;
 import GameObjects.Planet;
 import GameObjects.Spaceship;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
 import org.jsfml.system.Vector2f;
-import org.jsfml.window.Keyboard;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.event.Event;
 import org.jsfml.window.event.KeyEvent;
@@ -23,7 +21,7 @@ public class PlanetTestState implements GameState {
 
     private Game game;
 
-    private List<GameObject> planets = new ArrayList<>();
+    private List<GameObject> sceneObjects = new ArrayList<>();
 
     private GravityHandler gravityHandler;
     private CollisionHandler collisionHandler;
@@ -43,13 +41,14 @@ public class PlanetTestState implements GameState {
         Planet planet = new Planet(100000, Vector2f.ZERO);
         planet.setPosition(Vector2f.sub(windowCenter, Vector2f.div(planet.getSize(), 2)));
 
-        planets.add(planet);
+        sceneObjects.add(planet);
         ship = new Spaceship(new Vector2f(windowCenter.x - 10, 20));
-        planets.add(ship);
+        sceneObjects.add(ship);
 
         gravityHandler = new GravityHandler(50);
         collisionHandler = new CollisionHandler(10);
         collisionHandler.showGrid();
+
     }
 
     @Override
@@ -59,8 +58,8 @@ public class PlanetTestState implements GameState {
         game.setView(view);
         RenderWindow window = game.getWindow();
 
-        for(GameObject o : planets){
-            if(o.isVisible() && o.isActive()){
+        for (GameObject o : sceneObjects) {
+            if (o.isVisible() && o.isActive()) {
                 o.draw(window);
             }
         }
@@ -73,46 +72,64 @@ public class PlanetTestState implements GameState {
     public void update(float dt) {
 
         collisionHandler.reset();
-        collisionHandler.insertAll(planets);
+        collisionHandler.insertAll(sceneObjects);
         collisionHandler.resolveCollisions();
 
+        if (collisionHandler.hasObjectsToRemove()) {
+            sceneObjects.removeAll(collisionHandler.getObjectsToRemove());
+        }
+
         gravityHandler.reset();
-        gravityHandler.insertAll(planets);
+        gravityHandler.insertAll(sceneObjects);
         gravityHandler.recalculatePhysicalProperties();
 
         if (VERLET_STATE) {
-            for (GameObject p : planets) {
+            for (GameObject p : sceneObjects) {
                 p.updatePosition(dt);
             }
         } else {
-            for (GameObject p : planets) {
+
+            List<GameObject> tempObjects = new ArrayList<>();
+            for (GameObject p : sceneObjects) {
                 p.applyForce(gravityHandler.getForce(p));
                 p.updateVelocity(dt);
             }
+
+            sceneObjects.addAll(tempObjects);
         }
         VERLET_STATE = !VERLET_STATE;
     }
 
     @Override
     public void handleInput() {
+
+        if (Mouse.isButtonPressed(Mouse.Button.LEFT)) {
+            Vector2f clickPos = game.mapPixelToCoords(Mouse.getPosition(game.getWindow()));
+
+            //if our focusedObject can shoot, shoot at the click target
+            if (focusedObject != null && focusedObject.hasWeapons()) {
+
+                //check weapon is not on cooldown
+                if (((Spaceship) focusedObject).isWeaponReady()) {
+                    sceneObjects.add(((Spaceship) focusedObject).fireWeapon(clickPos));
+                }
+            } else {
+                //only select an object if the current focusedObject can't shoot
+                for (GameObject o : sceneObjects) {
+                    if (o.getBounds().contains(clickPos)) {
+                        focusedObject = o;
+                    }
+                }
+            }
+        }
+
         for (Event e : game.getWindow().pollEvents()) {
             if (e.type == Event.Type.CLOSED) {
                 game.getWindow().close();
-            } else if (e.type == Event.Type.MOUSE_BUTTON_PRESSED) {
-                MouseButtonEvent mouseEvt = e.asMouseButtonEvent();
-                if (mouseEvt.button == Mouse.Button.LEFT) {
-                    Vector2f worldPos = game.mapPixelToCoords(mouseEvt.position);
-
-                    for (GameObject o : planets) {
-                        if (o.getBounds().contains(worldPos)) {
-                            focusedObject = o;
-                        }
-                    }
-                }
             } else if (e.type == Event.Type.KEY_PRESSED) {
                 KeyEvent keyEvt = e.asKeyEvent();
-                switch(keyEvt.key){
-                    case ESCAPE :
+                switch (keyEvt.key) {
+                    case ESCAPE:
                         focusedObject = null;
                         break;
                     case RIGHT:
@@ -152,7 +169,7 @@ public class PlanetTestState implements GameState {
 
     public Vector2f getSceneMassCenter() {
         float x = 0, y = 0, mass = 0;
-        for (GameObject o : planets) {
+        for (GameObject o : sceneObjects) {
             x += o.getCenter().x * o.getMass();
             y += o.getCenter().y * o.getMass();
             mass += o.getMass();

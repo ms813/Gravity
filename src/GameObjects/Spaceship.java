@@ -1,7 +1,11 @@
 package GameObjects;
 
 import Core.TextureManager;
+import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
+import GameObjects.Tools.Bullet;
+import GameObjects.Tools.Weapon;
+import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.Sprite;
 import org.jsfml.system.Vector2f;
 
@@ -11,6 +15,7 @@ import org.jsfml.system.Vector2f;
 public class Spaceship extends GameObject {
 
     private Thruster thruster;
+    private Weapon weapon;
 
     public Spaceship(Vector2f position) {
 
@@ -28,8 +33,11 @@ public class Spaceship extends GameObject {
         setPosition(position);
 
         collider = new CircleCollider(this, 1);
+
         thruster = new Thruster();
         thruster.setRotation(Math.toRadians(sprite.getRotation()));
+
+        weapon = new Weapon(this);
     }
 
     @Override
@@ -38,6 +46,27 @@ public class Spaceship extends GameObject {
             appliedForce = Vector2f.add(appliedForce, thruster.getThrustVector());
         }
         super.updateVelocity(dt);
-        System.out.println(velocity);
+
+        weapon.decrementCooldown(dt);
+    }
+
+    @Override
+    public void updatePosition(float dt){
+        super.updateVelocity(dt);
+
+        weapon.decrementCooldown(dt);
+    }
+
+    public Bullet fireWeapon(Vector2f targetPos){
+        return weapon.fire(targetPos);
+    }
+
+    public boolean isWeaponReady(){
+        return weapon.isReady();
+    }
+
+    @Override
+    public boolean hasWeapons(){
+        return weapon != null;
     }
 }

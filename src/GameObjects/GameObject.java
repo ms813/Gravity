@@ -34,6 +34,8 @@ public abstract class GameObject {
 
     private boolean HITBOX_VISIBLE = true;
 
+    private boolean destroyOnHit = false;
+
     /*
         Core
     */
@@ -191,5 +193,17 @@ public abstract class GameObject {
 
     public Collider getCollider(){
         return collider;
+    }
+
+    public boolean hasWeapons(){
+        return false;
+    }
+
+    public boolean isDestroyOnHit(){
+        return destroyOnHit;
+    }
+
+    public void setDestroyOnHit(boolean bool){
+        destroyOnHit = bool;
     }
 }
