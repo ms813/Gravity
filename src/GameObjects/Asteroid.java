@@ -2,13 +2,18 @@ package GameObjects;
 
 import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
+import GameObjects.Tools.Turret;
+import GameObjects.Tools.TurretPlatform;
 import org.jsfml.system.Vector2f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by Matthew on 26/10/2015.
  */
-public class Asteroid extends GameObject {
+public class Asteroid extends TurretPlatform {
 
     private ParticleType type = ParticleType.DUST_SMALL;
 
@@ -17,21 +22,22 @@ public class Asteroid extends GameObject {
         this.density = 5.0f;
         this.mass = mass;
         this.heatCapacity = 0.84f;
-        this.temperature = 200;
+        this.temperature = 200f;
 
+        this.setPosition(pos);
         collider = new CircleCollider(this, 0.90f);
 
         texture = TextureManager.getTexture("dust.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
         updateTextureRect();
-        sprite.setPosition(pos);
 
         float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
         rescale(radius * 2);
         type = checkType();
         updateTextureRect();
 
+        maxTurrets = (int) Math.floor(getSize().y / Turret.TURRET_SIZE) * (int) Math.floor(getSize().x / Turret.TURRET_SIZE);
     }
 
     /*
@@ -106,4 +112,5 @@ public class Asteroid extends GameObject {
         }
         rescale((getSize().x + getSize().y) / 4);
     }
+
 }

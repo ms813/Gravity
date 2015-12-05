@@ -5,5 +5,5 @@ package Core;
  */
 public class GlobalConstants {
     //public static final float GRAVITATIONAL_CONSTANT = 6.67300E-11f;
-    public static final float GRAVITATIONAL_CONSTANT = 0.000001f;
+    public static final float GRAVITATIONAL_CONSTANT = 1f;
 }

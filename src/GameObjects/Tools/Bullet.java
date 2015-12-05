@@ -4,8 +4,6 @@ import Core.TextureManager;
 import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
 import GameObjects.GameObject;
-import org.jsfml.graphics.CircleShape;
-import org.jsfml.graphics.Color;
 import org.jsfml.system.Vector2f;
 
 /**
@@ -13,10 +11,10 @@ import org.jsfml.system.Vector2f;
  */
 public class Bullet extends GameObject {
 
-    private Weapon source;
+    private Turret source;
     private float length = 15;
 
-    public Bullet(Weapon source, Vector2f targetPos) {
+    public Bullet(Turret source, Vector2f targetPos) {
         this.source = source;
 
         mass = 1;
@@ -42,12 +40,6 @@ public class Bullet extends GameObject {
         sprite.setRotation((float) Math.toDegrees(VectorMath.angle(velocity)));
 
         collider = new CircleCollider(this, 1);
-    }
-
-    @Override
-    public void updateVelocity(float dt) {
-        super.updateVelocity(dt);
-        //System.out.println("Laser vel = " + velocity);
     }
 
 }

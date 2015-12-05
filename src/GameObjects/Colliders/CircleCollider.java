@@ -60,7 +60,8 @@ public class CircleCollider implements SolidCollider {
         if (object.isSolid()) {
 
             //move objects out of collision
-            if (parent.getMass() < object.getMass()) {  //only move the less massive of the two colliders
+            //only move the less massive of the two colliders
+            if (parent.getMass() <= object.getMass()) {
                 if (object.getCollider() instanceof CircleCollider) {
                     CircleCollider col = (CircleCollider) object.getCollider();
                     Vector2f dif = Vector2f.sub(col.getCenter(), this.getCenter());

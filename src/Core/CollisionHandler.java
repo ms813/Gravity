@@ -89,7 +89,6 @@ public class CollisionHandler {
                         //we then apply the calculated collisions in the next step
                         o1.applyCollision();
                         o2.applyCollision();
-                        System.out.println("collision: " + o1 + ", " + o2);
 
                         if (o1.isDestroyOnHit()) {
                             objectsToRemove.add(o1);

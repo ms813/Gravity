@@ -1,6 +1,7 @@
 package GameObjects;
 
 import Core.VectorMath;
+import GameObjects.Colliders.CircleCollider;
 import GameObjects.Colliders.Collider;
 import GameObjects.Colliders.SolidCollider;
 import org.jsfml.graphics.*;
@@ -20,7 +21,7 @@ public abstract class GameObject {
     protected Sprite sprite = new Sprite();
     protected Texture texture;
 
-    protected Collider collider;
+    protected Collider collider = new CircleCollider(this, 1);
 
     protected List<GameObject> children = new ArrayList<>();
 
@@ -45,7 +46,17 @@ public abstract class GameObject {
     private Vector2f acceleration = Vector2f.ZERO;
     private Vector2f newAcceleration = Vector2f.ZERO;
 
-    public void updatePosition(float dt){
+    public void update(float dt, boolean VERLET_STATE){
+
+        //velocity Verlet requires all of the positions to be updated first, then the velocities
+        if(VERLET_STATE){
+            updatePosition(dt);
+        } else{
+            updateVelocity(dt);
+        }
+    }
+
+    private void updatePosition(float dt){
         acceleration = getAcceleration();
         //position  += timestep * (velocity + timestep * acceleration / 2)
         move(Vector2f.mul(Vector2f.add(velocity, Vector2f.mul(acceleration, dt / 2)), dt));
@@ -55,7 +66,7 @@ public abstract class GameObject {
         }
     }
 
-    public void updateVelocity(float dt){
+    private void updateVelocity(float dt){
         newAcceleration = getAcceleration();
         velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt/2));
         appliedForce = Vector2f.ZERO;

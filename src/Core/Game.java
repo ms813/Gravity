@@ -1,5 +1,8 @@
 package Core;
 
+import GameStates.AsteroidTestState;
+import GameStates.GameState;
+import GameStates.LevelTestState;
 import org.jsfml.graphics.Color;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
@@ -21,7 +24,7 @@ public class Game {
     private final int FRAME_RATE = 60;
 
     private RenderWindow window = new RenderWindow();
-    private Stack<GameState> gameStates = new Stack<GameState>();
+    private Stack<GameState> gameStates = new Stack<>();
 
     public Game() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -33,7 +36,7 @@ public class Game {
         window.setFramerateLimit(FRAME_RATE);
 
         //gameStates.push(new AsteroidTestState(this));
-        gameStates.push(new PlanetTestState(this));
+        gameStates.push(new LevelTestState(this));
     }
 
     public void start() {
