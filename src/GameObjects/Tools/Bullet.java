@@ -28,7 +28,7 @@ public class Bullet extends GameObject {
         sprite.setScale(length / sprite.getGlobalBounds().width, length / sprite.getGlobalBounds().width);
 
         Vector2f direction = VectorMath.normalize(Vector2f.sub(targetPos, source.getParent().getCenter()));
-        velocity = Vector2f.mul(direction, source.getPower());
+        velocity = Vector2f.mul(direction, source.getDamage());
         //calculate initial position based on velocity
         sprite.setOrigin(getSize().x / 2, getSize().y / 2);
         float shipRadius = (source.getParent().getSize().x + source.getParent().getSize().y) / 4;

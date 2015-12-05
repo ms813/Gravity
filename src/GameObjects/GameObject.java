@@ -37,6 +37,8 @@ public abstract class GameObject {
 
     private boolean destroyOnHit = false;
 
+    private boolean destroyFlag = false;
+
     /*
         Core
     */
@@ -46,32 +48,32 @@ public abstract class GameObject {
     private Vector2f acceleration = Vector2f.ZERO;
     private Vector2f newAcceleration = Vector2f.ZERO;
 
-    public void update(float dt, boolean VERLET_STATE){
+    public void update(float dt, boolean VERLET_STATE) {
 
         //velocity Verlet requires all of the positions to be updated first, then the velocities
-        if(VERLET_STATE){
+        if (VERLET_STATE) {
             updatePosition(dt);
-        } else{
+        } else {
             updateVelocity(dt);
         }
     }
 
-    private void updatePosition(float dt){
+    private void updatePosition(float dt) {
         acceleration = getAcceleration();
         //position  += timestep * (velocity + timestep * acceleration / 2)
         move(Vector2f.mul(Vector2f.add(velocity, Vector2f.mul(acceleration, dt / 2)), dt));
 
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.updatePosition(dt);
         }
     }
 
-    private void updateVelocity(float dt){
+    private void updateVelocity(float dt) {
         newAcceleration = getAcceleration();
-        velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt/2));
+        velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt / 2));
         appliedForce = Vector2f.ZERO;
 
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.updateVelocity(dt);
         }
         acceleration = newAcceleration;
@@ -80,7 +82,7 @@ public abstract class GameObject {
     public void draw(RenderWindow window) {
         if (visible && active) {
             window.draw(sprite);
-            if(HITBOX_VISIBLE) collider.draw(window);
+            if (HITBOX_VISIBLE) collider.draw(window);
             for (GameObject child : getChildren()) {
                 child.draw(window);
             }
@@ -189,32 +191,41 @@ public abstract class GameObject {
         this.temperature = temperature;
     }
 
-    public boolean isColliding(GameObject object){
+    public boolean isColliding(GameObject object) {
         return collider.isColliding(object);
     }
 
-    public void calculateCollision(GameObject object){
+    public void calculateCollision(GameObject object) {
         collider.calculateCollision(object);
     }
 
 
-    public void applyCollision(){
+    public void applyCollision() {
         collider.applyCollision();
     }
 
-    public Collider getCollider(){
+    public Collider getCollider() {
         return collider;
     }
 
-    public boolean hasWeapons(){
+    public boolean hasWeapons() {
         return false;
     }
 
-    public boolean isDestroyOnHit(){
+    public boolean isDestroyOnHit() {
         return destroyOnHit;
     }
 
-    public void setDestroyOnHit(boolean bool){
+    public void setDestroyOnHit(boolean bool) {
         destroyOnHit = bool;
     }
+
+    public void setDestroyFlag(boolean flag) {
+        destroyFlag = flag;
+    }
+
+    public boolean getDestroyFlag(){
+        return destroyFlag;
+    }
+
 }

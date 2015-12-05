@@ -2,11 +2,10 @@ package Grids;
 
 import GameObjects.GameObject;
 import org.jsfml.graphics.RenderWindow;
+import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Matthew on 31/10/2015.

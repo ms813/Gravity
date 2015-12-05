@@ -2,36 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="52b83fbb-41b1-46ba-ba1a-f854c5e41d39" name="Default" comment="Adding creeps, removing spaceship + PlanetTestState. Issues with creep on creep collision">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/AsteroidTestState.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/GameState.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/PlanetTestState$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/PlanetTestState.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Spaceship.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Tools/Weapon.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Core/AsteroidTestState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Core/GameState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Core/PlanetTestState.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/GameObjects/Spaceship.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/GameObjects/Tools/Weapon.java" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Core/TargetingHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/CollisionHandler.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Core/CollisionHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/Game.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Core/Game.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/GlobalConstants.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Core/GlobalConstants.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/GravityHandler.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Core/GravityHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Asteroid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Asteroid.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Colliders/CircleCollider.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Colliders/CircleCollider.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/GameObject.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/GameObject.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Tools/Bullet.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Tools/Bullet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/CollisionGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/CollisionGrid.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/GravityGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/GravityGrid.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/SpatialHashGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/SpatialHashGrid.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Core/CollisionHandler.java" afterPath="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Core/Game.java" afterPath="$PROJECT_DIR$/src/Core/Game.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Core/GlobalConstants.java" afterPath="$PROJECT_DIR$/src/Core/GlobalConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/Asteroid.java" afterPath="$PROJECT_DIR$/src/GameObjects/Asteroid.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" afterPath="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/GameObject.java" afterPath="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/Tools/Bullet.java" afterPath="$PROJECT_DIR$/src/GameObjects/Tools/Bullet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/CollisionGrid.java" afterPath="$PROJECT_DIR$/src/Grids/CollisionGrid.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/GravityGrid.java" afterPath="$PROJECT_DIR$/src/Grids/GravityGrid.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" afterPath="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" />
     </list>
     <ignored path="Gravity.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -100,76 +83,24 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="AsteroidTestState.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameStates/AsteroidTestState.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="199" column="4" selection-start-line="199" selection-start-column="4" selection-end-line="206" selection-end-column="5" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LevelTestState.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="LevelTestState.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/GameStates/LevelTestState.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="9" column="39" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+                <state vertical-scroll-proportion="1.058997">
+                  <caret line="240" column="51" selection-start-line="240" selection-start-column="9" selection-end-line="240" selection-end-column="9" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="CircleCollider.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
+          <file leaf-file-name="TargetingHandler.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/Core/TargetingHandler.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="65" column="51" selection-start-line="65" selection-start-column="51" selection-end-line="65" selection-end-column="51" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="GameState.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameStates/GameState.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="5" column="43" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+                  <caret line="25" column="110" selection-start-line="25" selection-start-column="110" selection-end-line="25" selection-end-column="110" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Asteroid.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Asteroid.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Game.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="26" column="52" selection-start-line="26" selection-start-column="52" selection-end-line="26" selection-end-column="52" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="GlobalConstants.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.05052006">
-                  <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -182,64 +113,13 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="35" column="36" selection-start-line="35" selection-start-column="36" selection-end-line="35" selection-end-column="36" />
-                  <folding>
-                    <element signature="e#2962#2963#0" expanded="false" />
-                    <element signature="e#2992#2993#0" expanded="false" />
-                    <element signature="e#3195#3196#0" expanded="false" />
-                    <element signature="e#3224#3225#0" expanded="false" />
-                    <element signature="e#3434#3435#0" expanded="false" />
-                    <element signature="e#3465#3466#0" expanded="false" />
-                    <element signature="e#3549#3550#0" expanded="false" />
-                    <element signature="e#3592#3593#0" expanded="false" />
-                    <element signature="e#3642#3643#0" expanded="false" />
-                    <element signature="e#3686#3687#0" expanded="false" />
-                    <element signature="e#3970#3971#0" expanded="false" />
-                    <element signature="e#4017#4018#0" expanded="false" />
-                    <element signature="e#4050#4051#0" expanded="false" />
-                    <element signature="e#4150#4151#0" expanded="false" />
-                    <element signature="e#4314#4315#0" expanded="false" />
-                    <element signature="e#4370#4371#0" expanded="false" />
-                    <element signature="e#4416#4417#0" expanded="false" />
-                    <element signature="e#4480#4481#0" expanded="false" />
-                    <element signature="e#4517#4518#0" expanded="false" />
-                    <element signature="e#4548#4549#0" expanded="false" />
-                    <element signature="e#4598#4599#0" expanded="false" />
-                    <element signature="e#4638#4639#0" expanded="false" />
-                    <element signature="e#4668#4669#0" expanded="false" />
-                    <element signature="e#4695#4696#0" expanded="false" />
-                    <element signature="e#4750#4751#0" expanded="false" />
-                    <element signature="e#4803#4804#0" expanded="false" />
-                    <element signature="e#4840#4841#0" expanded="false" />
-                    <element signature="e#4874#4875#0" expanded="false" />
-                    <element signature="e#4927#4928#0" expanded="false" />
-                    <element signature="e#4973#4974#0" expanded="false" />
-                    <element signature="e#5025#5026#0" expanded="false" />
-                    <element signature="e#5076#5077#0" expanded="false" />
-                    <element signature="e#5132#5133#0" expanded="false" />
-                    <element signature="e#5183#5184#0" expanded="false" />
-                    <element signature="e#5219#5220#0" expanded="false" />
-                    <element signature="e#5260#5261#0" expanded="false" />
-                    <element signature="e#5296#5297#0" expanded="false" />
-                    <element signature="e#5327#5328#0" expanded="false" />
-                    <element signature="e#5361#5362#0" expanded="false" />
-                    <element signature="e#5389#5390#0" expanded="false" />
-                    <element signature="e#5427#5428#0" expanded="false" />
-                    <element signature="e#5462#5463#0" expanded="false" />
-                    <element signature="e#5510#5511#0" expanded="false" />
-                    <element signature="e#5545#5546#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="CreepSpawner.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="1.0861813">
-                  <caret line="45" column="66" selection-start-line="45" selection-start-column="66" selection-end-line="45" selection-end-column="66" />
+                  <caret line="226" column="18" selection-start-line="226" selection-start-column="18" selection-end-line="226" selection-end-column="18" />
                   <folding>
                     <element signature="imports" expanded="true" />
+                    <element signature="e#5655#5656#0" expanded="true" />
+                    <element signature="e#5689#5690#0" expanded="true" />
+                    <element signature="e#5727#5728#0" expanded="true" />
+                    <element signature="e#5761#5762#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -249,9 +129,11 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Creep.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+                  <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
                   <folding>
                     <element signature="imports" expanded="true" />
+                    <element signature="e#835#836#0" expanded="true" />
+                    <element signature="e#860#861#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -261,32 +143,30 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+                  <caret line="37" column="18" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
                   <folding>
-                    <element signature="e#1055#1056#0" expanded="false" />
-                    <element signature="e#1102#1103#0" expanded="false" />
-                    <element signature="e#1157#1158#0" expanded="false" />
-                    <element signature="e#1200#1201#0" expanded="false" />
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#1010#1011#0" expanded="true" />
+                    <element signature="e#1048#1049#0" expanded="true" />
+                    <element signature="e#1087#1088#0" expanded="true" />
+                    <element signature="e#1117#1118#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Turret.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Turret.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="41" column="33" selection-start-line="41" selection-start-column="33" selection-end-line="41" selection-end-column="33" />
+                <state vertical-scroll-proportion="0.44837758">
+                  <caret line="49" column="53" selection-start-line="49" selection-start-column="53" selection-end-line="49" selection-end-column="53" />
                   <folding>
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#422#423#0" expanded="false" />
-                    <element signature="e#458#459#0" expanded="false" />
-                    <element signature="e#917#918#0" expanded="false" />
-                    <element signature="e#963#964#0" expanded="false" />
-                    <element signature="e#1265#1266#0" expanded="false" />
-                    <element signature="e#1294#1295#0" expanded="false" />
-                    <element signature="e#1325#1326#0" expanded="false" />
-                    <element signature="e#1353#1354#0" expanded="false" />
+                    <element signature="e#1657#1658#0" expanded="true" />
+                    <element signature="e#1685#1686#0" expanded="true" />
+                    <element signature="e#1717#1718#0" expanded="true" />
+                    <element signature="e#1746#1747#0" expanded="true" />
+                    <element signature="e#1789#1790#0" expanded="true" />
+                    <element signature="e#1825#1826#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -324,23 +204,27 @@
         <option value="$PROJECT_DIR$/src/GameObjects/Tools/Weapon.java" />
         <option value="$PROJECT_DIR$/src/Core/PlanetTestState.java" />
         <option value="$PROJECT_DIR$/src/GameStates/TurretTestState.java" />
-        <option value="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/CreepType.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Tools/Turret.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Spaceship.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Tools/Bullet.java" />
         <option value="$PROJECT_DIR$/src/Core/GlobalConstants.java" />
         <option value="$PROJECT_DIR$/src/GameStates/LevelTest.java" />
         <option value="$PROJECT_DIR$/src/GameStates/GameState.java" />
         <option value="$PROJECT_DIR$/src/GameStates/AsteroidTestState.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Asteroid.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Creep.java" />
-        <option value="$PROJECT_DIR$/src/GameStates/LevelTestState.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" />
         <option value="$PROJECT_DIR$/src/Core/Game.java" />
+        <option value="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
+        <option value="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" />
+        <option value="$PROJECT_DIR$/src/Grids/CollisionGrid.java" />
+        <option value="$PROJECT_DIR$/src/Grids/GravityGrid.java" />
+        <option value="$PROJECT_DIR$/src/Core/TargetingHandler.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
+        <option value="$PROJECT_DIR$/src/GameStates/LevelTestState.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Creep.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Tools/Turret.java" />
       </list>
     </option>
   </component>
@@ -580,11 +464,11 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="" />
-    </key>
     <key name="CreateTestDialog.RecentsKey">
       <recent name="GameObjects" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
@@ -905,6 +789,13 @@
       <option name="number" value="Default" />
       <updated>1445880809925</updated>
     </task>
+    <task id="LOCAL-00001" summary="Adding creeps, removing spaceship + PlanetTestState. Issues with creep on creep collision">
+      <created>1449322324087</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1449322324087</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -929,19 +820,20 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291714" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24866024" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24866024" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22457068" sideWeight="0.505032" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24330118" sideWeight="0.49496797" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24330118" sideWeight="0.49496797" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280363" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17324094" sideWeight="0.49918166" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32583067" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -955,7 +847,6 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="184" y="127" width="951" height="686" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32583067" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -981,24 +872,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="47" selection-start-line="41" selection-start-column="33" selection-end-line="41" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#422#423#0" expanded="false" />
-            <element signature="e#458#459#0" expanded="false" />
-            <element signature="e#917#918#0" expanded="false" />
-            <element signature="e#963#964#0" expanded="false" />
-            <element signature="e#1265#1266#0" expanded="false" />
-            <element signature="e#1294#1295#0" expanded="false" />
-            <element signature="e#1325#1326#0" expanded="false" />
-            <element signature="e#1353#1354#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1083,13 +956,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Grids/SpatialHashGrid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/jsfml/jsfml.jar!/org/jsfml/graphics/IntRect.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1132,27 +998,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Grids/GravityGrid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46503496">
-          <caret line="64" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Grids/GravityGridCell.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.981595">
-          <caret line="62" column="33" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Grids/GridCell.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34764826">
-          <caret line="21" column="26" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/SolidCollider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1178,14 +1023,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.19465649">
           <caret line="81" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Grids/CollisionGrid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1243,17 +1080,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/CollisionHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="91" column="74" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding>
-            <element signature="e#704#705#0" expanded="false" />
-            <element signature="e#754#755#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/jsfml/jsfml.jar!/org/jsfml/graphics/Sprite.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4498861">
@@ -1286,37 +1112,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="33" selection-start-line="41" selection-start-column="33" selection-end-line="41" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#422#423#0" expanded="false" />
-            <element signature="e#458#459#0" expanded="false" />
-            <element signature="e#917#918#0" expanded="false" />
-            <element signature="e#963#964#0" expanded="false" />
-            <element signature="e#1265#1266#0" expanded="false" />
-            <element signature="e#1294#1295#0" expanded="false" />
-            <element signature="e#1325#1326#0" expanded="false" />
-            <element signature="e#1353#1354#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding>
-            <element signature="e#1055#1056#0" expanded="false" />
-            <element signature="e#1102#1103#0" expanded="false" />
-            <element signature="e#1157#1158#0" expanded="false" />
-            <element signature="e#1200#1201#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Asteroid.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1327,109 +1122,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="36" selection-start-line="35" selection-start-column="36" selection-end-line="35" selection-end-column="36" />
-          <folding>
-            <element signature="e#2962#2963#0" expanded="false" />
-            <element signature="e#2992#2993#0" expanded="false" />
-            <element signature="e#3195#3196#0" expanded="false" />
-            <element signature="e#3224#3225#0" expanded="false" />
-            <element signature="e#3434#3435#0" expanded="false" />
-            <element signature="e#3465#3466#0" expanded="false" />
-            <element signature="e#3549#3550#0" expanded="false" />
-            <element signature="e#3592#3593#0" expanded="false" />
-            <element signature="e#3642#3643#0" expanded="false" />
-            <element signature="e#3686#3687#0" expanded="false" />
-            <element signature="e#3970#3971#0" expanded="false" />
-            <element signature="e#4017#4018#0" expanded="false" />
-            <element signature="e#4050#4051#0" expanded="false" />
-            <element signature="e#4150#4151#0" expanded="false" />
-            <element signature="e#4314#4315#0" expanded="false" />
-            <element signature="e#4370#4371#0" expanded="false" />
-            <element signature="e#4416#4417#0" expanded="false" />
-            <element signature="e#4480#4481#0" expanded="false" />
-            <element signature="e#4517#4518#0" expanded="false" />
-            <element signature="e#4548#4549#0" expanded="false" />
-            <element signature="e#4598#4599#0" expanded="false" />
-            <element signature="e#4638#4639#0" expanded="false" />
-            <element signature="e#4668#4669#0" expanded="false" />
-            <element signature="e#4695#4696#0" expanded="false" />
-            <element signature="e#4750#4751#0" expanded="false" />
-            <element signature="e#4803#4804#0" expanded="false" />
-            <element signature="e#4840#4841#0" expanded="false" />
-            <element signature="e#4874#4875#0" expanded="false" />
-            <element signature="e#4927#4928#0" expanded="false" />
-            <element signature="e#4973#4974#0" expanded="false" />
-            <element signature="e#5025#5026#0" expanded="false" />
-            <element signature="e#5076#5077#0" expanded="false" />
-            <element signature="e#5132#5133#0" expanded="false" />
-            <element signature="e#5183#5184#0" expanded="false" />
-            <element signature="e#5219#5220#0" expanded="false" />
-            <element signature="e#5260#5261#0" expanded="false" />
-            <element signature="e#5296#5297#0" expanded="false" />
-            <element signature="e#5327#5328#0" expanded="false" />
-            <element signature="e#5361#5362#0" expanded="false" />
-            <element signature="e#5389#5390#0" expanded="false" />
-            <element signature="e#5427#5428#0" expanded="false" />
-            <element signature="e#5462#5463#0" expanded="false" />
-            <element signature="e#5510#5511#0" expanded="false" />
-            <element signature="e#5545#5546#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Creep.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0861813">
-          <caret line="45" column="66" selection-start-line="45" selection-start-column="66" selection-end-line="45" selection-end-column="66" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameStates/AsteroidTestState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="199" column="4" selection-start-line="199" selection-start-column="4" selection-end-line="206" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameStates/LevelTestState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="39" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameStates/GameState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="43" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
+    <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="65" column="51" selection-start-line="65" selection-start-column="51" selection-end-line="65" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.050147492">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1442,11 +1148,153 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/GlobalConstants.java">
+    <entry file="file://$PROJECT_DIR$/src/GameStates/AsteroidTestState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.05052006">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.2079646">
+          <caret line="199" column="4" selection-start-line="199" selection-start-column="4" selection-end-line="206" selection-end-column="5" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.72713864">
+          <caret line="65" column="51" selection-start-line="65" selection-start-column="51" selection-end-line="65" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grids/GravityGridCell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.4292035">
+          <caret line="62" column="33" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grids/CollisionGrid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.82448375">
+          <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grids/GravityGrid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.82448375">
+          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding>
+            <element signature="e#1737#1738#0" expanded="true" />
+            <element signature="e#1768#1769#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grids/GridCell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.04719764">
+          <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Grids/SpatialHashGrid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5014749">
+          <caret line="26" column="16" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/CollisionHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.0088496">
+          <caret line="144" column="5" selection-start-line="144" selection-start-column="5" selection-end-line="144" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/TargetingHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="110" selection-start-line="25" selection-start-column="110" selection-end-line="25" selection-end-column="110" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="18" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1010#1011#0" expanded="true" />
+            <element signature="e#1048#1049#0" expanded="true" />
+            <element signature="e#1087#1088#0" expanded="true" />
+            <element signature="e#1117#1118#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14143094">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="226" column="18" selection-start-line="226" selection-start-column="18" selection-end-line="226" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#5655#5656#0" expanded="true" />
+            <element signature="e#5689#5690#0" expanded="true" />
+            <element signature="e#5727#5728#0" expanded="true" />
+            <element signature="e#5761#5762#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameStates/LevelTestState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.058997">
+          <caret line="240" column="51" selection-start-line="240" selection-start-column="9" selection-end-line="240" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Creep.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#835#836#0" expanded="true" />
+            <element signature="e#860#861#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44837758">
+          <caret line="49" column="53" selection-start-line="49" selection-start-column="53" selection-end-line="49" selection-end-column="53" />
+          <folding>
+            <element signature="e#1657#1658#0" expanded="true" />
+            <element signature="e#1685#1686#0" expanded="true" />
+            <element signature="e#1717#1718#0" expanded="true" />
+            <element signature="e#1746#1747#0" expanded="true" />
+            <element signature="e#1789#1790#0" expanded="true" />
+            <element signature="e#1825#1826#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

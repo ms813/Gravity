@@ -1,15 +1,20 @@
 package Core;
 
+import GameObjects.Creep;
 import GameObjects.GameObject;
 import GameObjects.Tools.Bullet;
+import GameObjects.Tools.Turret;
+import GameObjects.Tools.TurretPlatform;
 import Grids.CollisionGrid;
 import Grids.GridCell;
 import org.jsfml.graphics.CircleShape;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2i;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by smithma on 12/11/15.
@@ -137,14 +142,6 @@ public class CollisionHandler {
 
             collisionPoints.subList(count, collisionPoints.size()).clear();
         }
-    }
-
-    public boolean hasObjectsToRemove() {
-        return objectsToRemove.size() > 0;
-    }
-
-    public List<GameObject> getObjectsToRemove() {
-        return objectsToRemove;
     }
 }
 
