@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="52b83fbb-41b1-46ba-ba1a-f854c5e41d39" name="Default" comment="Adding creeps, removing spaceship + PlanetTestState. Issues with creep on creep collision">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Core/TargetingHandler.java" />
+    <list default="true" id="52b83fbb-41b1-46ba-ba1a-f854c5e41d39" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/GameObjects/Tools/HealthBar.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Core/CollisionHandler.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Core/CollisionHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Colliders/CircleCollider.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Colliders/CircleCollider.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/CollisionGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/CollisionGrid.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/GravityGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/GravityGrid.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/Grids/SpatialHashGrid.class" afterPath="$PROJECT_DIR$/out/production/Gravity/Grids/SpatialHashGrid.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/GameObject.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/GameObject.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Tools/Bullet.class" afterPath="$PROJECT_DIR$/out/production/Gravity/GameObjects/Tools/Bullet.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Core/CollisionHandler.java" afterPath="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/GameObject.java" afterPath="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameObjects/Tools/Bullet.java" afterPath="$PROJECT_DIR$/src/GameObjects/Tools/Bullet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/CollisionGrid.java" afterPath="$PROJECT_DIR$/src/Grids/CollisionGrid.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/GravityGrid.java" afterPath="$PROJECT_DIR$/src/Grids/GravityGrid.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" afterPath="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" />
     </list>
     <ignored path="Gravity.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -83,21 +76,21 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="LevelTestState.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="LevelTestState.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/GameStates/LevelTestState.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="1.058997">
-                  <caret line="240" column="51" selection-start-line="240" selection-start-column="9" selection-end-line="240" selection-end-column="9" />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="TargetingHandler.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="TargetingHandler.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Core/TargetingHandler.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="25" column="110" selection-start-line="25" selection-start-column="110" selection-end-line="25" selection-end-column="110" />
+                <state vertical-scroll-proportion="0.78350514">
+                  <caret line="42" column="86" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -113,11 +106,9 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="226" column="18" selection-start-line="226" selection-start-column="18" selection-end-line="226" selection-end-column="18" />
+                  <caret line="203" column="21" selection-start-line="203" selection-start-column="21" selection-end-line="203" selection-end-column="21" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#5655#5656#0" expanded="true" />
-                    <element signature="e#5689#5690#0" expanded="true" />
                     <element signature="e#5727#5728#0" expanded="true" />
                     <element signature="e#5761#5762#0" expanded="true" />
                   </folding>
@@ -129,11 +120,27 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Creep.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+                  <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#835#836#0" expanded="true" />
-                    <element signature="e#860#861#0" expanded="true" />
+                    <element signature="e#1106#1107#0" expanded="true" />
+                    <element signature="e#1139#1140#0" expanded="true" />
+                    <element signature="e#1170#1171#0" expanded="true" />
+                    <element signature="e#1199#1200#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="HealthBar.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/HealthBar.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="27" column="111" selection-start-line="27" selection-start-column="111" selection-end-line="27" selection-end-column="111" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#958#959#0" expanded="true" />
+                    <element signature="e#990#991#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -143,13 +150,9 @@
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="37" column="18" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+                  <caret line="31" column="27" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#1010#1011#0" expanded="true" />
-                    <element signature="e#1048#1049#0" expanded="true" />
-                    <element signature="e#1087#1088#0" expanded="true" />
-                    <element signature="e#1117#1118#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -158,15 +161,11 @@
           <file leaf-file-name="Turret.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.44837758">
-                  <caret line="49" column="53" selection-start-line="49" selection-start-column="53" selection-end-line="49" selection-end-column="53" />
+                <state vertical-scroll-proportion="0.39911634">
+                  <caret line="48" column="18" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="18" />
                   <folding>
-                    <element signature="e#1657#1658#0" expanded="true" />
-                    <element signature="e#1685#1686#0" expanded="true" />
-                    <element signature="e#1717#1718#0" expanded="true" />
-                    <element signature="e#1746#1747#0" expanded="true" />
-                    <element signature="e#1789#1790#0" expanded="true" />
-                    <element signature="e#1825#1826#0" expanded="true" />
+                    <element signature="e#1967#1968#0" expanded="true" />
+                    <element signature="e#1996#1997#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -215,15 +214,16 @@
         <option value="$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Colliders/CircleCollider.java" />
         <option value="$PROJECT_DIR$/src/Core/Game.java" />
-        <option value="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
         <option value="$PROJECT_DIR$/src/Grids/SpatialHashGrid.java" />
         <option value="$PROJECT_DIR$/src/Grids/CollisionGrid.java" />
         <option value="$PROJECT_DIR$/src/Grids/GravityGrid.java" />
         <option value="$PROJECT_DIR$/src/Core/TargetingHandler.java" />
-        <option value="$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/GameObject.java" />
         <option value="$PROJECT_DIR$/src/GameStates/LevelTestState.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java" />
+        <option value="$PROJECT_DIR$/src/Core/CollisionHandler.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Creep.java" />
+        <option value="$PROJECT_DIR$/src/GameObjects/Tools/HealthBar.java" />
         <option value="$PROJECT_DIR$/src/GameObjects/Tools/Turret.java" />
       </list>
     </option>
@@ -269,7 +269,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -420,8 +420,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -795,7 +795,13 @@
       <option name="project" value="LOCAL" />
       <updated>1449322324087</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added groundwork for target acquisition, turrets firing + creeps dying">
+      <created>1449336890145</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1449336890145</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -829,11 +835,10 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22457068" sideWeight="0.505032" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24330118" sideWeight="0.49496797" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24222937" sideWeight="0.49496797" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280363" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17324094" sideWeight="0.49918166" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32583067" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -847,6 +852,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="184" y="127" width="951" height="686" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32583067" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -859,7 +865,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Adding creeps, removing spaceship + PlanetTestState. Issues with creep on creep collision" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding creeps, removing spaceship + PlanetTestState. Issues with creep on creep collision" />
+    <MESSAGE value="Added groundwork for target acquisition, turrets firing + creeps dying" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added groundwork for target acquisition, turrets firing + creeps dying" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -872,14 +879,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Core/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameStates/AsteroidTestState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1207,38 +1206,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/CollisionHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.0088496">
-          <caret line="144" column="5" selection-start-line="144" selection-start-column="5" selection-end-line="144" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/TargetingHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="110" selection-start-line="25" selection-start-column="110" selection-end-line="25" selection-end-column="110" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="18" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1010#1011#0" expanded="true" />
-            <element signature="e#1048#1049#0" expanded="true" />
-            <element signature="e#1087#1088#0" expanded="true" />
-            <element signature="e#1117#1118#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/CreepSpawner.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14143094">
@@ -1249,51 +1216,87 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/CollisionHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22516556">
+          <caret line="26" column="12" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/GameObject.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="226" column="18" selection-start-line="226" selection-start-column="18" selection-end-line="226" selection-end-column="18" />
+          <caret line="203" column="21" selection-start-line="203" selection-start-column="21" selection-end-line="203" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5655#5656#0" expanded="true" />
-            <element signature="e#5689#5690#0" expanded="true" />
             <element signature="e#5727#5728#0" expanded="true" />
             <element signature="e#5761#5762#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/TurretPlatform.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="27" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/GameStates/LevelTestState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.058997">
-          <caret line="240" column="51" selection-start-line="240" selection-start-column="9" selection-end-line="240" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="135" column="0" selection-start-line="135" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Core/TargetingHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.78350514">
+          <caret line="42" column="86" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Creep.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="34" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+          <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#835#836#0" expanded="true" />
-            <element signature="e#860#861#0" expanded="true" />
+            <element signature="e#1106#1107#0" expanded="true" />
+            <element signature="e#1139#1140#0" expanded="true" />
+            <element signature="e#1170#1171#0" expanded="true" />
+            <element signature="e#1199#1200#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/HealthBar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="111" selection-start-line="27" selection-start-column="111" selection-end-line="27" selection-end-column="111" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#958#959#0" expanded="true" />
+            <element signature="e#990#991#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GameObjects/Tools/Turret.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44837758">
-          <caret line="49" column="53" selection-start-line="49" selection-start-column="53" selection-end-line="49" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.39911634">
+          <caret line="48" column="18" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="18" />
           <folding>
-            <element signature="e#1657#1658#0" expanded="true" />
-            <element signature="e#1685#1686#0" expanded="true" />
-            <element signature="e#1717#1718#0" expanded="true" />
-            <element signature="e#1746#1747#0" expanded="true" />
-            <element signature="e#1789#1790#0" expanded="true" />
-            <element signature="e#1825#1826#0" expanded="true" />
+            <element signature="e#1967#1968#0" expanded="true" />
+            <element signature="e#1996#1997#0" expanded="true" />
           </folding>
         </state>
       </provider>

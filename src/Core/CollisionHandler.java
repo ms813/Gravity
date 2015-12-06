@@ -139,7 +139,6 @@ public class CollisionHandler {
                 c.setRadius(c.getRadius() - 0.5f);
                 c.setPosition(c.getPosition().x + 1, c.getPosition().y + 1);
             }
-
             collisionPoints.subList(count, collisionPoints.size()).clear();
         }
     }
