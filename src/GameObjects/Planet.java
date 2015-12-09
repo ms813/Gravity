@@ -15,7 +15,7 @@ public class Planet extends GameObject {
         this.mass = mass;
         this.temperature = 200;
         this.heatCapacity = 1;
-        this.density = 10;
+        this.density = 10000;
 
         float radius = (float) Math.sqrt(this.mass / (Math.PI * density));
 

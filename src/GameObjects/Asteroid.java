@@ -4,6 +4,10 @@ import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
 import GameObjects.Tools.Turret;
 import GameObjects.Tools.TurretPlatform;
+import org.jsfml.graphics.PrimitiveType;
+import org.jsfml.graphics.RenderWindow;
+import org.jsfml.graphics.Vertex;
+import org.jsfml.graphics.VertexArray;
 import org.jsfml.system.Vector2f;
 
 import java.util.ArrayList;
@@ -16,6 +20,9 @@ import java.util.List;
 public class Asteroid extends TurretPlatform {
 
     private ParticleType type = ParticleType.DUST_SMALL;
+
+    private VertexArray trail = new VertexArray();
+    private int trailCount = 0;
 
     public Asteroid(float mass, Vector2f pos) {
 
@@ -38,6 +45,8 @@ public class Asteroid extends TurretPlatform {
         updateTextureRect();
 
         maxTurrets = (int) Math.floor(getSize().y / Turret.TURRET_SIZE) * (int) Math.floor(getSize().x / Turret.TURRET_SIZE);
+
+        trail.setPrimitiveType(PrimitiveType.LINE_STRIP);
     }
 
     /*
@@ -113,4 +122,23 @@ public class Asteroid extends TurretPlatform {
         rescale((getSize().x + getSize().y) / 4);
     }
 
+    @Override
+    public void update(float dt, boolean VERLET_STATE) {
+        super.update(dt, VERLET_STATE);
+
+        if(VERLET_STATE){
+            trailCount++;
+
+            if(trailCount % 5 == 0){
+                trail.add(new Vertex(getCenter()));
+                trailCount = 0;
+            }
+        }
+    }
+
+    @Override
+    public void draw(RenderWindow window) {
+        window.draw(trail);
+        super.draw(window);
+    }
 }
