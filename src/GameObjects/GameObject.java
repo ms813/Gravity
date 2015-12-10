@@ -24,6 +24,7 @@ public abstract class GameObject {
     protected Texture texture;
 
     protected Collider collider = new CircleCollider(this, 1);
+    protected Queue<CollisionEvent> collisionEvents = new PriorityQueue<>();
 
     protected List<GameObject> children = new ArrayList<>();
 
@@ -40,8 +41,6 @@ public abstract class GameObject {
     private boolean destroyOnHit = false;
 
     private boolean destroyFlag = false;
-
-    private Queue<CollisionEvent> collisionEvents = new PriorityQueue<>();
 
     /*
         Core

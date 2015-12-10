@@ -2,10 +2,7 @@ package GameObjects.Tools;
 
 import GameObjects.Creep;
 import GameObjects.GameObject;
-import org.jsfml.graphics.PrimitiveType;
-import org.jsfml.graphics.RenderWindow;
-import org.jsfml.graphics.Vertex;
-import org.jsfml.graphics.VertexArray;
+import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
 /**
@@ -60,8 +57,8 @@ public class Turret {
     public void draw(RenderWindow window){
         if(target != null) {
             VertexArray line = new VertexArray();
-            line.add(new Vertex(parent.getCenter()));
-            line.add(new Vertex(target.getCenter()));
+            line.add(new Vertex(parent.getCenter(), Color.RED));
+            line.add(new Vertex(target.getCenter(), Color.YELLOW));
 
             line.setPrimitiveType(PrimitiveType.LINES);
             window.draw(line);

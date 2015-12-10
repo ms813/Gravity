@@ -2,6 +2,7 @@ package GameObjects;
 
 import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
+import GameObjects.Colliders.CollisionEvent;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
@@ -40,13 +41,20 @@ public class Planet extends GameObject {
     }
 
     @Override
-    public void addCollisionEvent(GameObject object) {
-        super.addCollisionEvent(object);
-    }
-
-    @Override
     public void applyCollisions() {
-        super.applyCollisions();
+        while(!collisionEvents.isEmpty()){
+            CollisionEvent e = collisionEvents.poll();
 
+            move(e.getCollisionOffset());
+            setVelocity(e.getCollisionVelocity());
+            temperature += e.getTemperatureChange();
+
+            if(e.getCollidingObject() instanceof Creep){
+                Creep creep = (Creep) e.getCollidingObject();
+                System.out.println(creep + " collided with planet " + this);
+                hp -= creep.getDamage();
+                creep.setDestroyFlag(true);
+            }
+        }
     }
 }

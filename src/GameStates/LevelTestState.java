@@ -71,7 +71,7 @@ public class LevelTestState implements GameState {
         */
 
         float asteroidHeight = 300f;
-        float asteroidMass = 100f;
+        float asteroidMass = 10000f;
 
         float vel = (float) Math.sqrt(GlobalConstants.GRAVITATIONAL_CONSTANT * p.getMass() /(2* asteroidHeight));
 

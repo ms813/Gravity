@@ -55,10 +55,7 @@ public class Creep extends GameObject {
         this.hp_current -= turret.getDamage();
         if (hp_current <= 0) {
             setDestroyFlag(true);
-
             System.out.println("[Creep.receiveFire] " + this + " destroyed by " + turret);
-
-
             turret.gainXp(xpValue);
         }
     }
@@ -78,11 +75,14 @@ public class Creep extends GameObject {
         }
     }
 
-
     @Override
     public void draw(RenderWindow window) {
         window.draw(trail);
         super.draw(window);
         healthBar.draw(window);
+    }
+
+    public float getDamage(){
+        return damage;
     }
 }
