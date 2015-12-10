@@ -60,7 +60,7 @@ public abstract class SpatialHashGrid {
         for (GridCell cell : cells.values()) {
             for (GameObject obj : cell.getObjects()) {
                 if (cls.isInstance(obj)){
-                    objects.add((T) obj);
+                    objects.add(cls.cast(obj));
                 }
             }
         }
