@@ -1,6 +1,5 @@
 package GameObjects.Colliders;
 
-import Core.GlobalConstants;
 import GameObjects.GameObject;
 import org.jsfml.graphics.CircleShape;
 import org.jsfml.graphics.FloatRect;
@@ -23,9 +22,7 @@ public abstract class Collider {
 
     public abstract boolean isColliding(GameObject object);
 
-    public abstract void calculateCollision(GameObject object);
-
-    public abstract void applyCollision();
+    public abstract CollisionEvent createCollisionEvent(GameObject object);
 
     public abstract void update();
 

@@ -11,6 +11,8 @@ import org.jsfml.system.Vector2i;
  */
 public class Planet extends GameObject {
 
+    private float hp = 100;
+
     public Planet(float mass, Vector2f position) {
         this.mass = mass;
         this.temperature = 200;
@@ -35,5 +37,16 @@ public class Planet extends GameObject {
         } else {
             System.out.println("[Planet.addSatellite()] This satellite already belongs to this body");
         }
+    }
+
+    @Override
+    public void addCollisionEvent(GameObject object) {
+        super.addCollisionEvent(object);
+    }
+
+    @Override
+    public void applyCollisions() {
+        super.applyCollisions();
+
     }
 }

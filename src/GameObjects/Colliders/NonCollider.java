@@ -3,6 +3,7 @@ package GameObjects.Colliders;
 import GameObjects.GameObject;
 import org.jsfml.graphics.CircleShape;
 import org.jsfml.graphics.Color;
+import org.jsfml.system.Vector2f;
 
 /**
  * Created by smithma on 10/12/2015.
@@ -29,14 +30,11 @@ public class NonCollider extends Collider {
     }
 
     @Override
-    public void calculateCollision(GameObject object) {
+    public CollisionEvent createCollisionEvent(GameObject object) {
         //deliberately blank
+        return new CollisionEvent(object, Vector2f.ZERO, Vector2f.ZERO, 0);
     }
 
-    @Override
-    public void applyCollision() {
-        //deliberately blank
-    }
 
     @Override
     public void update() {

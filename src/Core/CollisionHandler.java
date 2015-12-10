@@ -1,20 +1,14 @@
 package Core;
 
-import GameObjects.Creep;
 import GameObjects.GameObject;
 import GameObjects.Tools.Bullet;
-import GameObjects.Tools.Turret;
-import GameObjects.Tools.TurretPlatform;
 import Grids.CollisionGrid;
 import Grids.GridCell;
 import org.jsfml.graphics.CircleShape;
 import org.jsfml.graphics.RenderWindow;
-import org.jsfml.system.Vector2f;
-import org.jsfml.system.Vector2i;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by smithma on 12/11/15.
@@ -88,12 +82,12 @@ public class CollisionHandler {
                         }
 
                         //we have to calculate the collision first, so that both objects use the same values during the calculation
-                        o1.calculateCollision(o2);
-                        o2.calculateCollision(o1);
+                        o1.addCollisionEvent(o2);
+                        o2.addCollisionEvent(o1);
 
                         //we then apply the calculated collisions in the next step
-                        o1.applyCollision();
-                        o2.applyCollision();
+                        o1.applyCollisions();
+                        o2.applyCollisions();
 
                         if (o1.isDestroyOnHit()) {
                             objectsToRemove.add(o1);

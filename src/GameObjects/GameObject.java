@@ -3,11 +3,14 @@ package GameObjects;
 import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
 import GameObjects.Colliders.Collider;
+import GameObjects.Colliders.CollisionEvent;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Created by smithma on 28/10/15.
@@ -37,6 +40,8 @@ public abstract class GameObject {
     private boolean destroyOnHit = false;
 
     private boolean destroyFlag = false;
+
+    private Queue<CollisionEvent> collisionEvents = new PriorityQueue<>();
 
     /*
         Core
@@ -193,12 +198,18 @@ public abstract class GameObject {
         return collider.isColliding(object);
     }
 
-    public void calculateCollision(GameObject object) {
-        collider.calculateCollision(object);
+    public void addCollisionEvent(GameObject object) {
+        collisionEvents.add(collider.createCollisionEvent(object));
     }
 
-    public void applyCollision() {
-        collider.applyCollision();
+    public void applyCollisions() {
+        while(!collisionEvents.isEmpty()){
+            CollisionEvent e = collisionEvents.poll();
+
+            move(e.getCollisionOffset());
+            setVelocity(e.getCollisionVelocity());
+            temperature += e.getTemperatureChange();
+        }
     }
 
     public Collider getCollider() {

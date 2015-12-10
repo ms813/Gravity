@@ -40,7 +40,7 @@ public class Creep extends GameObject {
 
         healthBar = new HealthBar(this);
 
-        trail.setPrimitiveType(PrimitiveType.LINE_STRIP);
+        trail.setPrimitiveType(PrimitiveType.LINES);
     }
 
     public float getCurrentHp() {

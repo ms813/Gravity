@@ -1,6 +1,5 @@
 package GameObjects.Colliders;
 
-import Core.GlobalConstants;
 import Core.VectorMath;
 import GameObjects.GameObject;
 import org.jsfml.graphics.*;
@@ -16,10 +15,6 @@ public class CircleCollider extends Collider {
     *   0.0 is perfectly inelastic (no velocity maintained after collision, all energy converted to temperature increase)
     */
     protected float efficiency = 1.0f;
-
-    private Vector2f collisionVelocity = Vector2f.ZERO;
-    private Vector2f collisionOffset = Vector2f.ZERO;
-    private float temperatureChange;
 
     public CircleCollider(GameObject parent, float efficiency) {
         super(parent);
@@ -45,7 +40,11 @@ public class CircleCollider extends Collider {
     }
 
     @Override
-    public void calculateCollision(GameObject object) {
+    public CollisionEvent createCollisionEvent(GameObject object) {
+
+        Vector2f collisionOffset = Vector2f.ZERO;
+        Vector2f collisionVelocity = Vector2f.ZERO;
+        float temperatureChange = 0;
 
         if (object.isSolid()) {
 
@@ -111,17 +110,8 @@ public class CircleCollider extends Collider {
 
             collisionVelocity = Vector2f.mul(collisionVelocity, fractionalVel);
         }
-    }
 
-    @Override
-    public void applyCollision() {
-        parent.move(collisionOffset);
-        parent.setVelocity(collisionVelocity);
-
-        parent.setTemperature(parent.getTemperature() + temperatureChange);
-
-        collisionVelocity = Vector2f.ZERO;
-        collisionOffset = Vector2f.ZERO;
+        return new CollisionEvent(object, collisionVelocity, collisionOffset, temperatureChange);
     }
 
     @Override

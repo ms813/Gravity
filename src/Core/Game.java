@@ -31,7 +31,8 @@ public class Game {
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
 
-        window.create(new VideoMode(screenWidth / 2, screenHeight / 2), "Gravity");
+        window.create(new VideoMode(screenWidth, screenHeight), "Gravity");
+        //window.create(new VideoMode(screenWidth / 2, screenHeight / 2), "Gravity");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
 
