@@ -11,14 +11,10 @@ import java.util.*;
 /**
  * Created by Matthew on 31/10/2015.
  */
-public class CollisionGrid implements SpatialHashGrid {
-
-    private float cellSize;
-
-    private HashMap<Vector2i, GridCell> cells = new HashMap<>();
+public class CollisionGrid extends SpatialHashGrid {
 
     public CollisionGrid(float cellSize) {
-        this.cellSize = cellSize;
+        super(cellSize);
     }
 
     @Override
@@ -94,27 +90,6 @@ public class CollisionGrid implements SpatialHashGrid {
     }
 
     @Override
-    public void draw(RenderWindow w) {
-        for (GridCell cell : cells.values()) {
-            cell.draw(w);
-        }
-    }
-
-    @Override
-    public void clear() {
-        cells.clear();
-    }
-
-    @Override
-    public List<GridCell> getCells() {
-        return new ArrayList<>(cells.values());
-    }
-
-    @Override
-    public float getCellSize() {
-        return cellSize;
-    }
-
     public void insert(GameObject o) {
         List<Vector2i> cellIds = getCellsForObj(o);
 

@@ -4,23 +4,22 @@ import Core.TextureManager;
 import GameObjects.Colliders.CircleCollider;
 import GameObjects.Tools.HealthBar;
 import GameObjects.Tools.Turret;
-import org.jsfml.graphics.RectangleShape;
-import org.jsfml.graphics.RenderWindow;
+import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
 /**
  * Created by Matthew on 04/12/2015.
  */
 public class Creep extends GameObject {
-    protected float hp_max = 100;
-    protected float hp_current;
-    protected float damage = 1;
-    protected float SIZE = 25f;
-    protected HealthBar healthBar;
-    protected float xpValue = 1;
+    private float hp_max = 100;
+    private float hp_current;
+    private float damage = 1;
+    private float SIZE = 25f;
+    private HealthBar healthBar;
+    private float xpValue = 1;
 
-
-    protected CreepType type = CreepType.NORMAL;
+    private VertexArray trail = new VertexArray();
+    private int trailCount = 0;
 
     public Creep(float mass, Vector2f pos) {
 
@@ -33,13 +32,15 @@ public class Creep extends GameObject {
 
         this.setPosition(pos);
 
-        collider = new CircleCollider(this, 0.99f);
+        collider = new CircleCollider(this, 0.90f);
 
         texture = TextureManager.getTexture("creep.png");
         sprite.setTexture(texture);
         sprite.setScale(SIZE / getSize().x, SIZE / getSize().y);
 
         healthBar = new HealthBar(this);
+
+        trail.setPrimitiveType(PrimitiveType.LINE_STRIP);
     }
 
     public float getCurrentHp() {
@@ -68,12 +69,19 @@ public class Creep extends GameObject {
 
         if(VERLET_STATE){
             healthBar.update();
+
+            trailCount++;
+            if(trailCount % 5 == 0){
+                trail.add(new Vertex(getCenter(), Color.GREEN));
+                trailCount = 0;
+            }
         }
     }
 
 
     @Override
     public void draw(RenderWindow window) {
+        window.draw(trail);
         super.draw(window);
         healthBar.draw(window);
     }

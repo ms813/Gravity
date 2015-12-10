@@ -112,4 +112,8 @@ public class VectorMath {
     public static boolean nearlyEquals(double a, double b, double eps){
         return Math.abs(a-b)<eps;
     }
+
+    public static strictfp Vector2f unitTangent(Vector2f v){
+        return normalize(new Vector2f(-v.y, v.x));
+    }
 }

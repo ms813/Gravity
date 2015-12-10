@@ -1,8 +1,10 @@
 package Core;
 
 import GameObjects.GameObject;
+import GameObjects.Planet;
 import Grids.GravityGrid;
 import Grids.GravityGridCell;
+import Grids.GridCell;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.system.Vector2f;
 
@@ -36,13 +38,13 @@ public class GravityHandler {
     }
 
     public Vector2f getForce(GameObject o) {
-        List<GravityGridCell> gravityCells = grid.getCells();
+        List<GridCell> gravityCells = grid.getCells();
 
         Vector2f totalForce = Vector2f.ZERO;    //running total of forces acting on object o
 
         //find the cell that object o is in
-        GravityGridCell oCell = null;
-        for (GravityGridCell cell : gravityCells) {
+        GridCell oCell = null;
+        for (GridCell cell : gravityCells) {
             if (cell.contains(o)) {
                 oCell = cell;
             }
@@ -73,7 +75,8 @@ public class GravityHandler {
 
 
         //now add an approximate force from the cell's center of mass
-        for (GravityGridCell cell : gravityCells) {
+        for (GridCell c : gravityCells) {
+            GravityGridCell cell = (GravityGridCell) c;
             //ignore contribution from same cell that object is in as we have already considered it
             if (cell == oCell) continue;
 
@@ -113,5 +116,35 @@ public class GravityHandler {
 
     public void recalculatePhysicalProperties() {
         grid.recalculatePhysicalProperties();
+    }
+
+    public <T extends GameObject> T getDominantObject(GameObject testObject, Class<T> dominantObjectType) {
+
+        List<T> objects = grid.getAll(dominantObjectType);
+
+        //return null if there are no objects of the requested type
+        if(objects.size() == 0) return null;
+
+        T dominantObject = grid.getAll(dominantObjectType).get(0);
+        float dominantForce = 0;
+
+
+        for (T obj : objects) {
+            //F = GmM/r^2
+
+            float G, m, M, r, F;
+            G = GlobalConstants.GRAVITATIONAL_CONSTANT;
+            m = testObject.getMass();
+            M = obj.getMass();
+            r = VectorMath.magnitude(Vector2f.sub(testObject.getCenter(), obj.getCenter()));
+
+            F = (G * m * M) / (r * r);
+
+            if(F > dominantForce){
+                dominantForce = F;
+                dominantObject = obj;
+            }
+        }
+        return dominantObject;
     }
 }

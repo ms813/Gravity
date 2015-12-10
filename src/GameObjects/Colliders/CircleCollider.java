@@ -9,36 +9,26 @@ import org.jsfml.system.Vector2f;
 /**
  * Created by smithma on 04/11/15.
  */
-public class CircleCollider implements SolidCollider {
-
-    private GameObject parent;
+public class CircleCollider extends Collider {
 
     /*
     *   1.0 is perfectly elastic (all velocity maintained after collision, no heat increase)
     *   0.0 is perfectly inelastic (no velocity maintained after collision, all energy converted to temperature increase)
     */
-    private float efficiency = 1.0f;
-
-    private CircleShape hitbox = new CircleShape();
+    protected float efficiency = 1.0f;
 
     private Vector2f collisionVelocity = Vector2f.ZERO;
     private Vector2f collisionOffset = Vector2f.ZERO;
-    private float tempChange;
+    private float temperatureChange;
 
     public CircleCollider(GameObject parent, float efficiency) {
-        this.parent = parent;
+        super(parent);
         this.efficiency = efficiency;
-        hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
+        ((CircleShape)hitbox).setRadius((parent.getSize().x + parent.getSize().y) / 4);
         hitbox.setPosition(parent.getPosition());
         hitbox.setFillColor(Color.TRANSPARENT);
         hitbox.setOutlineColor(Color.CYAN);
         hitbox.setOutlineThickness(-1.0f);
-    }
-
-    @Override
-    public float getBreakForce() {
-        //2D gravitational binding energy = (2/3) * Gm^2/r
-        return (2f / 3f) * GlobalConstants.GRAVITATIONAL_CONSTANT * parent.getMass() * parent.getMass() / hitbox.getGlobalBounds().width / 2;
     }
 
     @Override
@@ -111,7 +101,7 @@ public class CircleCollider implements SolidCollider {
             float kE_after = 0.5f * parent.getMass() * (float) Math.pow(VectorMath.magnitude(collisionVelocity), 2);
 
             //spend the waste energy from the collision on creating heat
-            tempChange = parent.getTemperatureChange(kE_after * (1f - efficiency));
+            temperatureChange = parent.getTemperatureChange(kE_after * (1f - efficiency));
 
             //reduce the velocity proportionally to the energy lost
             //Kinetic energy E = 1/2 mv^2 => v = sqrt(2E/m)
@@ -128,7 +118,7 @@ public class CircleCollider implements SolidCollider {
         parent.move(collisionOffset);
         parent.setVelocity(collisionVelocity);
 
-        parent.setTemperature(parent.getTemperature() + tempChange);
+        parent.setTemperature(parent.getTemperature() + temperatureChange);
 
         collisionVelocity = Vector2f.ZERO;
         collisionOffset = Vector2f.ZERO;
@@ -141,12 +131,12 @@ public class CircleCollider implements SolidCollider {
 
     @Override
     public void update() {
-        hitbox.setRadius((parent.getSize().x + parent.getSize().y) / 4);
+        ((CircleShape)hitbox).setRadius((parent.getSize().x + parent.getSize().y) / 4);
         hitbox.setPosition(parent.getCenter().x - getRadius(), parent.getCenter().y - getRadius());
     }
 
     public float getRadius() {
-        return hitbox.getRadius();
+        return ((CircleShape)hitbox).getRadius();
     }
 
     @Override

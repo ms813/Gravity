@@ -24,7 +24,8 @@ public class TargetingHandler {
                 float range = t.getRange();
 
                 //set closest creep to previous target if there was one, if not to the first creep in the list
-                Creep closestCreep = t.getTarget() != null ? t.getTarget() : targets.get(0);
+                Creep closestCreep = (t.getTarget() != null) ? t.getTarget() : targets.get(0);
+
                 float closestDist = VectorMath.magnitude(Vector2f.sub(closestCreep.getCenter(), platform.getCenter()));
                 for(Creep creep : targets){
                     float dist = VectorMath.magnitude(Vector2f.sub(creep.getCenter(), platform.getCenter()));

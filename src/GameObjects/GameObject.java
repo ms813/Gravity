@@ -3,7 +3,6 @@ package GameObjects;
 import Core.VectorMath;
 import GameObjects.Colliders.CircleCollider;
 import GameObjects.Colliders.Collider;
-import GameObjects.Colliders.SolidCollider;
 import org.jsfml.graphics.*;
 import org.jsfml.system.Vector2f;
 
@@ -28,10 +27,10 @@ public abstract class GameObject {
     protected Vector2f appliedForce = Vector2f.ZERO;
     protected Vector2f velocity = Vector2f.ZERO;
 
-    protected float mass;
-    protected float temperature;
-    protected float heatCapacity;
-    protected float density;
+    protected float mass = 1f;
+    protected float temperature = 1f;
+    protected float heatCapacity = 1f;
+    protected float density = 1f;
 
     private boolean HITBOX_VISIBLE = true;
 
@@ -46,7 +45,6 @@ public abstract class GameObject {
     //Verlet method requires updating position and velocity in separate steps
     //http://gamedev.stackexchange.com/questions/15708/how-can-i-implement-gravity
     private Vector2f acceleration = Vector2f.ZERO;
-    private Vector2f newAcceleration = Vector2f.ZERO;
 
     public void update(float dt, boolean VERLET_STATE) {
 
@@ -69,7 +67,7 @@ public abstract class GameObject {
     }
 
     private void updateVelocity(float dt) {
-        newAcceleration = getAcceleration();
+        Vector2f newAcceleration = getAcceleration();
         velocity = Vector2f.add(velocity, Vector2f.mul(Vector2f.add(acceleration, newAcceleration), dt / 2));
         appliedForce = Vector2f.ZERO;
 
@@ -80,7 +78,7 @@ public abstract class GameObject {
     }
 
     public void draw(RenderWindow window) {
-        if (visible && active) {
+        if (visible && active && sprite != null) {
             window.draw(sprite);
             if (HITBOX_VISIBLE) collider.draw(window);
             for (GameObject child : getChildren()) {
@@ -160,7 +158,7 @@ public abstract class GameObject {
        Physics
     */
     public boolean isSolid() {
-        return collider instanceof SolidCollider;
+        return collider instanceof CircleCollider;
     }
 
     public void applyForce(Vector2f force) {
@@ -198,7 +196,6 @@ public abstract class GameObject {
     public void calculateCollision(GameObject object) {
         collider.calculateCollision(object);
     }
-
 
     public void applyCollision() {
         collider.applyCollision();

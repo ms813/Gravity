@@ -128,7 +128,6 @@ public class Asteroid extends TurretPlatform {
 
         if(VERLET_STATE){
             trailCount++;
-
             if(trailCount % 5 == 0){
                 trail.add(new Vertex(getCenter()));
                 trailCount = 0;

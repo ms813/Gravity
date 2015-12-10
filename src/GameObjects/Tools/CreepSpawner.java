@@ -1,40 +1,46 @@
 package GameObjects.Tools;
 
+import Core.Game;
+import Core.GlobalConstants;
 import Core.VectorMath;
+import GameObjects.Colliders.NonCollider;
 import GameObjects.Creep;
-import GameStates.GameState;
+import GameObjects.GameObject;
 import org.jsfml.system.Vector2f;
-import org.omg.CORBA.VM_ABSTRACT;
+
+import java.util.*;
 
 /**
  * Created by Matthew on 04/12/2015.
  */
-public class CreepSpawner {
+public class CreepSpawner extends GameObject {
 
-    private boolean spawning = false;
     private int level = 0;
-    private GameState scene;
 
     private float cooldown = 1;
     private float cooldown_remaining = 0;
-    private int creep_count, creeps_remaining;
+    private int creeps_remaining;
 
-    public CreepSpawner(GameState scene) {
-        this.scene = scene;
+    private GameObject dominantGravityObject;
+
+    private Queue<Creep> creepQueue = new PriorityQueue<>();
+
+    public CreepSpawner(Vector2f position, Vector2f velocity) {
+        setPosition(position);
+        setVelocity(velocity);
+
+        //visible = false;
+        collider = new NonCollider(this);
     }
 
-    public void startLevel(int level) {
-        this.level = level;
-        spawning = true;
-
-        if (level == 1) {
-            creep_count = 20;
-            creeps_remaining = creep_count;
-        }
+    public void startNextLevel() {
+        level++;
+        creeps_remaining = 10 + (level - 1) * 2;
     }
 
-    public void update(float dt) {
-
+    @Override
+    public void update(float dt, boolean VERLET_STATE) {
+        super.update(dt, VERLET_STATE);
         if (creeps_remaining > 0) {
             if (cooldown_remaining > 0) {
                 //spawner on cooldown so decrement the cooldown
@@ -42,10 +48,20 @@ public class CreepSpawner {
             } else {
                 //spawner ready so lets spawn a creep
 
-                Creep creep = new Creep(1f, Vector2f.ZERO);
-                creep.setVelocity(Vector2f.mul(VectorMath.RIGHT,75));
+                //attempt to set up a stable orbit around the dominant body
+                // v = sqrt(Gm/2r)
+                float v = 0;
+                Vector2f difference = Vector2f.ZERO;
+                if (dominantGravityObject != null) {
+                    difference = Vector2f.sub(collider.getCenter(), dominantGravityObject.getCenter());
 
-                scene.addGameObject(creep);
+                    float r = VectorMath.magnitude(difference);
+                    v = (float) Math.sqrt(GlobalConstants.GRAVITATIONAL_CONSTANT * dominantGravityObject.getMass() / (4f * r));
+                }
+                Creep creep = new Creep(100f, getCenter());
+                creep.setVelocity(Vector2f.mul(VectorMath.unitTangent(difference), v));
+
+                creepQueue.add(creep);
 
                 cooldown_remaining = cooldown;
                 --creeps_remaining;
@@ -53,4 +69,19 @@ public class CreepSpawner {
         }
     }
 
+    public Creep poll() {
+        return creepQueue.poll();
+    }
+
+    public boolean isEmpty() {
+        return creepQueue.isEmpty();
+    }
+
+    public int getCreepsRemaining() {
+        return creeps_remaining;
+    }
+
+    public void setDominantGravityObject(GameObject obj) {
+        this.dominantGravityObject = obj;
+    }
 }

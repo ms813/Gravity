@@ -26,7 +26,7 @@ public class Planet extends GameObject {
         sprite.setScale(2 * radius / sprite.getTextureRect().width, 2 * radius / sprite.getTextureRect().height);
         sprite.setPosition(position);
 
-        collider = new CircleCollider(this, 1.0f);
+        collider = new CircleCollider(this, 0.9f);
     }
 
     public void addSatellite(GameObject satellite) {

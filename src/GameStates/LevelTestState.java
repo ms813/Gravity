@@ -16,6 +16,8 @@ import org.jsfml.window.event.Event;
 import org.jsfml.window.event.KeyEvent;
 import org.jsfml.window.event.MouseButtonEvent;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class LevelTestState implements GameState {
     private GravityHandler gravityHandler = new GravityHandler(50);
     private TargetingHandler targetingHandler = new TargetingHandler();
 
-    private CreepSpawner creepSpawner = new CreepSpawner(this);
+    private CreepSpawner creepSpawner;
 
     private View view = new View();
     private View guiView = new View();
@@ -68,7 +70,7 @@ public class LevelTestState implements GameState {
         *
         */
 
-        float asteroidHeight = 350f;
+        float asteroidHeight = 300f;
         float asteroidMass = 100f;
 
         float vel = (float) Math.sqrt(GlobalConstants.GRAVITATIONAL_CONSTANT * p.getMass() /(2* asteroidHeight));
@@ -85,6 +87,17 @@ public class LevelTestState implements GameState {
             }
         }
 
+        try {
+            font.loadFromFile(Paths.get("resources/fonts/arial.ttf"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        label.setFont(font);
+        label.setPosition(50, 50);
+        label.setCharacterSize(24);
+        label.setColor(Color.CYAN);
+
         System.out.println("number of overlapping starting objects removed: " + overlapping.size());
         sceneObjects.removeAll(overlapping);
 
@@ -93,7 +106,10 @@ public class LevelTestState implements GameState {
         view.setSize(new Vector2f(game.getWindow().getSize()));
         game.setView(view);
 
-        creepSpawner.startLevel(1);
+        creepSpawner = new CreepSpawner(new Vector2f(0, -asteroidHeight), new Vector2f(-vel, 0));
+
+        sceneObjects.add(creepSpawner);
+        creepSpawner.startNextLevel();
     }
 
     @Override
@@ -125,11 +141,6 @@ public class LevelTestState implements GameState {
         //sort the dust so that the smaller particles are at the front
         //asteroids.sort(new MassComparator());
 
-        /*
-        *   Check if we should be spawning creeps
-        */
-        //creepSpawner.update(dt);
-
         //check for dead creeps and remove them
         cleanSceneObjects();
 
@@ -160,16 +171,26 @@ public class LevelTestState implements GameState {
             for (GameObject o : sceneObjects) {
                 o.applyForce(gravityHandler.getForce(o));
             }
+
         }
+
+        creepSpawner.setDominantGravityObject(gravityHandler.getDominantObject(creepSpawner, Planet.class));
 
         for (GameObject o : sceneObjects) {
             o.update(dt, VERLET_STATE);
         }
 
+        /*
+        *   Check if creeps have spawned and add them
+        */
+        while(!creepSpawner.isEmpty()){
+            sceneObjects.add(creepSpawner.poll());
+        }
+
         //toggle the Verlet state
         VERLET_STATE = !VERLET_STATE;
 
-        label.setString("Particles remaining: " + sceneObjects.size() + "\nFPS: " + Math.round(1 / dt));
+        label.setString("Creeps remaining: " + creepSpawner.getCreepsRemaining() + "\nFPS: " + Math.round(1 / dt));
         // System.out.println("Frame end");
     }
 
