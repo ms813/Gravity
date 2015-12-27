@@ -1,8 +1,7 @@
 package Grids;
 
-import GameObjects.Colliders.CircleCollider;
-import GameObjects.GameObject;
-import org.jsfml.graphics.RenderWindow;
+import Components.CircleCollider;
+import Components.Collider;
 import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
 
@@ -18,21 +17,21 @@ public class CollisionGrid extends SpatialHashGrid {
     }
 
     @Override
-    public ArrayList<Vector2i> getCellsForObj(GameObject o) {
+    public ArrayList<Vector2i> getCellsForCollider(Collider collider) {
 
         ArrayList<Vector2i> ids = new ArrayList<>();
 
-        Vector2f topLeftPos = o.getCollider().getPosition();
-        Vector2f bottomRightPos = Vector2f.add(topLeftPos, o.getCollider().getSize());
+        Vector2f topLeftPos = collider.getPosition();
+        Vector2f bottomRightPos = Vector2f.add(topLeftPos, collider.getSize());
 
         int leftCol = (int) Math.floor(topLeftPos.x / cellSize);
         int rightCol = (int) Math.floor(bottomRightPos.x / cellSize);
         int topRow = (int) Math.floor(topLeftPos.y / cellSize);
         int bottomRow = (int) Math.floor(bottomRightPos.y / cellSize);
 
-        if (o.getCollider() instanceof CircleCollider) {
-            float objRadius = ((CircleCollider) o.getCollider()).getRadius();
-            Vector2f objCenter = o.getCollider().getCenter();
+        if (collider instanceof CircleCollider) {
+            float objRadius = ((CircleCollider) collider).getRadius();
+            Vector2f objCenter = collider.getCenter();
 
 
             for (int i = leftCol; i <= rightCol; i++) {
@@ -90,8 +89,8 @@ public class CollisionGrid extends SpatialHashGrid {
     }
 
     @Override
-    public void insert(GameObject o) {
-        List<Vector2i> cellIds = getCellsForObj(o);
+    public void insert(Collider collider) {
+        List<Vector2i> cellIds = getCellsForCollider(collider);
 
         for (Vector2i id : cellIds) {
 
@@ -99,8 +98,8 @@ public class CollisionGrid extends SpatialHashGrid {
                 cells.put(id, new GridCell(this, id));
             }
 
-            if (!cells.get(id).contains(o)) {
-                cells.get(id).insert(o);
+            if (!cells.get(id).contains(collider)) {
+                cells.get(id).insert(collider);
             }
         }
     }

@@ -1,8 +1,6 @@
 package Core;
 
-import GameStates.AsteroidTestState;
 import GameStates.GameState;
-import GameStates.LevelTestState;
 import org.jsfml.graphics.Color;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.graphics.View;
@@ -31,13 +29,12 @@ public class Game {
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
 
-        window.create(new VideoMode(screenWidth, screenHeight), "Gravity");
-        //window.create(new VideoMode(screenWidth / 2, screenHeight / 2), "Gravity");
+        //window.create(new VideoMode(screenWidth, screenHeight), "Gravity");
+        window.create(new VideoMode(screenWidth / 2, screenHeight / 2), "Gravity");
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
 
-        //gameStates.push(new AsteroidTestState(this));
-        gameStates.push(new LevelTestState(this));
+        gameStates.push(new GameState(this));
     }
 
     public void start() {

@@ -1,8 +1,6 @@
 package Grids;
 
-import GameObjects.GameObject;
-import org.jsfml.graphics.RenderWindow;
-import org.jsfml.system.Vector2f;
+import Components.Collider;
 import org.jsfml.system.Vector2i;
 
 import java.util.*;
@@ -17,9 +15,9 @@ public class GravityGrid extends SpatialHashGrid {
     }
 
     @Override
-    public ArrayList<Vector2i> getCellsForObj(GameObject o) {
-        int col = (int) Math.floor((o.getPosition().x + o.getSize().x / 2) / cellSize);
-        int row = (int) Math.floor((o.getPosition().y + o.getSize().y / 2) / cellSize);
+    public ArrayList<Vector2i> getCellsForCollider(Collider c) {
+        int col = (int) Math.floor((c.getPosition().x + c.getSize().x / 2) / cellSize);
+        int row = (int) Math.floor((c.getPosition().y + c.getSize().y / 2) / cellSize);
 
         ArrayList<Vector2i> l = new ArrayList<>();
         l.add(new Vector2i(col, row));
@@ -28,8 +26,8 @@ public class GravityGrid extends SpatialHashGrid {
     }
 
     @Override
-    public void insert(GameObject o) {
-        List<Vector2i> cellIds = getCellsForObj(o);
+    public void insert(Collider c) {
+        List<Vector2i> cellIds = getCellsForCollider(c);
 
         for (Vector2i id : cellIds) {
 
@@ -37,8 +35,8 @@ public class GravityGrid extends SpatialHashGrid {
                 cells.put(id, new GravityGridCell(this, id));
             }
 
-            if (!cells.get(id).contains(o)) {
-                cells.get(id).insert(o);
+            if (!cells.get(id).contains(c)) {
+                cells.get(id).insert(c);
             }
         }
     }

@@ -1,6 +1,6 @@
 package Grids;
 
-import GameObjects.GameObject;
+import Components.Collider;
 import org.jsfml.graphics.Color;
 import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
@@ -20,21 +20,21 @@ public class GravityGridCell extends GridCell {
         outline.setOutlineColor(Color.RED);
     }
 
-    private float calculateTotalMass(List<GameObject> objs) {
+    private float calculateTotalMass(List<Collider> colliders) {
         float mass = 0;
-        for (GameObject o : objs) {
-            mass += o.getMass();
+        for (Collider c : colliders) {
+            mass += c.getMass();
         }
         return mass;
     }
 
-    private Vector2f calculateCenterOfMass(List<GameObject> objs) {
+    private Vector2f calculateCenterOfMass(List<Collider> colliders) {
         float x = 0, y = 0, tMass = 0;
 
-        for (GameObject o : objs) {
-            x += o.getCenter().x * o.getMass();
-            y += o.getCenter().y * o.getMass();
-            tMass += o.getMass();
+        for (Collider c : colliders) {
+            x += c.getCenter().x * c.getMass();
+            y += c.getCenter().y * c.getMass();
+            tMass += c.getMass();
         }
 
         Vector2f com = new Vector2f(x / tMass, y / tMass);
@@ -60,8 +60,8 @@ public class GravityGridCell extends GridCell {
 
 
     public void updateProperties() {
-        totalMass = calculateTotalMass(objects);
-        centerOfMass = calculateCenterOfMass(objects);
+        totalMass = calculateTotalMass(colliders);
+        centerOfMass = calculateCenterOfMass(colliders);
 
     }
 

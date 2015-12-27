@@ -1,14 +1,14 @@
 package Grids;
 
-import Core.Game;
-import GameObjects.GameObject;
+import Components.Collider;
+import GameObjects.Entity;
 import org.jsfml.graphics.RenderWindow;
 import org.jsfml.system.Vector2i;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Matthew on 30/10/2015.
@@ -23,9 +23,9 @@ public abstract class SpatialHashGrid {
         this.cellSize = cellSize;
     }
 
-    abstract void insert(GameObject o);
+    abstract void insert(Components.Collider collider);
 
-    abstract ArrayList<Vector2i> getCellsForObj(GameObject o);
+    abstract ArrayList<Vector2i> getCellsForCollider(Components.Collider collider);
 
     public void draw(RenderWindow w) {
         for (GridCell cell : cells.values()) {
@@ -45,26 +45,11 @@ public abstract class SpatialHashGrid {
         return cellSize;
     }
 
-    public List<GameObject> getAllObjects() {
-        List<GameObject> objects = new ArrayList<>();
+    public List<Collider> getAllColliders() {
+        List<Collider> colliders = new ArrayList<>();
         for (GridCell cell : cells.values()) {
-            objects.addAll(cell.getObjects());
+            colliders.addAll(cell.getColliders());
         }
-        return objects;
-    }
-
-    public <T extends GameObject> List<T> getAll(Class<T> cls) {
-
-        List<T> objects = new ArrayList<>();
-
-        for (GridCell cell : cells.values()) {
-            for (GameObject obj : cell.getObjects()) {
-                if (cls.isInstance(obj)){
-                    objects.add(cls.cast(obj));
-                }
-            }
-        }
-
-        return objects;
+        return colliders;
     }
 }

@@ -1,6 +1,7 @@
 package Grids;
 
-import GameObjects.GameObject;
+
+import Components.Collider;
 import org.jsfml.graphics.Color;
 import org.jsfml.graphics.RectangleShape;
 import org.jsfml.graphics.RenderWindow;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class GridCell {
     protected SpatialHashGrid parent;
-    protected List<GameObject> objects = new ArrayList<>();
+    protected List<Collider> colliders = new ArrayList<>();
     protected Vector2i id;
 
     protected RectangleShape outline = new RectangleShape();
@@ -42,20 +43,20 @@ public class GridCell {
         return id;
     }
 
-    public boolean insert(GameObject o) {
+    public boolean insert(Collider collider) {
         //o.setFillColor(color);
-        return objects.add(o);
+        return colliders.add(collider);
     }
 
-    public boolean contains(GameObject o) {
-        return objects.contains(o);
+    public boolean contains(Collider collider) {
+        return colliders.contains(collider);
     }
 
     public void draw(RenderWindow w) {
         w.draw(outline);
     }
 
-    public List<GameObject> getObjects() {
-        return objects;
+    public List<Collider> getColliders() {
+        return colliders;
     }
 }

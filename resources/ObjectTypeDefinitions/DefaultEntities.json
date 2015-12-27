@@ -1,0 +1,32 @@
+[
+  {
+    "EntityName": "Satellite",
+    "Components" : [
+      {
+        "ComponentName": "Thruster",
+        "Attributes" : {
+          "maxThrust" : 1000
+        }
+      },
+      {
+        "ComponentName": "CircleCollider",
+        "Attributes" : {
+          "efficiency" : 1
+        }
+      }
+    ]
+  },
+
+  {
+    "EntityName": "Asteroid",
+    "AssetPath" : "resources/EntityAssets/asteroid/",
+    "Components" : [
+      {
+        "ComponentName": "CircleCollider",
+        "Attributes" : {
+          "efficiency" : 1
+        }
+      }
+    ]
+  }
+]

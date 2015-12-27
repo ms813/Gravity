@@ -1,7 +1,6 @@
 package Core;
 
-import GameObjects.GameObject;
-import GameObjects.Planet;
+import Components.Collider;
 import Grids.GravityGrid;
 import Grids.GravityGridCell;
 import Grids.GridCell;
@@ -37,31 +36,31 @@ public class GravityHandler {
         }
     }
 
-    public Vector2f getForce(GameObject o) {
+    public Vector2f getForce(Collider c) {
         List<GridCell> gravityCells = grid.getCells();
 
         Vector2f totalForce = Vector2f.ZERO;    //running total of forces acting on object o
 
-        //find the cell that object o is in
-        GridCell oCell = null;
+        //find the cell that collider c is in
+        GridCell cCell = null;
         for (GridCell cell : gravityCells) {
-            if (cell.contains(o)) {
-                oCell = cell;
+            if (cell.contains(c)) {
+                cCell = cell;
             }
         }
 
         //get the forces from all of the particles in the same cell as o
-        if (oCell != null) {
-            for (GameObject object : oCell.getObjects()) {
-                if (object == o) continue; //don't calculate force contribution from self
+        if (cCell != null) {
+            for (Collider collider : cCell.getColliders()) {
+                if (collider == c) continue; //don't calculate force contribution from self
 
                 float F, G, m, M, r;
-                Vector2f centerToCenter = Vector2f.sub(object.getCenter(), o.getCenter());
+                Vector2f centerToCenter = Vector2f.sub(collider.getCenter(), c.getCenter());
                 Vector2f direction = VectorMath.normalize(centerToCenter);
 
                 G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-                m = o.getMass();
-                M = object.getMass();
+                m = c.getMass();
+                M = collider.getMass();
                 r = VectorMath.magnitude(centerToCenter);
 
 
@@ -75,17 +74,17 @@ public class GravityHandler {
 
 
         //now add an approximate force from the cell's center of mass
-        for (GridCell c : gravityCells) {
-            GravityGridCell cell = (GravityGridCell) c;
+        for (GridCell gridCell : gravityCells) {
+            GravityGridCell cell = (GravityGridCell) gridCell;
             //ignore contribution from same cell that object is in as we have already considered it
-            if (cell == oCell) continue;
+            if (cell == cCell) continue;
 
             float F, G, m, M, r;
-            Vector2f centerToCenter = Vector2f.sub(cell.getCenterOfMass(), o.getCenter());
+            Vector2f centerToCenter = Vector2f.sub(cell.getCenterOfMass(), c.getCenter());
             Vector2f direction = VectorMath.normalize(centerToCenter);
 
             G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-            m = o.getMass();
+            m = c.getMass();
             M = cell.getTotalMass();
             r = VectorMath.magnitude(centerToCenter);
 
@@ -101,50 +100,17 @@ public class GravityHandler {
         grid.clear();
     }
 
-    public void insertAll(List<GameObject> objects) {
-        for (GameObject object : objects) {
-            insert(object);
+    public void insertAll(List<Collider> colliders) {
+        for (Collider c : colliders) {
+            insert(c);
         }
     }
 
-    public void insert(GameObject object) {
-        grid.insert(object);
-        if (object.getChildren().size() > 0) {
-            insertAll(object.getChildren());
-        }
+    public void insert(Collider c) {
+        grid.insert(c);
     }
 
     public void recalculatePhysicalProperties() {
         grid.recalculatePhysicalProperties();
-    }
-
-    public <T extends GameObject> T getDominantObject(GameObject testObject, Class<T> dominantObjectType) {
-
-        List<T> objects = grid.getAll(dominantObjectType);
-
-        //return null if there are no objects of the requested type
-        if(objects.size() == 0) return null;
-
-        T dominantObject = grid.getAll(dominantObjectType).get(0);
-        float dominantForce = 0;
-
-
-        for (T obj : objects) {
-            //F = GmM/r^2
-
-            float G, m, M, r, F;
-            G = GlobalConstants.GRAVITATIONAL_CONSTANT;
-            m = testObject.getMass();
-            M = obj.getMass();
-            r = VectorMath.magnitude(Vector2f.sub(testObject.getCenter(), obj.getCenter()));
-
-            F = (G * m * M) / (r * r);
-
-            if(F > dominantForce){
-                dominantForce = F;
-                dominantObject = obj;
-            }
-        }
-        return dominantObject;
     }
 }

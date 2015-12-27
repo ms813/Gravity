@@ -1,7 +1,7 @@
 package Core;
 
-import GameObjects.GameObject;
-import GameObjects.Tools.Bullet;
+import Components.Collider;
+import GameObjects.Entity;
 import Grids.CollisionGrid;
 import Grids.GridCell;
 import org.jsfml.graphics.CircleShape;
@@ -19,7 +19,7 @@ public class CollisionHandler {
     private boolean COLLISION_POINTS_VISIBLE = true;
     private boolean GRID_VISIBLE = false;
     private List<CircleShape> collisionPoints = new ArrayList<>();
-    private List<GameObject> objectsToRemove = new ArrayList<>();
+    private List<Entity> objectsToRemove = new ArrayList<>();
 
     public CollisionHandler(float gridSize) {
         grid = new CollisionGrid(gridSize);
@@ -45,7 +45,7 @@ public class CollisionHandler {
         List<GridCell> collisionCells = grid.getCells();
 
         for (GridCell cell : collisionCells) {
-            List<GameObject> cellObjects = cell.getObjects();
+            List<Collider> cellObjects = cell.getColliders();
             for (int i = 0; i < cellObjects.size() - 1; i++) {
 
                 for (int j = i + 1; j < cellObjects.size(); j++) {
@@ -56,24 +56,19 @@ public class CollisionHandler {
                     //http://www.hoomanr.com/Demos/Elastic2/
                     //https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
                     //http://gamedev.stackexchange.com/questions/20516/ball-collisions-sticking-together
-                    GameObject o1 = cellObjects.get(i);
-                    GameObject o2 = cellObjects.get(j);
+                    Collider col1 = cellObjects.get(i);
+                    Collider col2 = cellObjects.get(j);
 
-                    //don't bother wasting cycles on inactive objects
-
-                    if (o1.isActive() && o2.isActive()                           //check both objects are active
-                            && !(o1 instanceof Bullet && o2 instanceof Bullet)  //bullets can't collide with each other
-                            && o1.isSolid() && o2.isSolid()                     //check both objects are solid
-                            && o1.isColliding(o2)                               //check that objects are colliding
-                            ) {
-
+                    //check that colliders are colliding
+                    if (col1.isColliding(col2))
+                    {
                         if (COLLISION_POINTS_VISIBLE) {
-                            float collisionPointX = (o1.getCenter().x * o2.getSize().x / 2
-                                    + o2.getCenter().x * o1.getSize().x / 2)
-                                    / (o1.getSize().x / 2 + o2.getSize().x / 2);
-                            float collisionPointY = (o1.getCenter().y * o2.getSize().x / 2
-                                    + o2.getCenter().y * o1.getSize().x / 2)
-                                    / (o1.getSize().x / 2 + o2.getSize().x / 2);
+                            float collisionPointX = (col1.getCenter().x * col2.getSize().x / 2
+                                    + col2.getCenter().x * col1.getSize().x / 2)
+                                    / (col1.getSize().x / 2 + col2.getSize().x / 2);
+                            float collisionPointY = (col1.getCenter().y * col2.getSize().x / 2
+                                    + col2.getCenter().y * col1.getSize().x / 2)
+                                    / (col1.getSize().x / 2 + col2.getSize().x / 2);
 
                             CircleShape c = new CircleShape(4);
                             c.setOrigin(c.getRadius() / 2, c.getRadius() / 2);
@@ -81,22 +76,23 @@ public class CollisionHandler {
                             collisionPoints.add(c);
                         }
 
-                        //we have to calculate the collision first, so that both objects use the same values during the calculation
-                        o1.addCollisionEvent(o2);
-                        o2.addCollisionEvent(o1);
+                        //we have to calculate the collision first, so that both colliders use the same values during the calculation
+                        col1.createCollisionEvent(col2);
+                        col2.createCollisionEvent(col1);
 
                         //we then apply the calculated collisions in the next step
-                        o1.applyCollisions();
-                        o2.applyCollisions();
+                        col1.applyCollisions();
+                        col2.applyCollisions();
 
-                        if (o1.isDestroyOnHit()) {
-                            objectsToRemove.add(o1);
+                        /*
+                        if (col1.isDestroyOnHit()) {
+                            objectsToRemove.add(col1);
                         }
 
-                        if (o2.isDestroyOnHit()) {
-                            objectsToRemove.add(o2);
+                        if (col2.isDestroyOnHit()) {
+                            objectsToRemove.add(col2);
                         }
-
+                        */
                     }
                 }
             }
@@ -108,17 +104,14 @@ public class CollisionHandler {
         collisionPoints.clear();
     }
 
-    public void insertAll(List<GameObject> objects) {
-        for (GameObject object : objects) {
-            insert(object);
+    public void insertAll(List<Collider> colliders) {
+        for (Collider collider : colliders) {
+            insert(collider);
         }
     }
 
-    public void insert(GameObject object) {
-        grid.insert(object);
-        if (object.getChildren().size() > 0) {
-            insertAll(object.getChildren());
-        }
+    public void insert(Collider collider) {
+        grid.insert(collider);
     }
 
     public void draw(RenderWindow window) {
