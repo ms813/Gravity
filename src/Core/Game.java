@@ -36,8 +36,8 @@ public class Game {
         window.setVerticalSyncEnabled(true);
         window.setFramerateLimit(FRAME_RATE);
 
-        //gameStates.push(new AsteroidTestState(this));
-        gameStates.push(new LevelTestState(this));
+        gameStates.push(new AsteroidTestState(this));
+        //gameStates.push(new LevelTestState(this));
     }
 
     public void start() {
